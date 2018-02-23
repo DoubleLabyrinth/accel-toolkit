@@ -1,0 +1,7 @@
+.vs/
+*.VC.*
+Win32/
+x64/
+
+accel-c/build
+accel-cpp/build
