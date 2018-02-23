@@ -2,6 +2,8 @@
 #include "hashlib/SHA512.h"
 #include <memory.h>
 
+#pragma comment(lib, "accel-c.lib")
+
 namespace accelpp::hash {
 
     class SHA512 {
