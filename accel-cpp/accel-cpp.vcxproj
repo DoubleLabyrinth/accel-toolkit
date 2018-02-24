@@ -152,6 +152,7 @@
     <ClInclude Include="accelpp\hash\SHA256.hpp" />
     <ClInclude Include="accelpp\hash\SHA384.hpp" />
     <ClInclude Include="accelpp\hash\SHA512.hpp" />
+    <ClInclude Include="accelpp\math\uintx_t.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

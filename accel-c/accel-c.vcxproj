@@ -52,6 +52,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -92,6 +93,9 @@
       <Command>xcopy $(ProjectDir)cryptolib\*.h $(OutDir)include\cryptolib\ /I /Y
 xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
     </PostBuildEvent>
+    <MASM>
+      <PreprocessorDefinitions>_M_IX86</PreprocessorDefinitions>
+    </MASM>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -103,6 +107,9 @@ xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
       <Command>xcopy $(ProjectDir)cryptolib\*.h $(OutDir)include\cryptolib\ /I /Y
 xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
     </PostBuildEvent>
+    <MASM>
+      <PreprocessorDefinitions>_M_X64</PreprocessorDefinitions>
+    </MASM>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -120,6 +127,9 @@ xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
       <Command>xcopy $(ProjectDir)cryptolib\*.h $(OutDir)include\cryptolib\ /I /Y
 xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
     </PostBuildEvent>
+    <MASM>
+      <PreprocessorDefinitions>_M_IX86</PreprocessorDefinitions>
+    </MASM>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -137,6 +147,9 @@ xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
       <Command>xcopy $(ProjectDir)cryptolib\*.h $(OutDir)include\cryptolib\ /I /Y
 xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
     </PostBuildEvent>
+    <MASM>
+      <PreprocessorDefinitions>_M_X64</PreprocessorDefinitions>
+    </MASM>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cryptolib\AES128.h" />
@@ -163,6 +176,12 @@ xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
     <ClInclude Include="hashlib\SHA256.h" />
     <ClInclude Include="hashlib\SHA384.h" />
     <ClInclude Include="hashlib\SHA512.h" />
+    <ClInclude Include="mathlib\add.h" />
+    <ClInclude Include="mathlib\cmp.h" />
+    <ClInclude Include="mathlib\def.h" />
+    <ClInclude Include="mathlib\div.h" />
+    <ClInclude Include="mathlib\mul.h" />
+    <ClInclude Include="mathlib\sub.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cryptolib\source\AES128.c" />
@@ -196,8 +215,13 @@ xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
     <ClCompile Include="hashlib\source\SHA256.c" />
     <ClCompile Include="hashlib\source\SHA384.c" />
     <ClCompile Include="hashlib\source\SHA512.c" />
+    <ClCompile Include="mathlib\source\mul_Karatsuba.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="mathlib\source\div_asm.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

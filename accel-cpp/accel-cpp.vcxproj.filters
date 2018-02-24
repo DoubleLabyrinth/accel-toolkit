@@ -39,5 +39,8 @@
     <ClInclude Include="accelpp\hash\SHA512.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="accelpp\math\uintx_t.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
