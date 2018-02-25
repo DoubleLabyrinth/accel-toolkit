@@ -203,6 +203,9 @@
     <ClCompile Include="mathlib\source\mul_Karatsuba.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="mathlib\source\div.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="mathlib\source\div_asm.asm">

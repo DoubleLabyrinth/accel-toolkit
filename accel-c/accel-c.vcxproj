@@ -215,6 +215,7 @@ xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
     <ClCompile Include="hashlib\source\SHA256.c" />
     <ClCompile Include="hashlib\source\SHA384.c" />
     <ClCompile Include="hashlib\source\SHA512.c" />
+    <ClCompile Include="mathlib\source\div.c" />
     <ClCompile Include="mathlib\source\mul_Karatsuba.c" />
   </ItemGroup>
   <ItemGroup>

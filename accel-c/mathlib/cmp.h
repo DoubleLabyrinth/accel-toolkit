@@ -25,30 +25,29 @@ extern "C" {
         const uintptr_t* cur_src2 = src2 + length2 - 1;
         const uintptr_t* const rlast_src1 = src1 - 1;
 
-        while (*cur_src1 == 0) {
+        while (*cur_src1 == 0 && cur_src1 != src1) {
             --length1;
             --cur_src1;
         }
-        while (*cur_src2 == 0) {
+        while (*cur_src2 == 0 && cur_src2 != src2) {
             --length2;
             --cur_src2;
         }
 
-        if (length1 > length2) {
-            return 1;
-        } else if (length1 < length2) {
-            return -1;
-        } else {
-            do {
-                if (*cur_src1 > *cur_src2) {
-                    return 1;
-                } else if (*cur_src1 < *cur_src2) {
-                    return -1;
-                }
+        if (length1 == length2) {
+            while (*cur_src1 == *cur_src2 && cur_src1 != src1) {
                 --cur_src1;
                 --cur_src2;
-            } while (cur_src1 == rlast_src1);
-            return 0;
+            }
+
+            if (*cur_src1 > *cur_src2)
+                return 1;
+            else if (*cur_src1 < *cur_src2)
+                return -1;
+            else
+                return 0;
+        } else {
+            return length1 > length2 ? 1 : -1;
         }
     }
 

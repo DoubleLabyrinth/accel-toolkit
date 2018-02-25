@@ -2,6 +2,8 @@
 * Filename:   mul_Karatsuba.c
 * Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
 *********************************************************************/
+#include "../add.h"
+#include "../sub.h"
 #include "../mul.h"
 
 #if defined(_M_X64)
