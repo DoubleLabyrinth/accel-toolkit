@@ -27,10 +27,10 @@ extern "C" {
                                   const uint8_t srcExpandedKey3[16][6]);
 
     //
-    // Failed if function return false.
+    // Failed if function return CRYPTO_DES_INVALID_KEY.
     // If and only if the number of bit '1' contained in each uint8_t of array srcKey is not odd, the function will return fail.
     // 
-    int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t out_ExpabvndedKey[16][6]);
+    int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t dstExpandedKey[16][6]);
 
 #if defined(__cplusplus)
 }
