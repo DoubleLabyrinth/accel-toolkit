@@ -35,7 +35,6 @@ void HASH_SHA224_MainCycle(const void* srcBytes, size_t srcBytesLength, uint32_t
     const uint32_t (*MessageBlock)[16] = srcBytes;
 
     size_t RoundsOfMainCycle = srcBytesLength / 64;
-
     for (size_t i = 0; i < RoundsOfMainCycle; ++i) {
         
         for (int j = 0; j < 16; ++j)

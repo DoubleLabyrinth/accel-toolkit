@@ -32,10 +32,9 @@ void HASH_SHA256_Initialize(uint32_t HashBuffer[8]) {
 void HASH_SHA256_MainCycle(const void* srcBytes, size_t srcBytesLength, uint32_t HashBuffer[8]) {
     uint32_t Buffer[64] = { 0 };
     uint32_t a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0;
-    const uint8_t (*MessageBlock)[64] = srcBytes;
+    const uint32_t (*MessageBlock)[16] = srcBytes;
 
     size_t RoundsOfMainCycle = srcBytesLength / 64;
-
     for (size_t i = 0; i < RoundsOfMainCycle; ++i) {
 
         for (int j = 0; j < 16; ++j)

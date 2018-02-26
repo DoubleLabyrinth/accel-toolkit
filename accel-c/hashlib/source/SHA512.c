@@ -34,9 +34,9 @@ void HASH_SHA512_Initialize(uint64_t HashBuffer[8]) {
 void HASH_SHA512_MainCycle(const void* srcBytes, size_t srcBytesLength, uint64_t HashBuffer[8]) {
     uint64_t Buffer[80] = { 0 };
     uint64_t a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0;
-    const uint8_t (*MessageBlock)[128] = srcBytes;
+    const uint64_t (*MessageBlock)[16] = srcBytes;
 
-    size_t RoundsOfMainCycle = srcBytesLength >> 7;
+    size_t RoundsOfMainCycle = srcBytesLength / 128;
     for (size_t i = 0; i < RoundsOfMainCycle; ++i) {
 
         for (int j = 0; j < 16; ++j)
