@@ -91,7 +91,8 @@
     </ClCompile>
     <PostBuildEvent>
       <Command>xcopy $(ProjectDir)cryptolib\*.h $(OutDir)include\cryptolib\ /I /Y
-xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
+xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y
+xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     </PostBuildEvent>
     <MASM>
       <PreprocessorDefinitions>_M_IX86</PreprocessorDefinitions>
@@ -105,7 +106,8 @@ xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
     </ClCompile>
     <PostBuildEvent>
       <Command>xcopy $(ProjectDir)cryptolib\*.h $(OutDir)include\cryptolib\ /I /Y
-xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
+xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y
+xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     </PostBuildEvent>
     <MASM>
       <PreprocessorDefinitions>_M_X64</PreprocessorDefinitions>
@@ -125,7 +127,8 @@ xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(ProjectDir)cryptolib\*.h $(OutDir)include\cryptolib\ /I /Y
-xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
+xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y
+xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     </PostBuildEvent>
     <MASM>
       <PreprocessorDefinitions>_M_IX86</PreprocessorDefinitions>
@@ -145,7 +148,8 @@ xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(ProjectDir)cryptolib\*.h $(OutDir)include\cryptolib\ /I /Y
-xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y</Command>
+xcopy $(ProjectDir)hashlib\*.h $(OutDir)include\hashlib\ /I /Y
+xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     </PostBuildEvent>
     <MASM>
       <PreprocessorDefinitions>_M_X64</PreprocessorDefinitions>
