@@ -238,7 +238,7 @@ void CRYPTO_Blowfish_DecryptBlock(uint8_t srcBytes[8],
     }
 }
 
-int CRYPTO_Blowfish_KeyExpansion(uint8_t srcKey[], uint8_t srcKeyLength,
+int CRYPTO_Blowfish_KeyExpansion(const uint8_t srcKey[], uint8_t srcKeyLength,
                                  uint32_t dstSubKeys[18],
                                  uint32_t dstSBox[4][256]) {
     if (srcKeyLength == 0)

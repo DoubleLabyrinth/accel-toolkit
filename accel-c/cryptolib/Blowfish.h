@@ -30,7 +30,7 @@ extern "C" {
                                       const uint32_t srcSBox[4][256],
                                       int Endian);
 
-    int CRYPTO_Blowfish_KeyExpansion(uint8_t srcKey[],
+    int CRYPTO_Blowfish_KeyExpansion(const uint8_t srcKey[],
                                      uint8_t srcKeyLength,
                                      uint32_t dstSubKeys[18],
                                      uint32_t dstSBox[4][256]);
