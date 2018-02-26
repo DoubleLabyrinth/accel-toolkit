@@ -2,8 +2,6 @@
 #include "hashlib/MD4.h"
 #include <memory.h>
 
-#pragma comment(lib, "accel-c.lib")
-
 namespace accelpp::hash {
 
     class MD4 {
