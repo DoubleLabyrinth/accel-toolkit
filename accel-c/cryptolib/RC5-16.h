@@ -21,7 +21,7 @@ extern "C" {
 
     // srcKeyLength can be 0x00 to 0xFF.
     // round_count can be 0x00 to 0xFF.
-    // The length of dstExpandedKey must at least be 2 * (round_count + 1).
+    // The length of dstExpandedKey must be at least 2 * (round_count + 1).
     int CRYPTO_RC5_16_KeyExpansion(const uint8_t srcKey[],
                                    uint8_t srcKeyLength,
                                    uint8_t round_count,
