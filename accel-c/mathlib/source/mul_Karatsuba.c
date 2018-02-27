@@ -20,8 +20,9 @@
 // ASSERT:
 // 1. length is a power of 2.
 // 2. product length = 2 * length
-void MATH_Mul_Karatsuba(const uintr_t* __restrict multiplier,
-                        const uintr_t* __restrict multiplicand,
+// 3. product must be cleared.
+void MATH_Mul_Karatsuba(const uintr_t* multiplier,
+                        const uintr_t* multiplicand,
                         size_t length,
                         uintr_t* __restrict product) {
     if (length <= 8) {
