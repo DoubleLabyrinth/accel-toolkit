@@ -143,9 +143,6 @@
     <ClCompile Include="cryptolib\source\RC2.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="cryptolib\source\RC4.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="cryptolib\source\RC5-16.c">
       <Filter>源文件</Filter>
     </ClCompile>

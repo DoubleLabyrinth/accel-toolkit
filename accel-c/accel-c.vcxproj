@@ -200,7 +200,6 @@ xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     <ClCompile Include="cryptolib\source\CAST-128.c" />
     <ClCompile Include="cryptolib\source\DES.c" />
     <ClCompile Include="cryptolib\source\RC2.c" />
-    <ClCompile Include="cryptolib\source\RC4.c" />
     <ClCompile Include="cryptolib\source\RC5-16.c" />
     <ClCompile Include="cryptolib\source\RC5-32.c" />
     <ClCompile Include="cryptolib\source\RC5-64.c" />
