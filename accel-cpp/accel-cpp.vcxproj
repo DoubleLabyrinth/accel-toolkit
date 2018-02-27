@@ -144,6 +144,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="accelpp\crypto\symmetric\AES.hpp" />
+    <ClInclude Include="accelpp\crypto\symmetric\Blowfish.hpp" />
+    <ClInclude Include="accelpp\crypto\symmetric\CAST-128.hpp" />
+    <ClInclude Include="accelpp\crypto\symmetric\DES.hpp" />
+    <ClInclude Include="accelpp\crypto\symmetric\RC2.hpp" />
+    <ClInclude Include="accelpp\crypto\symmetric\RC4.hpp" />
+    <ClInclude Include="accelpp\crypto\symmetric\RC5.hpp" />
+    <ClInclude Include="accelpp\crypto\symmetric\TEA.hpp" />
+    <ClInclude Include="accelpp\crypto\symmetric\Twofish.hpp" />
+    <ClInclude Include="accelpp\crypto\symmetric\XTEA.hpp" />
     <ClInclude Include="accelpp\hash\MD2.hpp" />
     <ClInclude Include="accelpp\hash\MD4.hpp" />
     <ClInclude Include="accelpp\hash\MD5.hpp" />

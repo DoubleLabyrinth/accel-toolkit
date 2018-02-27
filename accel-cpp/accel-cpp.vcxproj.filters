@@ -42,6 +42,36 @@
     <ClInclude Include="accelpp\math\uintx_t.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="accelpp\crypto\symmetric\AES.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\symmetric\Blowfish.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\symmetric\CAST-128.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\symmetric\DES.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\symmetric\RC2.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\symmetric\RC4.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\symmetric\RC5.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\symmetric\TEA.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\symmetric\XTEA.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\symmetric\Twofish.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="accelpp\void.cpp">
