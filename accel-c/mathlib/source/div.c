@@ -122,3 +122,32 @@ void MATH_Div(uintr_t* __restrict dividend, size_t dividend_length,
         } while (cur_quotient != quotient - 1);
     }
 }
+
+void MATH_Mod(uintr_t* __restrict dividend, size_t dividend_length,
+              const uintr_t* __restrict divisor, size_t divisor_length) {
+
+    const uintr_t* cur = dividend + dividend_length - 1;
+    while (*cur == 0 && cur != dividend) {
+        --dividend_length;
+        --cur;
+    }
+
+    cur = divisor + divisor_length - 1;
+    while (*cur == 0 && cur != divisor) {
+        --divisor_length;
+        --cur;
+    }
+
+    if (dividend_length < divisor_length) {
+        return;
+    } else {
+        size_t quotient_expect_eft_length = dividend_length - divisor_length + 1;
+        uintr_t* cur_dividend = dividend + (dividend_length - divisor_length);
+        uintr_t remainder_highest = 0;
+        for (size_t i = 0; i < quotient_expect_eft_length; ++i) {
+            _div_helper_(cur_dividend, divisor, divisor_length, remainder_highest != 0);
+            --cur_dividend;
+            remainder_highest = cur_dividend[divisor_length];
+        }
+    }
+}

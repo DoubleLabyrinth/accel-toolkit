@@ -170,6 +170,12 @@ extern "C" {
                   const uintr_t* __restrict divisor, size_t divisor_length,
                   uintr_t* __restrict quotient, size_t quotient_length);
 
+    // dividend %= divisor
+    // ASSERT:
+    // 1. dividend_length > 0 and divisor_length > 0
+    // 2. quotient_length >= dividend_length
+    void MATH_Mod(uintr_t* __restrict dividend, size_t dividend_length,
+                  const uintr_t* __restrict divisor, size_t divisor_length);
 
 #if defined(__cplusplus)
 }
