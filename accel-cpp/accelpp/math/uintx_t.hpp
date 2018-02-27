@@ -225,7 +225,7 @@ namespace accelpp::math {
                 memset(reinterpret_cast<_Type*>(x_ext) + 1, -1, sizeof(x_ext) - sizeof(_Type));
                 
                 uintr_t quotient[length];
-                MATH_Div(value, length, x_ext, length, quotient, length);
+                MATH_DivMod(value, length, x_ext, length, quotient, length);
                 memcpy(value, quotient, sizeof(value));
             } else {
                 if (sizeof(x) <= sizeof(uintr_t)) {
@@ -235,7 +235,7 @@ namespace accelpp::math {
                     *reinterpret_cast<_Type*>(x_ext) = x;
                     
                     uintr_t quotient[length];
-                    MATH_Div(value, length, x_ext, sizeof(x_ext) / sizeof(uintr_t), quotient, length);
+                    MATH_DivMod(value, length, x_ext, sizeof(x_ext) / sizeof(uintr_t), quotient, length);
                     memcpy(value, quotient, sizeof(value));
                 }
             }
@@ -252,7 +252,7 @@ namespace accelpp::math {
             static_assert(dst_length >= src_length, "src buffer is too long.");
             static void impl(uintr_t (&dst)[dst_length], const uintr_t (&src)[src_length]) {
                 uintr_t quotient[dst_length];
-                MATH_Div(dst, dst_length, src, src_length, quotient, dst_length);
+                MATH_DivMod(dst, dst_length, src, src_length, quotient, dst_length);
                 memcpy(dst, quotient, sizeof(dst));
             }
         };
@@ -263,7 +263,7 @@ namespace accelpp::math {
             [[deprecated("Warning: Truncation detected while dividing. If this is an error, please add \"#pragma warning(default: 4996)\" to make it a warning.")]]
             static void impl(uintr_t (&dst)[dst_length], const uintr_t(&src)[src_length]) {
                 uintr_t quotient[dst_length];
-                MATH_Div(dst, dst_length, src, dst_length, quotient, dst_length);
+                MATH_DivMod(dst, dst_length, src, dst_length, quotient, dst_length);
                 memcpy(dst, quotient, sizeof(dst));
             }
         };
@@ -282,7 +282,7 @@ namespace accelpp::math {
                 memset(reinterpret_cast<_Type*>(x_ext) + 1, -1, sizeof(x_ext) - sizeof(_Type));
 
                 uintr_t quotient[length];
-                MATH_Div(value, length, x_ext, length, quotient, length);
+                MATH_DivMod(value, length, x_ext, length, quotient, length);
             } else {
                 if (sizeof(x) <= sizeof(uintr_t)) {
                     uintr_t remainder = MATH_DivAssign(value, length, static_cast<uintr_t>(x));
@@ -293,7 +293,7 @@ namespace accelpp::math {
                     *reinterpret_cast<_Type*>(x_ext) = x;
 
                     uintr_t quotient[length];
-                    MATH_Div(value, length, x_ext, sizeof(x_ext) / sizeof(uintr_t), quotient, length);
+                    MATH_DivMod(value, length, x_ext, sizeof(x_ext) / sizeof(uintr_t), quotient, length);
                 }
             }
         }
@@ -309,7 +309,7 @@ namespace accelpp::math {
             static_assert(dst_length >= src_length, "src buffer is too long.");
             static void impl(uintr_t (&dst)[dst_length], const uintr_t (&src)[src_length]) {
                 uintr_t quotient[dst_length];
-                MATH_Div(dst, dst_length, src, src_length, quotient, dst_length);
+                MATH_DivMod(dst, dst_length, src, src_length, quotient, dst_length);
             }
         };
 
@@ -319,7 +319,7 @@ namespace accelpp::math {
             [[deprecated("Warning: Truncation detected while modulo. If this is an error, please add \"#pragma warning(default: 4996)\" to make it a warning.")]]
             static void impl(uintr_t (&dst)[dst_length], const uintr_t(&src)[src_length]) {
                 uintr_t quotient[dst_length];
-                MATH_Div(dst, dst_length, src, dst_length, quotient, dst_length);
+                MATH_DivMod(dst, dst_length, src, dst_length, quotient, dst_length);
             }
         };
 

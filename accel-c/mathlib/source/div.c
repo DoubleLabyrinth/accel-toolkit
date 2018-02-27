@@ -86,9 +86,9 @@ static inline uintr_t _div_helper_(uintr_t* __restrict dividend,
     return quotient;
 }
 
-void MATH_Div(uintr_t* __restrict dividend, size_t dividend_length,
-              const uintr_t* __restrict divisor, size_t divisor_length,
-              uintr_t* __restrict quotient, size_t quotient_length) {
+void MATH_DivMod(uintr_t* __restrict dividend, size_t dividend_length,
+                 const uintr_t* __restrict divisor, size_t divisor_length,
+                 uintr_t* __restrict quotient, size_t quotient_length) {
 
     const uintr_t* cur = dividend + dividend_length - 1;
     while (*cur == 0 && cur != dividend) {
