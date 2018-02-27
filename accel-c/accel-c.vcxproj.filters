@@ -105,6 +105,9 @@
     <ClInclude Include="mathlib\div.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="mathlib\powmod.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cryptolib\source\AES128.c">
@@ -201,6 +204,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="mathlib\source\div.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="mathlib\source\powmod.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

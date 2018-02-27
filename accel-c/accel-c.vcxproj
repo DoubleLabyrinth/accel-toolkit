@@ -185,6 +185,7 @@ xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     <ClInclude Include="mathlib\def.h" />
     <ClInclude Include="mathlib\div.h" />
     <ClInclude Include="mathlib\mul.h" />
+    <ClInclude Include="mathlib\powmod.h" />
     <ClInclude Include="mathlib\sub.h" />
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +221,7 @@ xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     <ClCompile Include="hashlib\source\SHA512.c" />
     <ClCompile Include="mathlib\source\div.c" />
     <ClCompile Include="mathlib\source\mul_Karatsuba.c" />
+    <ClCompile Include="mathlib\source\powmod.c" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="mathlib\source\div_asm.asm" />
