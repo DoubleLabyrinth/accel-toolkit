@@ -52,8 +52,8 @@ void MATH_Mul_Karatsuba(const uintr_t* multiplier,
                        length / 2,
                        product + length);
 
-    uintr_t* buffer = alloca(length * 2);
-    memset(buffer, 0, length * 2);
+    uintr_t* buffer = alloca(length * 2 * sizeof(uintr_t));
+    memset(buffer, 0, length * 2 * sizeof(uintr_t));
 
     uint8_t carry_a = 0;
     const uintr_t* addend_ptr = multiplier + length / 2;
