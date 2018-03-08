@@ -1,5 +1,6 @@
 #pragma once
 #include "cryptolib/CAST-128.h"
+#include "../utility.hpp"
 
 namespace accelpp::crypto::symmetric {
 
@@ -19,12 +20,12 @@ namespace accelpp::crypto::symmetric {
             CRYPTO_CAST128_KeyExpansion(srcKey, _KeyLength, Km, Kr);
         }
 
-        void Encrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_CAST128_EncryptBlock(srcBytes, Km, Kr, _KeyLength);
+        void Encrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_CAST128_EncryptBlock(srcBytes.value, Km, Kr, _KeyLength);
         }
 
-        void Decrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_CAST128_DecryptBlock(srcBytes, Km, Kr, _KeyLength);
+        void Decrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_CAST128_DecryptBlock(srcBytes.value, Km, Kr, _KeyLength);
         }
 
         CAST128(const uint8_t (&srcKey)[_KeyLength]) {

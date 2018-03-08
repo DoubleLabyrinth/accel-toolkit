@@ -1,5 +1,6 @@
 #pragma once
 #include "cryptolib/DES.h"
+#include "../utility.hpp"
 
 namespace accelpp::crypto::symmetric {
 
@@ -21,12 +22,12 @@ namespace accelpp::crypto::symmetric {
                 throw Exception::InvalidKey();
         }
 
-        void Encrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_DES_EncryptBlock(srcBytes, ExpandedKey);
+        void Encrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_DES_EncryptBlock(srcBytes.value, ExpandedKey);
         }
 
-        void Decrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_DES_DecryptBlock(srcBytes, ExpandedKey);
+        void Decrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_DES_DecryptBlock(srcBytes.value, ExpandedKey);
         }
 
         DES(const uint8_t (&srcKey)[KeyByteLength]) throw(Exception::InvalidKey) {

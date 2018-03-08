@@ -1,5 +1,6 @@
 #pragma once
 #include "cryptolib/Blowfish.h"
+#include "../utility.hpp"
 
 namespace accelpp::crypto::symmetric {
 
@@ -18,13 +19,13 @@ namespace accelpp::crypto::symmetric {
             CRYPTO_Blowfish_KeyExpansion(srcKey, _KeyLength, SubKey, SBox);
         }
 
-        void Encrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_Blowfish_EncryptBlock(srcBytes, SubKey, SBox, 
+        void Encrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_Blowfish_EncryptBlock(srcBytes.value, SubKey, SBox, 
                                          _UseBigEndian ? CRYPTO_BLOWFISH_BIG_ENDIAN : CRYPTO_BLOWFISH_LITTLE_ENDIAN);
         }
 
-        void Decrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_Blowfish_DecryptBlock(srcBytes, SubKey, SBox,
+        void Decrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_Blowfish_DecryptBlock(srcBytes.value, SubKey, SBox,
                                          _UseBigEndian ? CRYPTO_BLOWFISH_BIG_ENDIAN : CRYPTO_BLOWFISH_LITTLE_ENDIAN);
         }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "cryptolib/XTEA.h"
+#include "../utility.hpp"
 
 namespace accelpp::crypto::symmetric {
 
@@ -18,12 +19,12 @@ namespace accelpp::crypto::symmetric {
             reinterpret_cast<uint64_t*>(Key)[1] = reinterpret_cast<const uint64_t*>(srcKey)[1];
         }
 
-        void Encrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_XTEA_EncryptBlock(srcBytes, Key, _Round);
+        void Encrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_XTEA_EncryptBlock(srcBytes.value, Key, _Round);
         }
 
-        void Decrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_XTEA_DecryptBlock(srcBytes, Key, _Round);
+        void Decrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_XTEA_DecryptBlock(srcBytes.value, Key, _Round);
         }
 
         XTEA(const uint8_t (&srcKey)[16]) {

@@ -2,6 +2,7 @@
 #include "cryptolib/Twofish128.h"
 #include "cryptolib/Twofish192.h"
 #include "cryptolib/Twofish256.h"
+#include "../utility.hpp"
 
 namespace accelpp::crypto::symmetric {
 
@@ -32,32 +33,32 @@ namespace accelpp::crypto::symmetric {
             }
         }
 
-        void Encrypt(uint8_t (&srcBytes)[BlockSize]) const {
+        void Encrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
             switch (_KeyBits) {
                 case 128:
-                    CRYPTO_Twofish128_EncryptBlock(srcBytes, ExpandedKey, S);
+                    CRYPTO_Twofish128_EncryptBlock(srcBytes.value, ExpandedKey, S);
                     break;
                 case 192:
-                    CRYPTO_Twofish192_EncryptBlock(srcBytes, ExpandedKey, S);
+                    CRYPTO_Twofish192_EncryptBlock(srcBytes.value, ExpandedKey, S);
                     break;
                 case 256:
-                    CRYPTO_Twofish256_EncryptBlock(srcBytes, ExpandedKey, S);
+                    CRYPTO_Twofish256_EncryptBlock(srcBytes.value, ExpandedKey, S);
                     break;
                 default:
                     break;  // nothing
             }
         }
 
-        void Decrypt(uint8_t (&srcBytes)[BlockSize]) const {
+        void Decrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
             switch (_KeyBits) {
                 case 128:
-                    CRYPTO_Twofish128_DecryptBlock(srcBytes, ExpandedKey, S);
+                    CRYPTO_Twofish128_DecryptBlock(srcBytes.value, ExpandedKey, S);
                     break;
                 case 192:
-                    CRYPTO_Twofish192_DecryptBlock(srcBytes, ExpandedKey, S);
+                    CRYPTO_Twofish192_DecryptBlock(srcBytes.value, ExpandedKey, S);
                     break;
                 case 256:
-                    CRYPTO_Twofish256_DecryptBlock(srcBytes, ExpandedKey, S);
+                    CRYPTO_Twofish256_DecryptBlock(srcBytes.value, ExpandedKey, S);
                     break;
                 default:
                     break;  // nothing

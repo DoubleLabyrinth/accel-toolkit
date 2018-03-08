@@ -1,5 +1,6 @@
 #pragma once
 #include "cryptolib/RC2.h"
+#include "../utility.hpp"
 
 namespace accelpp::crypto::symmetric {
 
@@ -19,12 +20,12 @@ namespace accelpp::crypto::symmetric {
             CRYPTO_RC2_KeyExpansion(srcKey, _KeyLength, _eftKeyBitLength, ExpandedKey);
         }
 
-        void Encrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_RC2_EncryptBlock(srcBytes, ExpandedKey);
+        void Encrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_RC2_EncryptBlock(srcBytes.value, ExpandedKey);
         }
 
-        void Decrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_RC2_DecryptBlock(srcBytes, ExpandedKey);
+        void Decrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_RC2_DecryptBlock(srcBytes.value, ExpandedKey);
         }
 
         RC2(const uint8_t (&srcKey)[_KeyLength]) {

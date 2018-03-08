@@ -2,10 +2,13 @@
 #include "cryptolib/RC5-16.h"
 #include "cryptolib/RC5-32.h"
 #include "cryptolib/RC5-64.h"
+#include "../utility.hpp"
 
 namespace accelpp::crypto::symmetric {
 
-    // 
+    // _WordBitLength can be 16, 32 and 64.
+    // _KeyLength can vary from 1 to 255
+    // _Round can vary from 0 to 255
     template<size_t _WordBitLength, size_t _KeyLength, size_t _Round>
     class RC5 {
         static_assert(_WordBitLength == 16 || _WordBitLength == 32 || _WordBitLength == 64, "RC5: Not-supported w.");
@@ -54,32 +57,32 @@ namespace accelpp::crypto::symmetric {
             }
         }
 
-        void Encrypt(uint8_t (&srcBytes)[BlockSize]) const {
+        void Encrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
             switch (_WordBitLength) {
                 case 16:
-                    CRYPTO_RC5_16_EncryptBlock(srcBytes, ExpandedKey, _Round);
+                    CRYPTO_RC5_16_EncryptBlock(srcBytes.value, ExpandedKey, _Round);
                     break;
                 case 32:
-                    CRYPTO_RC5_32_EncryptBlock(srcBytes, ExpandedKey, _Round);
+                    CRYPTO_RC5_32_EncryptBlock(srcBytes.value, ExpandedKey, _Round);
                     break;
                 case 64:
-                    CRYPTO_RC5_64_EncryptBlock(srcBytes, ExpandedKey, _Round);
+                    CRYPTO_RC5_64_EncryptBlock(srcBytes.value, ExpandedKey, _Round);
                     break;
                 default:
                     break;  // nothing
             }
         }
 
-        void Decrypt(uint8_t(&srcBytes)[BlockSize]) const {
+        void Decrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
             switch (_WordBitLength) {
                 case 16:
-                    CRYPTO_RC5_16_DecryptBlock(srcBytes, ExpandedKey, _Round);
+                    CRYPTO_RC5_16_DecryptBlock(srcBytes.value, ExpandedKey, _Round);
                     break;
                 case 32:
-                    CRYPTO_RC5_32_DecryptBlock(srcBytes, ExpandedKey, _Round);
+                    CRYPTO_RC5_32_DecryptBlock(srcBytes.value, ExpandedKey, _Round);
                     break;
                 case 64:
-                    CRYPTO_RC5_64_DecryptBlock(srcBytes, ExpandedKey, _Round);
+                    CRYPTO_RC5_64_DecryptBlock(srcBytes.value, ExpandedKey, _Round);
                     break;
                 default:
                     break;  // nothing

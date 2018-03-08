@@ -1,5 +1,6 @@
 #pragma once
 #include "cryptolib/TEA.h"
+#include "../utility.hpp"
 
 namespace accelpp::crypto::symmetric {
 
@@ -16,12 +17,12 @@ namespace accelpp::crypto::symmetric {
             reinterpret_cast<uint64_t*>(Key)[1] = reinterpret_cast<const uint64_t*>(srcKey)[1];
         }
 
-        void Encrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_TEA_EncryptBlock(srcBytes, Key);
+        void Encrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_TEA_EncryptBlock(srcBytes.value, Key);
         }
 
-        void Decrypt(uint8_t (&srcBytes)[BlockSize]) const {
-            CRYPTO_TEA_DecryptBlock(srcBytes, Key);
+        void Decrypt(accelpp::crypto::Block<BlockSize>& srcBytes) const {
+            CRYPTO_TEA_DecryptBlock(srcBytes.value, Key);
         }
 
         TEA(const uint8_t(&srcKey)[16]) {
