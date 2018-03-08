@@ -12,7 +12,6 @@ namespace accelpp::crypto::symmetric {
     public:
 
         static constexpr size_t KeyByteLength = _KeyLength;
-        static constexpr size_t BlockSize = -1;
 
         void SetKey(const uint8_t (&srcKey)[_KeyLength]) {
             CRYPTO_RC4_KeyExpansion(srcKey, _KeyLength, S2);
