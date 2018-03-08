@@ -77,7 +77,7 @@ namespace accelpp::math {
             if (x < static_cast<_Type>(0)) {
                 MATH_SubBorrow(value, length, x_ext, sizeof(x_ext) / sizeof(uintr_t), 0);
             } else {
-                MATH_AddCarry(value, length, x_ext, sizeof(x_ext) / sizeof(uintr_t), 0);
+                MATH_AddAssign(value, length, x_ext, sizeof(x_ext) / sizeof(uintr_t), 0);
             }
         }
 
@@ -91,7 +91,7 @@ namespace accelpp::math {
         struct add_from_uintrs<false, dst_length, src_length> {
             static_assert(dst_length >= src_length, "src buffer is too long.");
             static void impl(uintr_t (&dst)[dst_length], const uintr_t (&src)[src_length]) {
-                MATH_AddCarry(dst, dst_length, src, src_length, 0);
+                MATH_AddAssign(dst, dst_length, src, src_length, 0);
             }
         };
 
@@ -100,7 +100,7 @@ namespace accelpp::math {
             static_assert(dst_length < src_length, "src buffer is too short.");
             [[deprecated("Warning: Truncation detected while adding. If this is an error, please add \"#pragma warning(default: 4996)\" to make it a warning.")]]
             static void impl(uintr_t (&dst)[dst_length], const uintr_t (&src)[src_length]) {
-                MATH_AddCarry(dst, dst_length, src, dst_length, 0);
+                MATH_AddAssign(dst, dst_length, src, dst_length, 0);
             }
         };
 
@@ -116,7 +116,7 @@ namespace accelpp::math {
             uintr_t x_ext[sizeof(x) / sizeof(uintr_t) == 0 ? 1 : sizeof(x) / sizeof(uintr_t)] = { };
             *reinterpret_cast<_Type*>(x_ext) = x < static_cast<_Type>(0) ? -x : x;
             if (x < static_cast<_Type>(0)) {
-                MATH_AddCarry(value, length, x_ext, sizeof(x_ext) / sizeof(uintr_t), 0);
+                MATH_AddAssign(value, length, x_ext, sizeof(x_ext) / sizeof(uintr_t), 0);
             } else {
                 MATH_SubBorrow(value, length, x_ext, sizeof(x_ext) / sizeof(uintr_t), 0);
             }

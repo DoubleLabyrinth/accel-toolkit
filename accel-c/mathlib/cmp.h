@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-    // Compare src1 and src2. 
+    // Compare src1 and src2 which are both unsigned integers. 
     // Return Value:
     //       0 if src1 = src2
     //       1 if src1 > src2
@@ -18,8 +18,8 @@ extern "C" {
     // ASSERT:
     // 1. length1 > 0 
     // 2. length2 > 0
-    inline int8_t MATH_Cmpare(const uintptr_t src1[], size_t length1,
-                              const uintptr_t src2[], size_t length2) {
+    inline int8_t MATH_UnsignedCompare(const uintptr_t src1[], size_t length1,
+                                       const uintptr_t src2[], size_t length2) {
 
         const uintptr_t* cur_src1 = src1 + length1 - 1;
         const uintptr_t* cur_src2 = src2 + length2 - 1;

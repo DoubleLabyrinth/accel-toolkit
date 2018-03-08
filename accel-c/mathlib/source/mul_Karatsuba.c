@@ -21,10 +21,10 @@
 // 1. length is a power of 2.
 // 2. product length = 2 * length
 // 3. product must be cleared.
-void MATH_Mul_Karatsuba(const uintr_t* multiplier,
-                        const uintr_t* multiplicand,
-                        size_t length,
-                        uintr_t* __restrict product) {
+void MATH_UnsignedMultiplyTo_Karatsuba(const uintr_t* multiplier,
+                                       const uintr_t* multiplicand,
+                                       size_t length,
+                                       uintr_t* __restrict product) {
     if (length <= 8) {
         uintr_t temp[2];
         for (size_t i = 0; i < length; ++i) {
@@ -43,14 +43,14 @@ void MATH_Mul_Karatsuba(const uintr_t* multiplier,
         return;
     }
 
-    MATH_Mul_Karatsuba(multiplier,
-                       multiplicand,
-                       length / 2,
-                       product);
-    MATH_Mul_Karatsuba(multiplier + length / 2,
-                       multiplicand + length / 2,
-                       length / 2,
-                       product + length);
+    MATH_UnsignedMultiplyTo_Karatsuba(multiplier,
+                                      multiplicand,
+                                      length / 2,
+                                      product);
+    MATH_UnsignedMultiplyTo_Karatsuba(multiplier + length / 2,
+                                      multiplicand + length / 2,
+                                      length / 2,
+                                      product + length);
 
     uintr_t* buffer = alloca(length * 2 * sizeof(uintr_t));
     memset(buffer, 0, length * 2 * sizeof(uintr_t));
@@ -68,33 +68,33 @@ void MATH_Mul_Karatsuba(const uintr_t* multiplier,
         carry_b = _addcarry_uintr(carry_b, multiplicand[i], addend_ptr[i], sum_ptr + i);
 
     uint8_t carry = 0;
-    MATH_Mul_Karatsuba(buffer,
-                       buffer + length / 2,
-                       length / 2,
-                       buffer + length);
+    MATH_UnsignedMultiplyTo_Karatsuba(buffer,
+                                      buffer + length / 2,
+                                      length / 2,
+                                      buffer + length);
 
     if (carry_a)
-        carry += MATH_AddCarry(buffer + length + length / 2, length / 2,
-                               buffer + length / 2, length / 2,
-                               0);
+        carry += MATH_AddAssign(buffer + length + length / 2, length / 2,
+                                buffer + length / 2, length / 2,
+                                0);
 
     if (carry_b)
-        carry += MATH_AddCarry(buffer + length + length / 2, length / 2,
-                               buffer, length / 2,
-                               0);
+        carry += MATH_AddAssign(buffer + length + length / 2, length / 2,
+                                buffer, length / 2,
+                                0);
 
     if (carry_a && carry_b)
         carry++;
 
-    carry -= MATH_SubBorrow(buffer + length, length,
+    carry -= MATH_SubAssign(buffer + length, length,
                             product, length,
                             0);
-    carry -= MATH_SubBorrow(buffer + length, length,
+    carry -= MATH_SubAssign(buffer + length, length,
                             product + length, length,
                             0);
-    MATH_AddCarry(product + length / 2, length + length / 2,
-                  buffer + length, length,
-                  0);
+    MATH_AddAssign(product + length / 2, length + length / 2,
+                   buffer + length, length,
+                   0);
 
 
     {
