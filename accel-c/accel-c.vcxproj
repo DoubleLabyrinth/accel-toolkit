@@ -187,6 +187,7 @@ xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     <ClInclude Include="mathlib\mul.h" />
     <ClInclude Include="mathlib\powmod.h" />
     <ClInclude Include="mathlib\sub.h" />
+    <ClInclude Include="memorylib\logical.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cryptolib\source\AES128.c" />
