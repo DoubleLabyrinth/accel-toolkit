@@ -187,8 +187,7 @@ xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     <ClInclude Include="mathlib\mul.h" />
     <ClInclude Include="mathlib\powmod.h" />
     <ClInclude Include="mathlib\sub.h" />
-    <ClInclude Include="memorylib\logical.h" />
-    <ClInclude Include="memorylib\reverse.h" />
+    <ClInclude Include="memorylib\memory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cryptolib\source\AES128.c" />
@@ -225,6 +224,7 @@ xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     <ClCompile Include="mathlib\source\div.c" />
     <ClCompile Include="mathlib\source\mul_Karatsuba.c" />
     <ClCompile Include="mathlib\source\powmod.c" />
+    <ClCompile Include="memorylib\source\logical.c" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="mathlib\source\div_asm.asm" />

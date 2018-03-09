@@ -108,10 +108,7 @@
     <ClInclude Include="mathlib\powmod.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="memorylib\logical.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="memorylib\reverse.h">
+    <ClInclude Include="memorylib\memory.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -216,6 +213,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="hashlib\source\MD4_SSE2.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="memorylib\source\logical.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
