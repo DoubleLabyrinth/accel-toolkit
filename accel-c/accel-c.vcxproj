@@ -188,6 +188,7 @@ xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     <ClInclude Include="mathlib\powmod.h" />
     <ClInclude Include="mathlib\sub.h" />
     <ClInclude Include="memorylib\logical.h" />
+    <ClInclude Include="memorylib\reverse.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cryptolib\source\AES128.c" />
@@ -214,6 +215,7 @@ xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     <ClCompile Include="hashlib\source\MD2.c" />
     <ClCompile Include="hashlib\source\MD2_SSE2.c" />
     <ClCompile Include="hashlib\source\MD4.c" />
+    <ClCompile Include="hashlib\source\MD4_SSE2.c" />
     <ClCompile Include="hashlib\source\MD5.c" />
     <ClCompile Include="hashlib\source\SHA1.c" />
     <ClCompile Include="hashlib\source\SHA224.c" />

@@ -18,6 +18,12 @@ extern "C" {
     void HASH_MD4_Final(const void* LeftBytes, size_t LeftBytesLength, uint64_t TotalBytesLength, 
                         uint32_t HashBuffer[4]);
 
+    //-----------------
+    //  SSE2 Enable
+    //-----------------
+
+    void HASH_MD4_Initialize_SSE2(uint32_t HashBuffer[4]);
+
 #if defined(__cplusplus)
 }
 #endif
