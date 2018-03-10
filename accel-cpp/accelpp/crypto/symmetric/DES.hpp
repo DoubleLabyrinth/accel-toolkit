@@ -1,6 +1,6 @@
 #pragma once
 #include "cryptolib/DES.h"
-#include "../utility.hpp"
+#include "../def.hpp"
 
 namespace accelpp::crypto::symmetric {
 

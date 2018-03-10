@@ -72,6 +72,24 @@
     <ClInclude Include="accelpp\crypto\symmetric\Twofish.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="accelpp\crypto\asymmetric\RSA.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\SymmetricCipher.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\def.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\crypto\utility\Counter.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\memory\xor.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="accelpp\memory\reverse.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="accelpp\void.cpp">

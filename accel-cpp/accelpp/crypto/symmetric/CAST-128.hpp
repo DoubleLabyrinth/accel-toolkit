@@ -1,6 +1,6 @@
 #pragma once
 #include "cryptolib/CAST-128.h"
-#include "../utility.hpp"
+#include "../def.hpp"
 
 namespace accelpp::crypto::symmetric {
 

@@ -2,7 +2,7 @@
 #include "cryptolib/AES128.h"
 #include "cryptolib/AES192.h"
 #include "cryptolib/AES256.h"
-#include "../utility.hpp"
+#include "../def.hpp"
 
 namespace accelpp::crypto::symmetric {
 

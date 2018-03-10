@@ -1,6 +1,6 @@
 #pragma once
 #include "cryptolib/XTEA.h"
-#include "../utility.hpp"
+#include "../def.hpp"
 
 namespace accelpp::crypto::symmetric {
 

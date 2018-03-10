@@ -144,6 +144,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="accelpp\crypto\asymmetric\RSA.hpp" />
+    <ClInclude Include="accelpp\crypto\SymmetricCipher.hpp" />
     <ClInclude Include="accelpp\crypto\symmetric\AES.hpp" />
     <ClInclude Include="accelpp\crypto\symmetric\Blowfish.hpp" />
     <ClInclude Include="accelpp\crypto\symmetric\CAST-128.hpp" />
@@ -154,6 +156,8 @@
     <ClInclude Include="accelpp\crypto\symmetric\TEA.hpp" />
     <ClInclude Include="accelpp\crypto\symmetric\Twofish.hpp" />
     <ClInclude Include="accelpp\crypto\symmetric\XTEA.hpp" />
+    <ClInclude Include="accelpp\crypto\def.hpp" />
+    <ClInclude Include="accelpp\crypto\utility\Counter.hpp" />
     <ClInclude Include="accelpp\hash\MD2.hpp" />
     <ClInclude Include="accelpp\hash\MD4.hpp" />
     <ClInclude Include="accelpp\hash\MD5.hpp" />
@@ -163,6 +167,8 @@
     <ClInclude Include="accelpp\hash\SHA384.hpp" />
     <ClInclude Include="accelpp\hash\SHA512.hpp" />
     <ClInclude Include="accelpp\math\uintx_t.hpp" />
+    <ClInclude Include="accelpp\memory\reverse.hpp" />
+    <ClInclude Include="accelpp\memory\xor.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="accelpp\void.cpp" />

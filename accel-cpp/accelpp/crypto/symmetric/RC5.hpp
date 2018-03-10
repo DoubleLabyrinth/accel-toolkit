@@ -2,7 +2,7 @@
 #include "cryptolib/RC5-16.h"
 #include "cryptolib/RC5-32.h"
 #include "cryptolib/RC5-64.h"
-#include "../utility.hpp"
+#include "../def.hpp"
 
 namespace accelpp::crypto::symmetric {
 

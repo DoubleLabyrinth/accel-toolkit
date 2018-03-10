@@ -2,7 +2,7 @@
 #include "cryptolib/Twofish128.h"
 #include "cryptolib/Twofish192.h"
 #include "cryptolib/Twofish256.h"
-#include "../utility.hpp"
+#include "../def.hpp"
 
 namespace accelpp::crypto::symmetric {
 
