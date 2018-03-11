@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <intrin.h>
-#include "../memory/logical.hpp"
+#include "../memory/bitwise.hpp"
 
 namespace accelpp::crypto {
 

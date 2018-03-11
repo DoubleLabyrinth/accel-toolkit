@@ -87,7 +87,7 @@
     <ClInclude Include="accelpp\memory\reverse.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="accelpp\memory\logical.hpp">
+    <ClInclude Include="accelpp\memory\bitwise.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
