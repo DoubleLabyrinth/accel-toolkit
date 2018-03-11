@@ -168,7 +168,7 @@
     <ClInclude Include="accelpp\hash\SHA512.hpp" />
     <ClInclude Include="accelpp\math\uintx_t.hpp" />
     <ClInclude Include="accelpp\memory\reverse.hpp" />
-    <ClInclude Include="accelpp\memory\xor.hpp" />
+    <ClInclude Include="accelpp\memory\logical.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="accelpp\void.cpp" />

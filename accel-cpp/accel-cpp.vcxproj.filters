@@ -84,10 +84,10 @@
     <ClInclude Include="accelpp\crypto\utility\Counter.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="accelpp\memory\xor.hpp">
+    <ClInclude Include="accelpp\memory\reverse.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="accelpp\memory\reverse.hpp">
+    <ClInclude Include="accelpp\memory\logical.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <intrin.h>
-#include "../memory/xor.hpp"
+#include "../memory/logical.hpp"
 
 namespace accelpp::crypto {
 
