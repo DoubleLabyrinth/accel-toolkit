@@ -221,13 +221,20 @@ xcopy $(ProjectDir)mathlib\*.h $(OutDir)include\mathlib\ /I /Y</Command>
     <ClCompile Include="hashlib\source\SHA256.c" />
     <ClCompile Include="hashlib\source\SHA384.c" />
     <ClCompile Include="hashlib\source\SHA512.c" />
+    <ClCompile Include="mathlib\source\add.c" />
+    <ClCompile Include="mathlib\source\cmp.c" />
     <ClCompile Include="mathlib\source\div.c" />
+    <ClCompile Include="mathlib\source\mul.c" />
     <ClCompile Include="mathlib\source\mul_Karatsuba.c" />
     <ClCompile Include="mathlib\source\powmod.c" />
+    <ClCompile Include="mathlib\source\sub.c" />
     <ClCompile Include="memorylib\source\logical.c" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="mathlib\source\div_asm.asm" />
+    <MASM Include="mathlib\source\div_asm.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </MASM>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

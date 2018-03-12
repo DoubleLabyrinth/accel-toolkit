@@ -218,6 +218,18 @@
     <ClCompile Include="memorylib\source\logical.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="mathlib\source\add.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="mathlib\source\sub.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="mathlib\source\mul.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="mathlib\source\cmp.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="mathlib\source\div_asm.asm">
