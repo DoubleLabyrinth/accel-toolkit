@@ -36,3 +36,9 @@ int8_t math_uintx_cmp(const coeff_t src1[], size_t length1,
         return length1 > length2 ? 1 : -1;
     }
 }
+
+int8_t math_uintx_isZero(const coeff_t src[], size_t length) {
+    for (size_t i = 0; i < length; ++i) 
+        if (src[i] != 0) return 0;
+    return 1;
+}
