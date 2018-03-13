@@ -1,7 +1,2 @@
-.vs/
-*.VC.*
-Win32/
-x64/
+*.DS_Store
 
-accel-c/build
-accel-cpp/build
