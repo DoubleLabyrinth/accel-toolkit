@@ -14,8 +14,8 @@
 #define _mulx_coeff _mulx_u32
 #endif
 
-coeff_t math_uintx_muls(coeff_t* multiplier, size_t multiplier_length,
-                        coeff_t multiplicand) {
+coeff_t math_uintx_mul_s(coeff_t* multiplier, size_t multiplier_length,
+                         coeff_t multiplicand) {
     coeff_t temp[2];
     coeff_t carry = 0;
     for (size_t i = 0; i < multiplier_length; ++i) {
@@ -47,9 +47,9 @@ void math_uintx_mul_to(const coeff_t* multiplier, size_t multiplier_length,
     }
 }
 
-void math_uintx_muls_to(const coeff_t* multiplier, size_t multiplier_length,
-                        coeff_t multiplicand,
-                        coeff_t* __restrict product) {
+void math_uintx_mul_s_to(const coeff_t* multiplier, size_t multiplier_length,
+                         coeff_t multiplicand,
+                         coeff_t* __restrict product) {
     coeff_t temp[2];
     coeff_t carry = 0;
     for (size_t i = 0; i < multiplier_length; ++i) {

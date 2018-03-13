@@ -156,7 +156,7 @@ namespace accelpp::math {
                     memcpy(multiplier, product, sizeof(multiplier));
                 } else {
                     if (sizeof(_Type) <= sizeof(coeff_t)) {
-                        math_uintx_muls(multiplier, multiplier_length, x);
+                        math_uintx_mul_s(multiplier, multiplier_length, x);
                     } else {
                         coeff_t x_ext[sizeof(_Type) / sizeof(coeff_t)];
                         *reinterpret_cast<_Type*>(x_ext) = x;
@@ -219,7 +219,7 @@ namespace accelpp::math {
                     memcpy(dividend, quotient, sizeof(dividend));
                 } else {
                     if (sizeof(x) <= sizeof(coeff_t)) {
-                        math_uintx_divs(dividend, dividend_length, static_cast<coeff_t>(x));
+                        math_uintx_div_s(dividend, dividend_length, static_cast<coeff_t>(x));
                     } else {
                         coeff_t x_ext[sizeof(_Type) / sizeof(coeff_t)];
                         *reinterpret_cast<_Type*>(x_ext) = x;
@@ -272,7 +272,7 @@ namespace accelpp::math {
                     math_uintx_divmod(dividend, dividend_length, x_ext, dividend_length, quotient, dividend_length);
                 } else {
                     if (sizeof(x) <= sizeof(coeff_t)) {
-                        coeff_t remainder = math_uintx_divs(dividend, dividend_length, static_cast<coeff_t>(x));
+                        coeff_t remainder = math_uintx_div_s(dividend, dividend_length, static_cast<coeff_t>(x));
                         memset(dividend, 0, sizeof(dividend));
                         dividend[0] = remainder;
                     } else {

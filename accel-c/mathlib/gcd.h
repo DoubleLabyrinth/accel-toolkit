@@ -11,7 +11,7 @@ extern "C" {
 
     // Get the greatest common divisor of a and b
     // The return value is the GCD
-    coeff_t math_uintx_gcds(coeff_t a, coeff_t b);
+    coeff_t math_uintx_gcd_s(coeff_t a, coeff_t b);
 
     // Get the greatest common divisor of a and b
     // The GCD value stores in a when return

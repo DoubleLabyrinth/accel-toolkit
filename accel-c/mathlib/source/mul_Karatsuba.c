@@ -98,7 +98,7 @@ void math_uintx_mul_to_Karatsuba(const coeff_t* multiplier,
                    buffer + length, length,
                    0);
 
-    math_uintx_adds(product + length + length / 2, length / 2, 
-                    0, 
-                    carry);
+    math_uintx_add_s(product + length + length / 2, length / 2, 
+                     0, 
+                     carry);
 }

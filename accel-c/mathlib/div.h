@@ -63,8 +63,8 @@ extern "C" {
     // Equivalent to "dividend /= divisor;"
     // ASSERT:
     // 1. dividend_length > 0
-    coeff_t math_uintx_divs(coeff_t dividend[], size_t dividend_length,
-                            coeff_t divisor);
+    coeff_t math_uintx_div_s(coeff_t dividend[], size_t dividend_length,
+                             coeff_t divisor);
 
     // quotient = dividend / divisor
     // The remainder stores in dividend buffer when function return

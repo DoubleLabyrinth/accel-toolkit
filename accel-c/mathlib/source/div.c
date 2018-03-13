@@ -87,8 +87,8 @@ static inline coeff_t _div_helper_(coeff_t* __restrict dividend,
     return quotient;
 }
 
-coeff_t math_uintx_divs(coeff_t dividend[], size_t dividend_length,
-                        coeff_t divisor) {
+coeff_t math_uintx_div_s(coeff_t dividend[], size_t dividend_length,
+                         coeff_t divisor) {
     coeff_t* cur = dividend + dividend_length - 1;
     coeff_t remainder = *cur % divisor;
     *cur = *cur / divisor;
