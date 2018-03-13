@@ -76,11 +76,12 @@ extern "C" {
                            coeff_t* __restrict quotient, size_t quotient_length);
 
     // dividend %= divisor
+    // The return value is the effective length of modulo.
     // ASSERT:
     // 1. dividend_length > 0 and divisor_length > 0
     // 2. quotient_length >= dividend_length
-    void math_uintx_mod(coeff_t* __restrict dividend, size_t dividend_length,
-                        const coeff_t* __restrict divisor, size_t divisor_length);
+    size_t math_uintx_mod(coeff_t* __restrict dividend, size_t dividend_length,
+                          const coeff_t* __restrict divisor, size_t divisor_length);
 
 #if defined(__cplusplus)
 }

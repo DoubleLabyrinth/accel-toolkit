@@ -136,8 +136,8 @@ void math_uintx_divmod(coeff_t* __restrict dividend, size_t dividend_length,
     }
 }
 
-void math_uintx_mod(coeff_t* __restrict dividend, size_t dividend_length,
-                    const coeff_t* __restrict divisor, size_t divisor_length) {
+size_t math_uintx_mod(coeff_t* __restrict dividend, size_t dividend_length,
+                      const coeff_t* __restrict divisor, size_t divisor_length) {
 
     const coeff_t* cur = dividend + dividend_length - 1;
     while (*cur == 0 && cur != dividend) {
@@ -152,7 +152,7 @@ void math_uintx_mod(coeff_t* __restrict dividend, size_t dividend_length,
     }
 
     if (dividend_length < divisor_length) {
-        return;
+        return dividend_length;
     } else {
         size_t quotient_expect_eft_length = dividend_length - divisor_length + 1;
         coeff_t* cur_dividend = dividend + (dividend_length - divisor_length);
@@ -162,5 +162,12 @@ void math_uintx_mod(coeff_t* __restrict dividend, size_t dividend_length,
             --cur_dividend;
             remainder_highest = cur_dividend[divisor_length];
         }
+
+        cur_dividend += divisor_length;
+        while (remainder_highest == 0 && cur_dividend != dividend) {
+            --cur_dividend;
+            remainder_highest = *cur_dividend;
+        }
+        return (cur_dividend - dividend) + 1;
     }
 }
