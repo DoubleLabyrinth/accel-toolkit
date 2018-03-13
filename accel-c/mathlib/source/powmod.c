@@ -7,12 +7,32 @@
 #if defined(_M_X64)
 #define _bittest_coeff _bittest64
 #define _bittestandreset_coeff _bittestandreset64
+#define _mulx_coeff _mulx_u64
 #elif defined(_M_IX86)
 #define _bittest_coeff _bittest
 #define _bittestandreset_coeff _bittestandreset
+#define _mulx_coeff _mulx_u32
 #else
 #error "No matched architecture found."
 #endif
+
+coeff_t math_uintx_powmod_s(coeff_t Base, coeff_t Exponent, coeff_t Modulus) {
+    coeff_t ret = 1 % Modulus;
+    coeff_t temp[2];
+
+    Base %= Modulus;
+    while (Exponent) {
+        if (Exponent % 2 == 1) {
+            temp[0] = _mulx_coeff(ret, Base, temp + 1);
+            ret = math_uintx_mod_asm(temp[0], temp[1], Modulus);
+        }
+        Exponent /= 2;
+        temp[0] = _mulx_coeff(Base, Base, temp + 1);
+        Base = math_uintx_mod_asm(temp[0], temp[1], Modulus);
+    }
+
+    return ret;
+}
 
 // ASSERT:
 // 1. Base and Modulus have the same length, specified by Length
