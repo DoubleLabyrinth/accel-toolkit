@@ -20,6 +20,14 @@ extern "C" {
     int8_t math_uintx_cmp(const coeff_t src1[], size_t length1,
                           const coeff_t src2[], size_t length2);
 
+    // Check if src is zero. 
+    // Return Value:
+    //       0 if src is not zero
+    //       1 if src is zero
+    // ASSERT:
+    // 1. length > 0 
+    int8_t math_uintx_isZero(const coeff_t src[], size_t length);
+
 #if defined(__cplusplus)
 }
 #endif
