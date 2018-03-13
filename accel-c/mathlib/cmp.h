@@ -28,6 +28,11 @@ extern "C" {
     // 1. length > 0 
     int8_t math_uintx_isZero(const coeff_t src[], size_t length);
 
+    // Get the bit length of src. 
+    // ASSERT:
+    // 1. length > 0 
+    size_t math_uintx_bit_length(const coeff_t src[], size_t length);
+
 #if defined(__cplusplus)
 }
 #endif
