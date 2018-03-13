@@ -2,6 +2,7 @@
 #include "../mul.h"
 #include "../div.h"
 #include <memory.h>
+#include <malloc.h>
 
 #if defined(_M_X64)
 #define _bittest_coeff _bittest64
@@ -24,7 +25,7 @@ void math_uintx_powmod(coeff_t* __restrict Base, size_t Length,
     // |________|________|________|________|________|________|________|________|
     // |  ret   |        |  ret * Base % c |   Base |        | Base * Base % c |
     // |  ret   |        |   ret_second    |  _Base |        |   _Base_second  |
-    coeff_t* ret = _alloca(Length * 8 * sizeof(coeff_t));
+    coeff_t* ret = alloca(Length * 8 * sizeof(coeff_t));
     memset(ret, 0, Length * sizeof(coeff_t));
     *ret = 1;
 
