@@ -30,16 +30,17 @@ static inline coeff_t _div_helper_(coeff_t* __restrict dividend,
                                    const coeff_t* __restrict divisor,
                                    size_t eft_length, int diff1) {
     if (eft_length == 1) {
+        coeff_t quotient;
         if (diff1) {
-            coeff_t quotient = math_uintx_divmod_asm(dividend[0], dividend[1],
-                                                     divisor[0],
-                                                     dividend);
+            quotient = math_uintx_divmod_asm(dividend[0], dividend[1],
+                                             divisor[0],
+                                             dividend);
             dividend[1] = 0;
-            return quotient;
         } else {
+            quotient = *dividend / *divisor;
             *dividend = *dividend % *divisor;
-            return *dividend / *divisor;
         }
+        return quotient;
     }
 
     unsigned long shift;
