@@ -23,9 +23,9 @@ uint8_t math_uintx_add(coeff_t* __restrict summand, size_t summand_length,
     return carry;
 }
 
-uint8_t math_uintx_adds(coeff_t* summand, size_t summand_length,
-                        coeff_t addend,
-                        uint8_t carry) {
+uint8_t math_uintx_add_s(coeff_t* summand, size_t summand_length,
+                         coeff_t addend,
+                         uint8_t carry) {
     carry = _addcarry_coeff(carry, *summand, addend, summand);
     for (size_t i = 1; carry != 0 && i < summand_length; ++i)
         carry = _addcarry_coeff(carry, summand[i], 0, summand + i);
@@ -47,10 +47,10 @@ uint8_t math_uintx_add_to(const coeff_t* summand, size_t summand_length,
     return carry;
 }
 
-uint8_t math_uintx_adds_to(const coeff_t* summand, size_t summand_length,
-                           coeff_t addend,
-                           uint8_t carry,
-                           coeff_t* __restrict sum) {
+uint8_t math_uintx_add_s_to(const coeff_t* summand, size_t summand_length,
+                            coeff_t addend,
+                            uint8_t carry,
+                            coeff_t* __restrict sum) {
 
     carry = _addcarry_coeff(carry, *summand, addend, sum);
 

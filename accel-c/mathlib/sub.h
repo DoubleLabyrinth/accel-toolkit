@@ -16,9 +16,9 @@ extern "C" {
     // Equivalent to "minuend -= (subtrahend + borrow);"
     // ASSERT:
     // 1. minuend_length > 0
-    uint8_t math_uintx_subs(coeff_t* __restrict minuend, size_t minuend_length,
-                            coeff_t subtrahend,
-                            uint8_t borrow);
+    uint8_t math_uintx_sub_s(coeff_t* __restrict minuend, size_t minuend_length,
+                             coeff_t subtrahend,
+                             uint8_t borrow);
 
     // Equivalent to "diff = minuend - (subtrahend + borrow);"
     // ASSERT:
@@ -34,10 +34,10 @@ extern "C" {
     // ASSERT:
     // 1. minuend_length > 0
     // 3. diff length >= minuend_length
-    uint8_t math_uintx_subs_to(const coeff_t* minuend, size_t minuend_length,
-                               coeff_t subtrahend,
-                               uint8_t borrow,
-                               coeff_t* __restrict diff);
+    uint8_t math_uintx_sub_s_to(const coeff_t* minuend, size_t minuend_length,
+                                coeff_t subtrahend,
+                                uint8_t borrow,
+                                coeff_t* __restrict diff);
 
 #if defined(__cplusplus)
 }
