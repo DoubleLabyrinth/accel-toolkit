@@ -17,8 +17,8 @@ extern "C" {
     // ASSERT:
     // 1. length1 > 0 
     // 2. length2 > 0
-    int8_t math_uintx_cmp(const uintptr_t src1[], size_t length1,
-                          const uintptr_t src2[], size_t length2);
+    int8_t math_uintx_cmp(const coeff_t src1[], size_t length1,
+                          const coeff_t src2[], size_t length2);
 
 #if defined(__cplusplus)
 }

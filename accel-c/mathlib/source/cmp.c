@@ -4,12 +4,12 @@
 *********************************************************************/
 #include "../cmp.h"
 
-int8_t math_uintx_cmp(const uintptr_t src1[], size_t length1,
-                      const uintptr_t src2[], size_t length2) {
+int8_t math_uintx_cmp(const coeff_t src1[], size_t length1,
+                      const coeff_t src2[], size_t length2) {
 
-    const uintptr_t* cur_src1 = src1 + length1 - 1;
-    const uintptr_t* cur_src2 = src2 + length2 - 1;
-    const uintptr_t* const rlast_src1 = src1 - 1;
+    const coeff_t* cur_src1 = src1 + length1 - 1;
+    const coeff_t* cur_src2 = src2 + length2 - 1;
+    const coeff_t* const rlast_src1 = src1 - 1;
 
     while (*cur_src1 == 0 && cur_src1 != src1) {
         --length1;
