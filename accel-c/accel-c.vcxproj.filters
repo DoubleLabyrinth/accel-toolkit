@@ -111,6 +111,9 @@
     <ClInclude Include="memorylib\memory.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="mathlib\gcd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cryptolib\source\AES128.c">
@@ -228,6 +231,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="mathlib\source\cmp.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="mathlib\source\gcd.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
