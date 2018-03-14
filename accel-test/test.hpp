@@ -13,6 +13,9 @@ namespace accel::test {
     bool SHA384_CorrectnessTest();
     bool SHA512_CorrectnessTest();
 
+    bool Karatsuba_Test();
+    bool powmod_Test();
+
     inline void RunAllTest() {
         if (accel::test::MD2_CorrectnessTest())
             _tprintf_s(TEXT("MD2 passed.\n"));
@@ -53,6 +56,16 @@ namespace accel::test {
             _tprintf_s(TEXT("SHA512 passed.\n"));
         else
             _tprintf_s(TEXT("SHA512 failed.\n"));
+
+        if(accel::test::Karatsuba_Test())
+            _tprintf_s(TEXT("Karatsuba multiplication passed.\n"));
+        else
+            _tprintf_s(TEXT("Karatsuba multiplication failed.\n"));
+
+        if (accel::test::powmod_Test())
+            _tprintf_s(TEXT("powmod passed.\n"));
+        else
+            _tprintf_s(TEXT("powmod failed.\n"));
     }
 
 }
