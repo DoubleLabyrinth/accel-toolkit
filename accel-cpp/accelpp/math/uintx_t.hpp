@@ -149,7 +149,7 @@ namespace accelpp::math {
                              typename std::enable_if<std::is_integral<_Type>::value, _Type>::type x) {
                 if (x < static_cast<_Type>(0)) {
                     coeff_t x_ext[multiplier_length];
-                    coeff_t product[2 * multiplier_length] = { };
+                    coeff_t product[2 * multiplier_length];
                     *reinterpret_cast<_Type*>(x_ext) = x;
                     memset(reinterpret_cast<_Type*>(x_ext) + 1, -1, sizeof(x_ext) - sizeof(_Type));
                     math_uintx_mul_to_Karatsuba(multiplier, x_ext, multiplier_length, product);
@@ -177,7 +177,7 @@ namespace accelpp::math {
 
             template<>
             static void _impl<false>(coeff_t (&multiplier)[multiplier_length], const coeff_t (&multiplicand)[multiplicand_length]) {
-                coeff_t product[2 * multiplier_length] = { };
+                coeff_t product[2 * multiplier_length];
 
                 if (multiplier_length == multiplicand_length) {
                     math_uintx_mul_to_Karatsuba(multiplier, multiplicand, multiplier_length, product);
@@ -194,7 +194,7 @@ namespace accelpp::math {
             template<>
             [[deprecated("Warning: Truncation detected while multiplying. If this is an error, please add \"#pragma warning(default: 4996)\" to make it a warning.")]]
             static void _impl<true>(coeff_t (&multiplier)[multiplier_length], const coeff_t (&multiplicand)[multiplicand_length]) {
-                coeff_t product[2 * multiplier_length] = { };
+                coeff_t product[2 * multiplier_length];
                 math_uintx_mul_to_Karatsuba(multiplier, multiplicand, multiplier_length, product);
                 memcpy(multiplier, product, sizeof(multiplier));
             }
