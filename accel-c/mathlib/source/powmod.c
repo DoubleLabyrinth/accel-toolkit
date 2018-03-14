@@ -50,12 +50,11 @@ void math_uintx_powmod(coeff_t* __restrict Base, size_t Length,
     *ret = 1;
 
     coeff_t* ret_second = ret + 2 * Length;
-    memset(ret_second, 0, Length * 2 * sizeof(coeff_t));
 
     coeff_t* _Base = ret + 4 * Length;
-    coeff_t* _Base_second = ret + 6 * Length;
     memcpy(_Base, Base, Length * sizeof(coeff_t));
-    memset(_Base_second, 0, Length * 2 * sizeof(coeff_t));
+
+    coeff_t* _Base_second = ret + 6 * Length;
 
     const coeff_t* pExponent_highest = Exponent + ExponentLength - 1;
     while (*pExponent_highest == 0 && pExponent_highest != Exponent)
@@ -71,14 +70,14 @@ void math_uintx_powmod(coeff_t* __restrict Base, size_t Length,
             if (_bittest_coeff(cur, bp)) {
                 math_uintx_mul_to_Karatsuba(ret, _Base, Length, ret_second);
                 math_uintx_mod(ret_second, 2 * Length, Modulus, Length);
-                memset(ret, 0, Length * 2 * sizeof(coeff_t));
+
                 coeff_t* temp = ret;
                 ret = ret_second;
                 ret_second = temp;
             }
             math_uintx_mul_to_Karatsuba(_Base, _Base, Length, _Base_second);
             math_uintx_mod(_Base_second, 2 * Length, Modulus, Length);
-            memset(_Base, 0, Length * 2 * sizeof(coeff_t));
+
             coeff_t* temp = _Base;
             _Base = _Base_second;
             _Base_second = temp;
@@ -96,14 +95,14 @@ void math_uintx_powmod(coeff_t* __restrict Base, size_t Length,
         if (_bittestandreset_coeff(&Exponent_highest, bp)) {
             math_uintx_mul_to_Karatsuba(ret, _Base, Length, ret_second);
             math_uintx_mod(ret_second, 2 * Length, Modulus, Length);
-            memset(ret, 0, Length * 2 * sizeof(coeff_t));
+            
             coeff_t* temp = ret;
             ret = ret_second;
             ret_second = temp;
         }
         math_uintx_mul_to_Karatsuba(_Base, _Base, Length, _Base_second);
         math_uintx_mod(_Base_second, 2 * Length, Modulus, Length);
-        memset(_Base, 0, Length * 2 * sizeof(coeff_t));
+        
         coeff_t* temp = _Base;
         _Base = _Base_second;
         _Base_second = temp;
