@@ -16,18 +16,22 @@
 #define _mulx_coeff _mulx_u32
 #endif
 
+#define KARATSUBA_MUL_CUT_LENGTH 8
+
 // Equivalent to "product = multiplier * multiplicand;"
 // Karatsuba multiplication,  time complexity O(n ^ log_2(3)) ~= O(n ^ 1.585)
 // Parameter 'length' is the length of both multiplier and multiplicand
 // ASSERT:
 // 1. length is a power of 2.
 // 2. product length = 2 * length
-// 3. product must be cleared.
 void math_uintx_mul_to_Karatsuba(const coeff_t* multiplier,
                                  const coeff_t* multiplicand,
                                  size_t length,
                                  coeff_t* __restrict product) {
-    if (length <= 8) {
+    if (length <= KARATSUBA_MUL_CUT_LENGTH) {
+        if (length == KARATSUBA_MUL_CUT_LENGTH)
+            memset(product, 0, 2 * KARATSUBA_MUL_CUT_LENGTH * sizeof(coeff_t));
+
         coeff_t temp[2];
         for (size_t i = 0; i < length; ++i) {
             for (size_t j = 0; j < length; ++j) {
