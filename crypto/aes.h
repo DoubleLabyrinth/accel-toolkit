@@ -13,10 +13,10 @@ extern "C" {
 
     typedef struct _AES_KEY {
         union {
-            uint8_t bytes[240];
-            uint16_t blocks_u16[120];
-            uint32_t blocks_u32[60];
-            uint64_t blocks_u64[30];
+            uint8_t byte[240];
+            uint16_t word[120];
+            uint32_t dword[60];
+            uint64_t qword[30];
         };
 
     } AES_KEY;

@@ -20,8 +20,8 @@ extern const uint8_t accelc_aes_GF2p8_Mul_0x0E[256];
 
 void accelc_AES128_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
 
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[0];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[1];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[0];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 
     uint8_t ShiftTemp = 0;
     for (int i = 1; i < 10; ++i) {
@@ -54,8 +54,8 @@ void accelc_AES128_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
             srcBytes[j + 3] = (uint8_t)(accelc_aes_GF2p8_Mul_0x03[temp[0]] ^ temp[1] ^ temp[2] ^ accelc_aes_GF2p8_Mul_0x02[temp[3]]);
         }
 
-        ((uint64_t*)(srcBytes))[0] ^= srcKey->blocks_u64[i * 2];
-        ((uint64_t*)(srcBytes))[1] ^= srcKey->blocks_u64[i * 2 + 1];
+        ((uint64_t*)(srcBytes))[0] ^= srcKey->qword[i * 2];
+        ((uint64_t*)(srcBytes))[1] ^= srcKey->qword[i * 2 + 1];
     }
 
     for (int j = 0; j < 16; ++j)
@@ -75,13 +75,13 @@ void accelc_AES128_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     Swap(srcBytes[11], srcBytes[7], ShiftTemp)
     //Shift rows ends;
 
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[20];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[21];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[20];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[21];
 }
 
 void accelc_AES128_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[20];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[21];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[20];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[21];
 
     uint8_t ShiftTemp = 0;
 
@@ -102,8 +102,8 @@ void accelc_AES128_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
         for (int j = 0; j < 16; ++j)
             srcBytes[j] = accelc_aes_InverseSBox[srcBytes[j]];
 
-        ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[i * 2];
-        ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[i * 2 + 1];
+        ((uint64_t*)srcBytes)[0] ^= srcKey->qword[i * 2];
+        ((uint64_t*)srcBytes)[1] ^= srcKey->qword[i * 2 + 1];
 
         for (int j = 0; j < 16; j += 4) {
             uint8_t temp[4];
@@ -131,16 +131,16 @@ void accelc_AES128_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     for (int j = 0; j < 16; ++j)
         srcBytes[j] = accelc_aes_InverseSBox[srcBytes[j]];
 
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[0];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[1];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[0];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 }
 
 void accelc_AES128_set_key(const uint8_t srcUserKey[16], AES_KEY* dstKey) {
-    dstKey->blocks_u64[0] = ((const uint64_t*)srcUserKey)[0];
-    dstKey->blocks_u64[1] = ((const uint64_t*)srcUserKey)[1];
+    dstKey->qword[0] = ((const uint64_t*)srcUserKey)[0];
+    dstKey->qword[1] = ((const uint64_t*)srcUserKey)[1];
 
     for (int i = 4; i < 44; ++i) {
-        uint32_t temp = dstKey->blocks_u32[i - 1];
+        uint32_t temp = dstKey->dword[i - 1];
         if (i % 4 == 0) {
             temp = _rotr(temp, 8);
             ((uint8_t*)&temp)[0] = accelc_aes_SBox[((uint8_t*)&temp)[0]];
@@ -149,15 +149,15 @@ void accelc_AES128_set_key(const uint8_t srcUserKey[16], AES_KEY* dstKey) {
             ((uint8_t*)&temp)[3] = accelc_aes_SBox[((uint8_t*)&temp)[3]];
             temp ^= accelc_aes_rcon[i / 4];
         }
-        dstKey->blocks_u32[i] = dstKey->blocks_u32[i - 4] ^ temp;
+        dstKey->dword[i] = dstKey->dword[i - 4] ^ temp;
     }
 }
 
 
 
 void accelc_AES192_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[0];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[1];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[0];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 
     uint8_t ShiftTemp = 0;
     for (int i = 1; i < 12; ++i) {
@@ -189,8 +189,8 @@ void accelc_AES192_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
             srcBytes[j + 3] = (uint8_t)(accelc_aes_GF2p8_Mul_0x03[temp[0]] ^ temp[1] ^ temp[2] ^ accelc_aes_GF2p8_Mul_0x02[temp[3]]);
         }
 
-        ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[i * 2];
-        ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[i * 2 + 1];
+        ((uint64_t*)srcBytes)[0] ^= srcKey->qword[i * 2];
+        ((uint64_t*)srcBytes)[1] ^= srcKey->qword[i * 2 + 1];
     }
 
     for (int j = 0; j < 16; ++j)
@@ -210,13 +210,13 @@ void accelc_AES192_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     Swap(srcBytes[11], srcBytes[7], ShiftTemp)
     //Shift rows ends;
 
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[24];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[25];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[24];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[25];
 }
 
 void accelc_AES192_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[24];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[25];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[24];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[25];
 
     uint8_t ShiftTemp = 0;
 
@@ -237,8 +237,8 @@ void accelc_AES192_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
         for (int j = 0; j < 16; ++j)
             srcBytes[j] = accelc_aes_InverseSBox[srcBytes[j]];
 
-        ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[i * 2];
-        ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[i * 2 + 1];
+        ((uint64_t*)srcBytes)[0] ^= srcKey->qword[i * 2];
+        ((uint64_t*)srcBytes)[1] ^= srcKey->qword[i * 2 + 1];
 
         for (int j = 0; j < 16; j += 4) {
             uint8_t temp[4];
@@ -266,17 +266,17 @@ void accelc_AES192_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     for (uint8_t j = 0; j < 16; ++j)
         srcBytes[j] = accelc_aes_InverseSBox[srcBytes[j]];
 
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[0];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[1];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[0];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 }
 
 void accelc_AES192_set_key(const uint8_t srcUserKey[24], AES_KEY* dstKey) {
-    dstKey->blocks_u64[0] = ((const uint64_t*)srcUserKey)[0];
-    dstKey->blocks_u64[1] = ((const uint64_t*)srcUserKey)[1];
-    dstKey->blocks_u64[2] = ((const uint64_t*)srcUserKey)[2];
+    dstKey->qword[0] = ((const uint64_t*)srcUserKey)[0];
+    dstKey->qword[1] = ((const uint64_t*)srcUserKey)[1];
+    dstKey->qword[2] = ((const uint64_t*)srcUserKey)[2];
 
     for (int i = 6; i < 52; ++i) {
-        uint32_t temp = dstKey->blocks_u32[i - 1];
+        uint32_t temp = dstKey->dword[i - 1];
         if (i % 6 == 0) {
             temp = _rotr(temp, 8);
             ((uint8_t*)&temp)[0] = accelc_aes_SBox[((uint8_t*)&temp)[0]];
@@ -285,15 +285,15 @@ void accelc_AES192_set_key(const uint8_t srcUserKey[24], AES_KEY* dstKey) {
             ((uint8_t*)&temp)[3] = accelc_aes_SBox[((uint8_t*)&temp)[3]];
             temp ^= accelc_aes_rcon[i / 6];
         }
-        dstKey->blocks_u32[i] = dstKey->blocks_u32[i - 6] ^ temp;
+        dstKey->dword[i] = dstKey->dword[i - 6] ^ temp;
     }
 }
 
 
 
 void accelc_AES256_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[0];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[1];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[0];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 
     uint8_t ShiftTemp = 0;
     for (int i = 1; i < 14; ++i) {
@@ -325,8 +325,8 @@ void accelc_AES256_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
             srcBytes[j + 3] = (uint8_t)(accelc_aes_GF2p8_Mul_0x03[temp[0]] ^ temp[1] ^ temp[2] ^ accelc_aes_GF2p8_Mul_0x02[temp[3]]);
         }
 
-        ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[i * 2];
-        ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[i * 2 + 1];
+        ((uint64_t*)srcBytes)[0] ^= srcKey->qword[i * 2];
+        ((uint64_t*)srcBytes)[1] ^= srcKey->qword[i * 2 + 1];
     }
 
     for (int j = 0; j < 16; ++j)
@@ -346,13 +346,13 @@ void accelc_AES256_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     Swap(srcBytes[11], srcBytes[7], ShiftTemp)
     //Shift rows ends;
 
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[28];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[29];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[28];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[29];
 }
 
 void accelc_AES256_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[28];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[29];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[28];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[29];
 
     uint8_t ShiftTemp = 0;
     for (int i = 13; i > 0; --i) {
@@ -372,8 +372,8 @@ void accelc_AES256_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
         for (int j = 0; j < 16; ++j)
             srcBytes[j] = accelc_aes_InverseSBox[srcBytes[j]];
 
-        ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[i * 2];
-        ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[i * 2 + 1];
+        ((uint64_t*)srcBytes)[0] ^= srcKey->qword[i * 2];
+        ((uint64_t*)srcBytes)[1] ^= srcKey->qword[i * 2 + 1];
 
         for (int j = 0; j < 16; j += 4) {
             uint8_t temp[4];
@@ -402,18 +402,18 @@ void accelc_AES256_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     for (int j = 0; j < 16; ++j)
         srcBytes[j] = accelc_aes_InverseSBox[srcBytes[j]];
 
-    ((uint64_t*)srcBytes)[0] ^= srcKey->blocks_u64[0];
-    ((uint64_t*)srcBytes)[1] ^= srcKey->blocks_u64[1];
+    ((uint64_t*)srcBytes)[0] ^= srcKey->qword[0];
+    ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 }
 
 void accelc_AES256_set_key(const uint8_t srcUserKey[32], AES_KEY* dstKey) {
-    dstKey->blocks_u64[0] = ((const uint64_t*)srcUserKey)[0];
-    dstKey->blocks_u64[1] = ((const uint64_t*)srcUserKey)[1];
-    dstKey->blocks_u64[2] = ((const uint64_t*)srcUserKey)[2];
-    dstKey->blocks_u64[3] = ((const uint64_t*)srcUserKey)[3];
+    dstKey->qword[0] = ((const uint64_t*)srcUserKey)[0];
+    dstKey->qword[1] = ((const uint64_t*)srcUserKey)[1];
+    dstKey->qword[2] = ((const uint64_t*)srcUserKey)[2];
+    dstKey->qword[3] = ((const uint64_t*)srcUserKey)[3];
 
     for (int i = 8; i < 60; ++i) {
-        uint32_t temp = dstKey->blocks_u32[i - 1];
+        uint32_t temp = dstKey->dword[i - 1];
         if (i % 8 == 0) {
             temp = _rotr(temp, 8);
             ((uint8_t*)&temp)[0] = accelc_aes_SBox[((uint8_t*)&temp)[0]];
@@ -428,6 +428,6 @@ void accelc_AES256_set_key(const uint8_t srcUserKey[32], AES_KEY* dstKey) {
             ((uint8_t*)&temp)[2] = accelc_aes_SBox[((uint8_t*)&temp)[2]];
             ((uint8_t*)&temp)[3] = accelc_aes_SBox[((uint8_t*)&temp)[3]];
         }
-        dstKey->blocks_u32[i] = dstKey->blocks_u32[i - 8] ^ temp;
+        dstKey->dword[i] = dstKey->dword[i - 8] ^ temp;
     }
 }

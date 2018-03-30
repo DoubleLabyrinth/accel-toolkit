@@ -48,7 +48,7 @@ int accelc_Base16_Check_avx2(const char* src, size_t len) {
     size_t blocks_len = len / sizeof(__m256i);
 
     for (size_t i = 0; i < blocks_len; ++i) {
-        __m256i temp = _mm_lddqu_si128(blocks + i);
+        __m256i temp = _mm256_lddqu_si256(blocks + i);
 
         __m256i probe = _mm256_or_si256(_mm256_cmpgt_epi8(temp, _mm256_set1_epi8('F')),
                                         _mm256_cmpgt_epi8(_mm256_set1_epi8('0'), temp));
