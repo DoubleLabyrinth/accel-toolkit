@@ -1,6 +1,11 @@
 #include "../blowfish.h"
-#include <x86intrin.h>
 #include <memory.h>
+
+#ifdef _MSC_VER
+#include <intrin.h>
+#elif defined(__GNUC__)
+#include <x86intrin.h>
+#endif
 
 const uint32_t accelc_Blowfish_Original_PBox[18] = {
     0x243F6A88, 0x85A308D3, 0x13198A2E, 0x03707344, 0xA4093822, 0x299F31D0,

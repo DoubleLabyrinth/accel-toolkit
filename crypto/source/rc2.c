@@ -2,11 +2,18 @@
 * Filename:   RC2.c
 * Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
 *********************************************************************/
-#include "../RC2.h"
-#include <intrin.h>
+#include "../rc2.h"
 #include <memory.h>
 
-const uint8_t CRYPTO_RC2_Pi_Table[256] = {
+#ifdef _MSC_VER
+#include <intrin.h>
+#elif defined(__GNUC__)
+#include <x86intrin.h>
+#define _rotl16 _rotwl
+#define _rotr16 _rotwr
+#endif
+
+const uint8_t accelc_RC2_PI_Table[256] = {
     0xD9, 0x78, 0xF9, 0xC4, 0x19, 0xDD, 0xB5, 0xED, 0x28, 0xE9, 0xFD, 0x79, 0x4A, 0xA0, 0xD8, 0x9D,
     0xC6, 0x7E, 0x37, 0x83, 0x2B, 0x76, 0x53, 0x8E, 0x62, 0x4C, 0x64, 0x88, 0x44, 0x8B, 0xFB, 0xA2,
     0x17, 0x9A, 0x59, 0xF5, 0x87, 0xB3, 0x4F, 0x13, 0x61, 0x45, 0x6D, 0x8D, 0x09, 0x81, 0x7D, 0x32,
@@ -25,170 +32,170 @@ const uint8_t CRYPTO_RC2_Pi_Table[256] = {
     0xC5, 0xF3, 0xDB, 0x47, 0xE5, 0xA5, 0x9C, 0x77, 0x0A, 0xA6, 0x20, 0x68, 0xFE, 0x7F, 0xC1, 0xAD
 };
 
-void CRYPTO_RC2_EncryptBlock(uint8_t srcBytes[8], const uint16_t srcExpandedKey[64]) {
+void accelc_RC2_encrypt(uint8_t srcBytes[RC2_BLOCK_SIZE], const RC2_KEY* srcKey) {
     uint16_t* const R = (uint16_t*)srcBytes;
     unsigned int j = 0;
 
     for (int i = 0; i < 5; ++i) {
-        R[0] += srcExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
+        R[0] += srcKey->ExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
         ++j;
         R[0] = _rotl16(R[0], 1);
 
-        R[1] += srcExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
+        R[1] += srcKey->ExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
         ++j;
         R[1] = _rotl16(R[1], 2);
 
-        R[2] += srcExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
+        R[2] += srcKey->ExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
         ++j;
         R[2] = _rotl16(R[2], 3);
 
-        R[3] += srcExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
+        R[3] += srcKey->ExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
         ++j;
         R[3] = _rotl16(R[3], 5);
     }
 
-    R[0] += srcExpandedKey[R[3] & 63];
-    R[1] += srcExpandedKey[R[0] & 63];
-    R[2] += srcExpandedKey[R[1] & 63];
-    R[3] += srcExpandedKey[R[2] & 63];
+    R[0] += srcKey->ExpandedKey[R[3] & 63];
+    R[1] += srcKey->ExpandedKey[R[0] & 63];
+    R[2] += srcKey->ExpandedKey[R[1] & 63];
+    R[3] += srcKey->ExpandedKey[R[2] & 63];
 
     for (int i = 0; i < 6; ++i) {
-        R[0] += srcExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
+        R[0] += srcKey->ExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
         ++j;
         R[0] = _rotl16(R[0], 1);
 
-        R[1] += srcExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
+        R[1] += srcKey->ExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
         ++j;
         R[1] = _rotl16(R[1], 2);
 
-        R[2] += srcExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
+        R[2] += srcKey->ExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
         ++j;
         R[2] = _rotl16(R[2], 3);
 
-        R[3] += srcExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
+        R[3] += srcKey->ExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
         ++j;
         R[3] = _rotl16(R[3], 5);
     }
 
-    R[0] += srcExpandedKey[R[3] & 63];
-    R[1] += srcExpandedKey[R[0] & 63];
-    R[2] += srcExpandedKey[R[1] & 63];
-    R[3] += srcExpandedKey[R[2] & 63];
+    R[0] += srcKey->ExpandedKey[R[3] & 63];
+    R[1] += srcKey->ExpandedKey[R[0] & 63];
+    R[2] += srcKey->ExpandedKey[R[1] & 63];
+    R[3] += srcKey->ExpandedKey[R[2] & 63];
 
     for (int i = 0; i < 5; ++i) {
-        R[0] += srcExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
+        R[0] += srcKey->ExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
         ++j;
         R[0] = _rotl16(R[0], 1);
 
-        R[1] += srcExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
+        R[1] += srcKey->ExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
         ++j;
         R[1] = _rotl16(R[1], 2);
 
-        R[2] += srcExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
+        R[2] += srcKey->ExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
         ++j;
         R[2] = _rotl16(R[2], 3);
 
-        R[3] += srcExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
+        R[3] += srcKey->ExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
         ++j;
         R[3] = _rotl16(R[3], 5);
     }
 }
 
-void CRYPTO_RC2_DecryptBlock(uint8_t srcBytes[8], const uint16_t srcExpandedKey[64]) {
+void accelc_RC2_decrypt(uint8_t srcBytes[RC2_BLOCK_SIZE], const RC2_KEY* srcKey) {
     uint16_t* const R = (uint16_t*)srcBytes;
     uint32_t j = 63;
 
     for (int i = 4; i >= 0; --i) {
         R[3] = _rotr16(R[3], 5);
-        R[3] -= srcExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
+        R[3] -= srcKey->ExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
         --j;
 
         R[2] = _rotr16(R[2], 3);
-        R[2] -= srcExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
+        R[2] -= srcKey->ExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
         --j;
 
         R[1] = _rotr16(R[1], 2);
-        R[1] -= srcExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
+        R[1] -= srcKey->ExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
         --j;
 
         R[0] = _rotr16(R[0], 1);
-        R[0] -= srcExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
+        R[0] -= srcKey->ExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
         --j;
     }
 
-    R[3] -= srcExpandedKey[R[2] & 63];
-    R[2] -= srcExpandedKey[R[1] & 63];
-    R[1] -= srcExpandedKey[R[0] & 63];
-    R[0] -= srcExpandedKey[R[3] & 63];
+    R[3] -= srcKey->ExpandedKey[R[2] & 63];
+    R[2] -= srcKey->ExpandedKey[R[1] & 63];
+    R[1] -= srcKey->ExpandedKey[R[0] & 63];
+    R[0] -= srcKey->ExpandedKey[R[3] & 63];
 
     for (int i = 5; i >= 0; --i) {
         R[3] = _rotr16(R[3], 5);
-        R[3] -= srcExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
+        R[3] -= srcKey->ExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
         --j;
 
         R[2] = _rotr16(R[2], 3);
-        R[2] -= srcExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
+        R[2] -= srcKey->ExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
         --j;
 
         R[1] = _rotr16(R[1], 2);
-        R[1] -= srcExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
+        R[1] -= srcKey->ExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
         --j;
 
         R[0] = _rotr16(R[0], 1);
-        R[0] -= srcExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
+        R[0] -= srcKey->ExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
         --j;
     }
 
-    R[3] -= srcExpandedKey[R[2] & 63];
-    R[2] -= srcExpandedKey[R[1] & 63];
-    R[1] -= srcExpandedKey[R[0] & 63];
-    R[0] -= srcExpandedKey[R[3] & 63];
+    R[3] -= srcKey->ExpandedKey[R[2] & 63];
+    R[2] -= srcKey->ExpandedKey[R[1] & 63];
+    R[1] -= srcKey->ExpandedKey[R[0] & 63];
+    R[0] -= srcKey->ExpandedKey[R[3] & 63];
 
     for (int i = 4; i >= 0; --i) {
         R[3] = _rotr16(R[3], 5);
-        R[3] -= srcExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
+        R[3] -= srcKey->ExpandedKey[j] + (R[2] & R[1]) + (~R[2] & R[0]);
         --j;
 
         R[2] = _rotr16(R[2], 3);
-        R[2] -= srcExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
+        R[2] -= srcKey->ExpandedKey[j] + (R[1] & R[0]) + (~R[1] & R[3]);
         --j;
 
         R[1] = _rotr16(R[1], 2);
-        R[1] -= srcExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
+        R[1] -= srcKey->ExpandedKey[j] + (R[0] & R[3]) + (~R[0] & R[2]);
         --j;
 
         R[0] = _rotr16(R[0], 1);
-        R[0] -= srcExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
+        R[0] -= srcKey->ExpandedKey[j] + (R[3] & R[2]) + (~R[3] & R[1]);
         --j;
     }
 }
 
-int CRYPTO_RC2_KeyExpansion(const uint8_t srcKey[],
-                            uint8_t srcKeyLength,
-                            uint16_t eftKey_bit_Length,
-                            uint16_t dstExpandedKey[64]) {
+int accelc_RC2_set_key(const uint8_t* srcKey,
+                       uint8_t srcKeyLength,
+                       uint16_t eftKey_bit_Length,
+                       RC2_KEY* dstKey) {
 
     if (srcKeyLength == 0)
-        return CRYPTO_RC2_INVALID_KEY_LENGTH;
-    if (srcKeyLength > CRYPTO_RC2_MAX_KEY_LENGTH)
-        return CRYPTO_RC2_KEY_TOO_LONG;
+        return RC2_INVALID_KEY_LENGTH;
+    if (srcKeyLength > RC2_MAX_KEY_LENGTH)
+        return RC2_KEY_TOO_LONG;
 
     if (eftKey_bit_Length > 8 * srcKeyLength)
-        return CRYPTO_RC2_EFFECTIVE_KEY_TOO_LONG;
+        return RC2_EFFECTIVE_KEY_TOO_LONG;
 
-    uint8_t* L = (uint8_t*)dstExpandedKey;
-    memset(dstExpandedKey, 0, 64 * sizeof(uint16_t));
-    memcpy(dstExpandedKey, srcKey, srcKeyLength);
+    uint8_t* L = (uint8_t*)dstKey->ExpandedKey;
+    memset(dstKey->ExpandedKey, 0, 64 * sizeof(uint16_t));
+    memcpy(dstKey->ExpandedKey, srcKey, srcKeyLength);
 
     unsigned int T8 = (eftKey_bit_Length + 7) / 8;
     unsigned int TM = 255 % (1 << (8 + eftKey_bit_Length - T8 * 8));
     for (int i = srcKeyLength; i < 128; ++i)
-        L[i] = CRYPTO_RC2_Pi_Table[(L[i - 1] + L[i - srcKeyLength]) % sizeof(CRYPTO_RC2_Pi_Table)];
+        L[i] = accelc_RC2_PI_Table[(L[i - 1] + L[i - srcKeyLength]) % sizeof(accelc_RC2_PI_Table)];
 
-    L[128 - T8] = CRYPTO_RC2_Pi_Table[L[128 - T8] & TM];
+    L[128 - T8] = accelc_RC2_PI_Table[L[128 - T8] & TM];
 
     for (int i = (int)(127 - T8); i >= 0; --i)
-        L[i] = CRYPTO_RC2_Pi_Table[L[i + 1] ^ L[i + T8]];
+        L[i] = accelc_RC2_PI_Table[L[i + 1] ^ L[i + T8]];
 
-    return CRYPTO_RC2_SUCCESS;
+    return RC2_SUCCESS;
 }

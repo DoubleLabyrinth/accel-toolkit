@@ -1,5 +1,10 @@
 #include "../aes.h"
+
+#ifdef _MSC_VER
+#include <intrin.h>
+#elif defined(__GNUC__)
 #include <x86intrin.h>
+#endif
 
 void accelc_AES128_encrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
     __m128i buffer = _mm_loadu_si128((__m128i*)srcBytes);

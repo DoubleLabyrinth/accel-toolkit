@@ -1,5 +1,10 @@
 #include "../aes.h"
+
+#ifdef _MSC_VER
+#include <intrin.h>
+#elif defined(__GNUC__)
 #include <x86intrin.h>
+#endif
 
 extern const uint32_t accelc_aes_rcon[11];
 
