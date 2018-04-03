@@ -1,19 +1,24 @@
 #include "../base16.h"
-#include <x86intrin.h>
 
-extern const char accelc_Base16Table[16];
+#if defined(_MSC_VER)
+#include <intrin.h>
+#elif defined(__GNUC__)
+#include <x86intrin.h>
+#endif
+
+extern const char accelc_Base16_Table[16];
 
 size_t accelc_Base16_Encode_ssse3(const void* __restrict src, size_t len,
                                   char* __restrict out_buf, size_t out_len) {
     if (len == 0)
-        return (size_t)-1;
+        return 0;
 
     size_t minimum_buf_len = 2 * len;
     if (out_len < minimum_buf_len)
         return minimum_buf_len;
 
-    const int64_t* const src_blocks = src;
-    __m128i* const dst_blocks = (__m128i*)out_buf;
+    const int64_t* src_blocks = src;
+    __m128i* dst_blocks = (__m128i*)out_buf;
     size_t blocks_len = len / sizeof(int64_t);
 
     for (size_t i = 0; i < blocks_len; ++i) {
@@ -28,51 +33,56 @@ size_t accelc_Base16_Encode_ssse3(const void* __restrict src, size_t len,
         _mm_storeu_si128(dst_blocks + i, temp);
     }
 
-    char* const dst_left = (char*)out_buf + blocks_len * sizeof(__m128i);
-    const uint8_t* const src_left = (const uint8_t*)src + blocks_len * sizeof(int64_t);
+    char* dst_left = out_buf + blocks_len * sizeof(__m128i);
+    const uint8_t* src_left = (const uint8_t*)src + blocks_len * sizeof(int64_t);
     size_t left_len = len % sizeof(int64_t);
 
     for(size_t i = 0; i < left_len; ++i) {
-        dst_left[2 * i] = accelc_Base16Table[src_left[i] >> 4];
-        dst_left[2 * i + 1] = accelc_Base16Table[src_left[i] & 0x0F];
+        dst_left[2 * i] = accelc_Base16_Table[src_left[i] >> 4];
+        dst_left[2 * i + 1] = accelc_Base16_Table[src_left[i] & 0x0F];
     }
 
     return minimum_buf_len;
 }
 
-int accelc_Base16_Check_ssse3(const char* src, size_t len) {
-    if (len % 2 != 0)
+size_t accelc_Base16_Check_ssse3(const char* src, size_t len) {
+    if (len == 0 || len % 2 != 0)
         return 0;
 
-    const __m128i* blocks = (const __m128i*)src;
-    size_t blocks_len = len / sizeof(__m128i);
+    const __m128i* src_blocks = (const __m128i*)src;
+    size_t src_blocks_len = len / sizeof(__m128i);
 
-    for (size_t i = 0; i < blocks_len; ++i) {
-        __m128i temp = _mm_lddqu_si128(blocks + i);
+    for (size_t i = 0; i < src_blocks_len; ++i) {
+        __m128i temp = _mm_lddqu_si128(src_blocks + i);
 
-        __m128i probe = _mm_or_si128(_mm_cmpgt_epi8(temp, _mm_set1_epi8('F')),
-                                     _mm_cmpgt_epi8(_mm_set1_epi8('0'), temp));
-        if (_mm_movemask_epi8(probe) != 0)
-            return 0;
+        __m128i mask = _mm_or_si128(_mm_cmpgt_epi8(temp, _mm_set1_epi8('F')),
+                                    _mm_cmpgt_epi8(_mm_set1_epi8('0'), temp));
 
-        probe = _mm_and_si128(_mm_cmpgt_epi8(temp, _mm_set1_epi8('9')),
-                              _mm_cmpgt_epi8(_mm_set1_epi8('A'), temp));
-        if (_mm_movemask_epi8(probe) != 0)
+        mask = _mm_xor_si128(mask, _mm_and_si128(_mm_cmpgt_epi8(temp, _mm_set1_epi8('9')),
+                                                 _mm_cmpgt_epi8(_mm_set1_epi8('A'), temp)));
+
+        if (_mm_movemask_epi8(mask) != 0)
             return 0;
     }
 
-    if (len % sizeof(__m128i))
-        return accelc_Base16_Check(src + blocks_len * sizeof(__m128i), len % sizeof(__m128i));
-    else
-        return 1;
+    const char* src_left = src + src_blocks_len * sizeof(__m128i);
+    size_t src_left_len = len % sizeof(__m128i);
+    for (size_t i = 0; i < src_left_len; ++i) {
+        if (src_left[i] < '0' || src_left[i] > 'F')
+            return 0;
+        if (src_left[i] > '9' && src_left[i] < 'A')
+            return 0;
+    }
+
+    return len /2;
 }
 
 size_t accelc_Base16_Decode_ssse3(const char* __restrict src, size_t len,
                                   void* __restrict out_buf, size_t out_len) {
-    if(len == 0 || len % 2 != 0)
-        return (size_t)-1;
+    size_t minimum_buf_len = accelc_Base16_Check_ssse3(src, len);
+    if (minimum_buf_len == 0)
+        return 0;
 
-    size_t minimum_buf_len = len / 2;
     if (out_len < minimum_buf_len)
         return minimum_buf_len;
 
