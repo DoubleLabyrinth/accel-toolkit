@@ -1,8 +1,4 @@
-/*********************************************************************
-* Filename:   MD2.c
-* Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
-*********************************************************************/
-#include "../MD2.h"
+#include "../md2.h"
 #include <memory.h>
 
 #define MD2_BLOCKSIZE 16

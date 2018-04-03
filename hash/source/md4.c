@@ -1,6 +1,10 @@
-#include "../MD4.h"
+#include "../md4.h"
+
+#if defined(_MSC_VER)
+#include <intrin.h>
+#elif defined(__GNUC__)
 #include <x86intrin.h>
-#include <memory.h>
+#endif
 
 #define MD4_BLOCKSIZE 64
 
@@ -102,7 +106,9 @@ void accelc_MD4_update(const void* srcBytes, size_t srcBytesLength, MD4_BUFFER* 
 
 void accelc_MD4_final(const void* LeftBytes, size_t LeftBytesLength, uint64_t TotalBytesLength,
                       const MD4_BUFFER* HashBuffer, MD4_DIGEST* Hash) {
-    memcpy(Hash, HashBuffer, sizeof(MD4_BUFFER));
+    if (HashBuffer != Hash)
+        *Hash = *HashBuffer;
+
     if (LeftBytesLength >= MD4_BLOCKSIZE) {
         accelc_MD4_update(LeftBytes, LeftBytesLength, Hash);
         LeftBytes = (const uint8_t*)LeftBytes + (LeftBytesLength / MD4_BLOCKSIZE) * MD4_BLOCKSIZE;
@@ -120,8 +126,7 @@ void accelc_MD4_final(const void* LeftBytes, size_t LeftBytesLength, uint64_t To
 }
 
 void accelc_MD4(const void* srcBytes, size_t srclen, MD4_DIGEST* Hash) {
-    MD4_BUFFER hash_buf;
-    accelc_MD4_init(&hash_buf);
-    accelc_MD4_update(srcBytes, srclen, &hash_buf);
-    accelc_MD4_final((uint8_t*)srcBytes + (srclen / MD4_BLOCKSIZE) * MD4_BLOCKSIZE, srclen % MD4_BLOCKSIZE, srclen, &hash_buf, Hash);
+    accelc_MD4_init(Hash);
+    accelc_MD4_update(srcBytes, srclen, Hash);
+    accelc_MD4_final((uint8_t*)srcBytes + (srclen / MD4_BLOCKSIZE) * MD4_BLOCKSIZE, srclen % MD4_BLOCKSIZE, srclen, Hash, Hash);
 }

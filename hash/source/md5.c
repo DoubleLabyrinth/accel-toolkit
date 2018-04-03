@@ -1,10 +1,10 @@
-/*********************************************************************
-* Filename:   MD5.c
-* Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
-*********************************************************************/
-#include "../MD5.h"
+#include "../md5.h"
+
+#if defined(_MSC_VER)
+#include <intrin.h>
+#elif defined(__GNUC__)
 #include <x86intrin.h>
-#include <memory.h>
+#endif
 
 #define MD5_BLOCKSIZE 64
 
@@ -128,7 +128,9 @@ void accelc_MD5_update(const void* srcBytes, size_t srcBytesLength, MD5_BUFFER* 
 
 void accelc_MD5_final(const void* LeftBytes, size_t LeftBytesLength, uint64_t TotalBytesLength,
                       const MD5_BUFFER* HashBuffer, MD5_DIGEST* Hash) {
-    memcpy(Hash, HashBuffer, sizeof(MD5_BUFFER));
+    if (HashBuffer != Hash)
+        *Hash = *HashBuffer;
+
     if (LeftBytesLength >= MD5_BLOCKSIZE) {
         accelc_MD5_update(LeftBytes, LeftBytesLength, Hash);
         LeftBytes = (const uint8_t*)LeftBytes + (LeftBytesLength / MD5_BLOCKSIZE) * MD5_BLOCKSIZE;
@@ -146,8 +148,7 @@ void accelc_MD5_final(const void* LeftBytes, size_t LeftBytesLength, uint64_t To
 }
 
 void accelc_MD5(const void* srcBytes, size_t srclen, MD5_DIGEST* Hash) {
-    MD5_BUFFER hash_buf;
-    accelc_MD5_init(&hash_buf);
-    accelc_MD5_update(srcBytes, srclen, &hash_buf);
-    accelc_MD5_final((uint8_t*)srcBytes + (srclen / MD5_BLOCKSIZE) * MD5_BLOCKSIZE, srclen % MD5_BLOCKSIZE, srclen, &hash_buf, Hash);
+    accelc_MD5_init(Hash);
+    accelc_MD5_update(srcBytes, srclen, Hash);
+    accelc_MD5_final((uint8_t*)srcBytes + (srclen / MD5_BLOCKSIZE) * MD5_BLOCKSIZE, srclen % MD5_BLOCKSIZE, srclen, Hash, Hash);
 }

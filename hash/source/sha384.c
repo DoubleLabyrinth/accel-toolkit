@@ -1,13 +1,17 @@
-/*********************************************************************
-* Filename:   SHA512.c
-* Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
-*********************************************************************/
-#include "../SHA512.h"
+#include "../sha2.h"
+
+#if defined(_MSC_VER)
 #include <intrin.h>
+#elif defined(__GNUC__)
+#include <x86intrin.h>
+#define _byteswap_ulong __bswapd
+#define _byteswap_uint64 __bswapq
+#define _rotr64 __rorq
+#endif
 
-#define HASH_SHA512_BLOCKSIZE 128
+#define SHA384_BLOCKSIZE 128
 
-const uint64_t HASH_SHA512_K[80] = {
+const uint64_t accelc_SHA384_K[80] = {
     0x428A2F98D728AE22, 0x7137449123EF65CD, 0xB5C0FBCFEC4D3B2F, 0xE9B5DBA58189DBBC, 0x3956C25BF348B538, 0x59F111F1B605D019, 0x923F82A4AF194F9B, 0xAB1C5ED5DA6D8118,
     0xD807AA98A3030242, 0x12835B0145706FBE, 0x243185BE4EE4B28C, 0x550C7DC3D5FFB4E2, 0x72BE5D74F27B896F, 0x80DEB1FE3B1696B1, 0x9BDC06A725C71235, 0xC19BF174CF692694,
     0xE49B69C19EF14AD2, 0xEFBE4786384F25E3, 0x0FC19DC68B8CD5B5, 0x240CA1CC77AC9C65, 0x2DE92C6F592B0275, 0x4A7484AA6EA6E483, 0x5CB0A9DCBD41FBD4, 0x76F988DA831153B5,
@@ -20,18 +24,18 @@ const uint64_t HASH_SHA512_K[80] = {
     0x28DB77F523047D84, 0x32CAAB7B40C72493, 0x3C9EBE0A15C9BEBC, 0x431D67C49C100D4C, 0x4CC5D4BECB3E42B6, 0x597F299CFC657E2A, 0x5FCB6FAB3AD6FAEC, 0x6C44198C4A475817
 };
 
-void HASH_SHA512_Initialize(uint64_t HashBuffer[8]) {
-    HashBuffer[0] = 0x6A09E667F3BCC908;
-    HashBuffer[1] = 0xBB67AE8584CAA73B;
-    HashBuffer[2] = 0x3C6EF372FE94F82B;
-    HashBuffer[3] = 0xA54FF53A5F1D36F1;
-    HashBuffer[4] = 0x510E527FADE682D1;
-    HashBuffer[5] = 0x9B05688C2B3E6C1F;
-    HashBuffer[6] = 0x1F83D9ABFB41BD6B;
-    HashBuffer[7] = 0x5BE0CD19137E2179;
+void accelc_SHA384_init(SHA384_BUFFER* HashBuffer) {
+    HashBuffer->qword[0] = 0xCBBB9D5DC1059ED8;
+    HashBuffer->qword[1] = 0x629A292A367CD507;
+    HashBuffer->qword[2] = 0x9159015A3070DD17;
+    HashBuffer->qword[3] = 0x152FECD8F70E5939;
+    HashBuffer->qword[4] = 0x67332667FFC00B31;
+    HashBuffer->qword[5] = 0x8EB44A8768581511;
+    HashBuffer->qword[6] = 0xDB0C2E0D64F98FA7;
+    HashBuffer->qword[7] = 0x47B5481DBEFA4FA4;
 }
 
-void HASH_SHA512_MainCycle(const void* srcBytes, size_t srcBytesLength, uint64_t HashBuffer[8]) {
+void accelc_SHA384_update(const void* srcBytes, size_t srcBytesLength, SHA384_BUFFER* HashBuffer) {
     uint64_t Buffer[80] = { 0 };
     uint64_t a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0;
     const uint64_t (*MessageBlock)[16] = srcBytes;
@@ -49,17 +53,17 @@ void HASH_SHA512_MainCycle(const void* srcBytes, size_t srcBytesLength, uint64_t
             Buffer[j] += Buffer[j - 16];
         }
 
-        a = HashBuffer[0];
-        b = HashBuffer[1];
-        c = HashBuffer[2];
-        d = HashBuffer[3];
-        e = HashBuffer[4];
-        f = HashBuffer[5];
-        g = HashBuffer[6];
-        h = HashBuffer[7];
+        a = HashBuffer->qword[0];
+        b = HashBuffer->qword[1];
+        c = HashBuffer->qword[2];
+        d = HashBuffer->qword[3];
+        e = HashBuffer->qword[4];
+        f = HashBuffer->qword[5];
+        g = HashBuffer->qword[6];
+        h = HashBuffer->qword[7];
 
         for (int j = 0; j < 80; ++j) {
-            uint64_t T1 = h + (_rotr64(e, 14) ^ _rotr64(e, 18) ^ _rotr64(e, 41)) + ((e & f) ^ (~e & g)) + HASH_SHA512_K[j] + Buffer[j];
+            uint64_t T1 = h + (_rotr64(e, 14) ^ _rotr64(e, 18) ^ _rotr64(e, 41)) + ((e & f) ^ (~e & g)) + accelc_SHA384_K[j] + Buffer[j];
             uint64_t T2 = (_rotr64(a, 28) ^ _rotr64(a, 34) ^ _rotr64(a, 39)) + ((a & b) ^ (a & c) ^ (b & c));
             h = g;
             g = f;
@@ -71,34 +75,44 @@ void HASH_SHA512_MainCycle(const void* srcBytes, size_t srcBytesLength, uint64_t
             a = T1 + T2;
         }
 
-        HashBuffer[0] += a;
-        HashBuffer[1] += b;
-        HashBuffer[2] += c;
-        HashBuffer[3] += d;
-        HashBuffer[4] += e;
-        HashBuffer[5] += f;
-        HashBuffer[6] += g;
-        HashBuffer[7] += h;
+        HashBuffer->qword[0] += a;
+        HashBuffer->qword[1] += b;
+        HashBuffer->qword[2] += c;
+        HashBuffer->qword[3] += d;
+        HashBuffer->qword[4] += e;
+        HashBuffer->qword[5] += f;
+        HashBuffer->qword[6] += g;
+        HashBuffer->qword[7] += h;
     }
 }
 
-void HASH_SHA512_Final(const void* LeftBytes, size_t LeftBytesLength, uint64_t TotalBytesLength, uint64_t HashBuffer[8]) {
-    if (LeftBytesLength >= HASH_SHA512_BLOCKSIZE) {
-        HASH_SHA512_MainCycle(LeftBytes, LeftBytesLength, HashBuffer);
-        LeftBytes = (const uint8_t*)LeftBytes + (LeftBytesLength / HASH_SHA512_BLOCKSIZE) * HASH_SHA512_BLOCKSIZE;
-        LeftBytesLength %= HASH_SHA512_BLOCKSIZE;
+void accelc_SHA384_final(const void* LeftBytes, size_t LeftBytesLength, uint64_t TotalBytesLength,
+                         const SHA384_BUFFER* __restrict HashBuffer, SHA384_DIGEST* __restrict Hash) {
+    SHA384_BUFFER temp_buf = *HashBuffer;
+
+    if (LeftBytesLength >= SHA384_BLOCKSIZE) {
+        accelc_SHA384_update(LeftBytes, LeftBytesLength, &temp_buf);
+        LeftBytes = (const uint8_t*)LeftBytes + (LeftBytesLength / SHA384_BLOCKSIZE) * SHA384_BLOCKSIZE;
+        LeftBytesLength %= SHA384_BLOCKSIZE;
     }
 
     uint8_t Extra[256] = { 0 };
     for (size_t i = 0; i < LeftBytesLength; ++i)
         Extra[i] = ((const uint8_t*)LeftBytes)[i];
-    Extra[LeftBytesLength] = 0x80;
 
+    Extra[LeftBytesLength] = 0x80;
     ((uint64_t*)(Extra + (LeftBytesLength >= 128 - 16 ? 256 - 16 : 128 - 16)))[0] = _byteswap_uint64(TotalBytesLength >> (sizeof(uint64_t) * 8 - 3));
     ((uint64_t*)(Extra + (LeftBytesLength >= 128 - 16 ? 256 - 16 : 128 - 16)))[1] = _byteswap_uint64(TotalBytesLength << 3);
 
-    HASH_SHA512_MainCycle(Extra, LeftBytesLength >= 128 - 16 ? 256 : 128, HashBuffer);
+    accelc_SHA384_update(Extra, LeftBytesLength >= 128 - 16 ? 256 : 128, &temp_buf);
 
-    for (int i = 0; i < 8; ++i)
-        HashBuffer[i] = _byteswap_uint64(HashBuffer[i]);
+    for (int i = 0; i < 6; ++i)
+        Hash->qword[i] = _byteswap_uint64(temp_buf.qword[i]);
+}
+
+void accelc_SHA384(const void* srcBytes, size_t srclen, SHA384_DIGEST* Hash) {
+    SHA384_BUFFER temp_buf;
+    accelc_SHA384_init(&temp_buf);
+    accelc_SHA384_update(srcBytes, srclen, &temp_buf);
+    accelc_SHA384_final((uint8_t*)srcBytes + (srclen / SHA384_BLOCKSIZE) * SHA384_BLOCKSIZE, srclen % SHA384_BLOCKSIZE, srclen, &temp_buf, Hash);
 }

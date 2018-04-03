@@ -2,20 +2,27 @@
 * Filename:   SHA1.c
 * Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
 *********************************************************************/
-#include "../SHA1.h"
+#include "../sha1.h"
+
+#if defined(_MSC_VER)
 #include <intrin.h>
+#elif defined(__GNUC__)
+#include <x86intrin.h>
+#define _byteswap_ulong __bswapd
+#define _byteswap_uint64 __bswapq
+#endif
 
-#define HASH_SHA1_BLOCKSIZE 64
+#define SHA1_BLOCKSIZE 64
 
-void HASH_SHA1_Initialize(uint32_t HashBuffer[5]) {
-    HashBuffer[0] = 0x67452301;
-    HashBuffer[1] = 0xEFCDAB89;
-    HashBuffer[2] = 0x98BADCFE;
-    HashBuffer[3] = 0x10325476;
-    HashBuffer[4] = 0xC3D2E1F0;
+void accelc_SHA1_init(SHA1_BUFFER* HashBuffer) {
+    HashBuffer->dword[0] = 0x67452301;
+    HashBuffer->dword[1] = 0xEFCDAB89;
+    HashBuffer->dword[2] = 0x98BADCFE;
+    HashBuffer->dword[3] = 0x10325476;
+    HashBuffer->dword[4] = 0xC3D2E1F0;
 }
 
-void HASH_SHA1_MainCycle(const void *srcBytes, size_t srcBytesLength, uint32_t HashBuffer[5]) {
+void accelc_SHA1_update(const void* srcBytes, size_t srcBytesLength, SHA1_BUFFER* HashBuffer) {
     uint32_t Buffer[80] = { 0 };
     uint32_t a, b, c, d, e;
     const uint32_t (*MessageBlock)[16] = srcBytes;
@@ -30,11 +37,11 @@ void HASH_SHA1_MainCycle(const void *srcBytes, size_t srcBytesLength, uint32_t H
             uint32_t temp = Buffer[j - 3] ^ Buffer[j - 8] ^ Buffer[j - 14] ^ Buffer[j - 16];
             Buffer[j] = _rotl(temp, 1);
         }
-        a = HashBuffer[0];
-        b = HashBuffer[1];
-        c = HashBuffer[2];
-        d = HashBuffer[3];
-        e = HashBuffer[4];
+        a = HashBuffer->dword[0];
+        b = HashBuffer->dword[1];
+        c = HashBuffer->dword[2];
+        d = HashBuffer->dword[3];
+        e = HashBuffer->dword[4];
 
         for (int j = 0; j < 20; ++j) {
             uint32_t T = _rotl(a, 5);
@@ -72,19 +79,23 @@ void HASH_SHA1_MainCycle(const void *srcBytes, size_t srcBytesLength, uint32_t H
             b = a;
             a = T;
         }
-        HashBuffer[0] += a;
-        HashBuffer[1] += b;
-        HashBuffer[2] += c;
-        HashBuffer[3] += d;
-        HashBuffer[4] += e;
+        HashBuffer->dword[0] += a;
+        HashBuffer->dword[1] += b;
+        HashBuffer->dword[2] += c;
+        HashBuffer->dword[3] += d;
+        HashBuffer->dword[4] += e;
     }
 }
 
-void HASH_SHA1_Final(const void* LeftBytes, size_t LeftBytesLength, uint64_t TotalBytesLength, uint32_t HashBuffer[5]) {
-    if (LeftBytesLength >= HASH_SHA1_BLOCKSIZE) {
-        HASH_SHA1_MainCycle(LeftBytes, LeftBytesLength, HashBuffer);
-        LeftBytes = (const uint8_t*)LeftBytes + (LeftBytesLength / HASH_SHA1_BLOCKSIZE) * HASH_SHA1_BLOCKSIZE;
-        LeftBytesLength %= HASH_SHA1_BLOCKSIZE;
+void accelc_SHA1_final(const void* LeftBytes, size_t LeftBytesLength, uint64_t TotalBytesLength,
+                       const SHA1_BUFFER* HashBuffer, SHA1_DIGEST* Hash) {
+    if (HashBuffer != Hash)
+        *Hash = *HashBuffer;
+
+    if (LeftBytesLength >= SHA1_BLOCKSIZE) {
+        accelc_SHA1_update(LeftBytes, LeftBytesLength, Hash);
+        LeftBytes = (const uint8_t*)LeftBytes + (LeftBytesLength / SHA1_BLOCKSIZE) * SHA1_BLOCKSIZE;
+        LeftBytesLength %= SHA1_BLOCKSIZE;
     }
 
     uint8_t Extra[128] = { 0 };
@@ -94,12 +105,17 @@ void HASH_SHA1_Final(const void* LeftBytes, size_t LeftBytesLength, uint64_t Tot
     Extra[LeftBytesLength] = 0x80;
     *(uint64_t*)(Extra + (LeftBytesLength >= 64 - 8 ? 128 - 8 : 64 - 8)) = _byteswap_uint64(TotalBytesLength * 8);
 
-    HASH_SHA1_MainCycle(Extra, LeftBytesLength >= 56 ? 128 : 64, HashBuffer);
+    accelc_SHA1_update(Extra, LeftBytesLength >= 56 ? 128 : 64, Hash);
 
-    HashBuffer[0] = _byteswap_ulong(HashBuffer[0]);
-    HashBuffer[1] = _byteswap_ulong(HashBuffer[1]);
-    HashBuffer[2] = _byteswap_ulong(HashBuffer[2]);
-    HashBuffer[3] = _byteswap_ulong(HashBuffer[3]);
-    HashBuffer[4] = _byteswap_ulong(HashBuffer[4]);
+    Hash->dword[0] = _byteswap_ulong(Hash->dword[0]);
+    Hash->dword[1] = _byteswap_ulong(Hash->dword[1]);
+    Hash->dword[2] = _byteswap_ulong(Hash->dword[2]);
+    Hash->dword[3] = _byteswap_ulong(Hash->dword[3]);
+    Hash->dword[4] = _byteswap_ulong(Hash->dword[4]);
 }
 
+void accelc_SHA1(const void* srcBytes, size_t srclen, SHA1_DIGEST* Hash) {
+    accelc_SHA1_init(Hash);
+    accelc_SHA1_update(srcBytes, srclen, Hash);
+    accelc_SHA1_final((uint8_t*)srcBytes + (srclen / SHA1_BLOCKSIZE) * SHA1_BLOCKSIZE, srclen % SHA1_BLOCKSIZE, srclen, Hash, Hash);
+}
