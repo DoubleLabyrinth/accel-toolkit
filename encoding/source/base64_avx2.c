@@ -127,6 +127,7 @@ size_t accelc_Base64_Check_avx2(const char* src, size_t len) {
 
     const __m256i* src_blocks = (const __m256i*)src;
     size_t blocks_len = len / sizeof(__m256i);
+    if (blocks_len != 0) blocks_len--;
 
     size_t i = 0;
     for (; i < blocks_len; ++i) {
@@ -154,7 +155,7 @@ size_t accelc_Base64_Check_avx2(const char* src, size_t len) {
             continue;
         if (src[i + j] >= '0' && src[i + j] <= '9')
             continue;
-        if (src[i + j] == '+' || src_blocks[i + j] == '/')
+        if (src[i + j] == '+' || src[i + j] == '/')
             continue;
         break;
     }
@@ -194,30 +195,30 @@ size_t accelc_Base64_Decode_avx2(const char* __restrict src, size_t len,
         {   // to raw data split
             __m256i offset;
 
-            offset = _mm_blendv_epi8(_mm256_setzero_si256(),
-                                     _mm256_set1_epi8('+' - 62),
-                                     _mm256_cmpeq_epi8(temp, _mm256_set1_epi8('+')));
+            offset = _mm256_blendv_epi8(_mm256_setzero_si256(),
+                                        _mm256_set1_epi8('+' - 62),
+                                        _mm256_cmpeq_epi8(temp, _mm256_set1_epi8('+')));
 
-            offset = _mm_blendv_epi8(offset,
-                                     _mm256_set1_epi8('/' - 63),
-                                     _mm256_cmpeq_epi8(temp, _mm256_set1_epi8('/')));
+            offset = _mm256_blendv_epi8(offset,
+                                        _mm256_set1_epi8('/' - 63),
+                                        _mm256_cmpeq_epi8(temp, _mm256_set1_epi8('/')));
 
-            offset = _mm_blendv_epi8(offset,
-                                     _mm256_set1_epi8('A'),
-                                     _mm256_and_si256(_mm256_cmpgt_epi8(temp, _mm256_set1_epi8('A' - 1)),
-                                                      _mm256_cmpgt_epi8(_mm256_set1_epi8('Z' + 1), temp)));
+            offset = _mm256_blendv_epi8(offset,
+                                        _mm256_set1_epi8('A'),
+                                        _mm256_and_si256(_mm256_cmpgt_epi8(temp, _mm256_set1_epi8('A' - 1)),
+                                                         _mm256_cmpgt_epi8(_mm256_set1_epi8('Z' + 1), temp)));
 
-            offset = _mm_blendv_epi8(offset,
-                                     _mm256_set1_epi8('a' - 26),
-                                     _mm256_and_si256(_mm256_cmpgt_epi8(temp, _mm256_set1_epi8('a' - 1)),
-                                                      _mm256_cmpgt_epi8(_mm256_set1_epi8('z' + 1), temp)));
+            offset = _mm256_blendv_epi8(offset,
+                                        _mm256_set1_epi8('a' - 26),
+                                        _mm256_and_si256(_mm256_cmpgt_epi8(temp, _mm256_set1_epi8('a' - 1)),
+                                                         _mm256_cmpgt_epi8(_mm256_set1_epi8('z' + 1), temp)));
 
-            offset = _mm_blendv_epi8(offset,
-                                     _mm256_set1_epi8('0' - 52),
-                                     _mm256_and_si256(_mm256_cmpgt_epi8(temp, _mm256_set1_epi8('0' - 1)),
-                                                      _mm256_cmpgt_epi8(_mm256_set1_epi8('9' + 1), temp)));
+            offset = _mm256_blendv_epi8(offset,
+                                        _mm256_set1_epi8('0' - 52),
+                                        _mm256_and_si256(_mm256_cmpgt_epi8(temp, _mm256_set1_epi8('0' - 1)),
+                                                         _mm256_cmpgt_epi8(_mm256_set1_epi8('9' + 1), temp)));
 
-            temp = _mm_sub_epi8(temp, offset);
+            temp = _mm256_sub_epi8(temp, offset);
         }
 
         temp = _mm256_shuffle_epi8(temp, _mm256_set_epi8(0 + 12, 1 + 12, 2 + 12, 3 + 12,
@@ -262,7 +263,7 @@ size_t accelc_Base64_Decode_avx2(const char* __restrict src, size_t len,
 
     const char (*src_left_blocks)[4] = (const char (*)[4])(src_blocks + blocks_len);
     uint8_t (*dst_left_blocks)[3] = (uint8_t (*)[3])(dst_blocks + blocks_len);
-    size_t left_blocks_len = (len % sizeof(__m256i)) / 4;
+    size_t left_blocks_len = (len - blocks_len * sizeof(__m256i)) / 4;
 
     for (size_t i = 0; i < left_blocks_len; ++i){
         if (src_left_blocks[i][2] == '=') {

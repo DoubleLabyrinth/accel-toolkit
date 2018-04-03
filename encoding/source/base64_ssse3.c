@@ -114,6 +114,7 @@ size_t accelc_Base64_Check_ssse3(const char* src, size_t len) {
 
     const __m128i* src_blocks = (const __m128i*)src;
     size_t blocks_len = len / sizeof(__m128i);
+    if (blocks_len != 0) blocks_len--;
 
     size_t i = 0;
     for (; i < blocks_len; ++i) {
@@ -141,7 +142,7 @@ size_t accelc_Base64_Check_ssse3(const char* src, size_t len) {
             continue;
         if (src[i + j] >= '0' && src[i + j] <= '9')
             continue;
-        if (src[i + j] == '+' || src_blocks[i + j] == '/')
+        if (src[i + j] == '+' || src[i + j] == '/')
             continue;
         break;
     }
@@ -216,28 +217,27 @@ size_t accelc_Base64_Decode_ssse3(const char* __restrict src, size_t len,
                                                    0, 1, 2, 3));
         temp = _mm_xor_si128(_mm_and_si128(temp,
                                            _mm_set1_epi32(0xFF00FF00)),
-                             _mm_sll_epi16(_mm_and_si128(temp,
-                                                         _mm_set1_epi32(0x00FF00FF)),
-                                           2));
+                             _mm_slli_epi16(_mm_and_si128(temp,
+                                                          _mm_set1_epi32(0x00FF00FF)), 2));
 
-        __m128i fin0 = _mm_shuffle_epi8(_mm_srl_epi16(temp, 2), _mm_set_epi8(-1, -1, -1, -1,
-                                                                             0 + 12, 1 + 12, -1,
-                                                                             0 + 8, 1 + 8, -1,
-                                                                             0 + 4, 1 + 4, -1,
-                                                                             0, 1, -1));
-        __m128i fin1 = _mm_shuffle_epi8(_mm_sll_epi16(temp, 2), _mm_set_epi8(-1, -1, -1, -1,
-                                                                             -1, 2 + 12, 3 + 12,
-                                                                             -1, 2 + 8, 3 + 8,
-                                                                             -1, 2 + 4, 3 + 4,
-                                                                             -1, 2, 3));
+        __m128i fin0 = _mm_shuffle_epi8(_mm_srli_epi16(temp, 2), _mm_set_epi8(-1, -1, -1, -1,
+                                                                              0 + 12, 1 + 12, -1,
+                                                                              0 + 8, 1 + 8, -1,
+                                                                              0 + 4, 1 + 4, -1,
+                                                                              0, 1, -1));
+        __m128i fin1 = _mm_shuffle_epi8(_mm_slli_epi16(temp, 2), _mm_set_epi8(-1, -1, -1, -1,
+                                                                              -1, 2 + 12, 3 + 12,
+                                                                              -1, 2 + 8, 3 + 8,
+                                                                              -1, 2 + 4, 3 + 4,
+                                                                              -1, 2, 3));
         _mm_maskmoveu_si128(_mm_xor_si128(fin0, fin1), _mm_set_epi32(0, -1, -1, -1), dst_blocks[i]);
     }
 
     const char (*src_left_blocks)[4] = (const char (*)[4])(src_blocks + blocks_len);
     uint8_t (*dst_left_blocks)[3] = (uint8_t (*)[3])(dst_blocks + blocks_len);
-    size_t left_blocks_len = (len % sizeof(__m128i)) / 4;
+    size_t left_blocks_len = (len - blocks_len * sizeof(__m128i)) / 4;
 
-    for (size_t i = 0; i < left_blocks_len; ++i){
+    for (size_t i = 0; i < left_blocks_len; ++i) {
         if (src_left_blocks[i][2] == '=') {
             dst_left_blocks[i][0] = accelc_Base64_InverseTable[src_left_blocks[i][0]] << 2 | accelc_Base64_InverseTable[src_left_blocks[i][1]] >> 4;
         } else if (src_left_blocks[i][3] == '=') {

@@ -22,7 +22,7 @@ size_t accelc_Base16_Encode(const void* __restrict src, size_t len,
     return minimum_buf_len;
 }
 
-size_t accelc_Basesizsd16_Check(const char* src, size_t len) {
+size_t accelc_Base16_Check(const char* src, size_t len) {
     if (len == 0 || len % 2 != 0)
         return 0;
 
