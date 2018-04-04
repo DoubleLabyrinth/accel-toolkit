@@ -83,7 +83,7 @@ coeff_t accelc_powmod(coeff_t Base, coeff_t Exponent, coeff_t Modulus) {
     return ret;
 }
 
-coeff_t accelc_numtheory_reciprocal(coeff_t a, coeff_t P) {
+coeff_t accelc_reciprocal_Fermat(coeff_t a, coeff_t P) {
     return accelc_powmod(a, P - 2, P);
 }
 

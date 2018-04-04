@@ -23,7 +23,7 @@ extern const uint8_t accelc_aes_GF2p8_Mul_0x0E[256];
     X = Y;                  \
     Y = Temp;
 
-void accelc_AES128_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES128_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES128_KEY* srcKey) {
 
     ((uint64_t*)srcBytes)[0] ^= srcKey->qword[0];
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
@@ -84,7 +84,7 @@ void accelc_AES128_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[21];
 }
 
-void accelc_AES128_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES128_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES128_KEY* srcKey) {
     ((uint64_t*)srcBytes)[0] ^= srcKey->qword[20];
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[21];
 
@@ -140,7 +140,7 @@ void accelc_AES128_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 }
 
-void accelc_AES128_set_key(const uint8_t srcUserKey[16], AES_KEY* dstKey) {
+void accelc_AES128_set_key(const uint8_t srcUserKey[16], AES128_KEY* dstKey) {
     dstKey->qword[0] = ((const uint64_t*)srcUserKey)[0];
     dstKey->qword[1] = ((const uint64_t*)srcUserKey)[1];
 
@@ -160,7 +160,7 @@ void accelc_AES128_set_key(const uint8_t srcUserKey[16], AES_KEY* dstKey) {
 
 
 
-void accelc_AES192_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES192_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES192_KEY* srcKey) {
     ((uint64_t*)srcBytes)[0] ^= srcKey->qword[0];
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 
@@ -219,7 +219,7 @@ void accelc_AES192_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[25];
 }
 
-void accelc_AES192_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES192_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES192_KEY* srcKey) {
     ((uint64_t*)srcBytes)[0] ^= srcKey->qword[24];
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[25];
 
@@ -275,7 +275,7 @@ void accelc_AES192_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 }
 
-void accelc_AES192_set_key(const uint8_t srcUserKey[24], AES_KEY* dstKey) {
+void accelc_AES192_set_key(const uint8_t srcUserKey[24], AES192_KEY* dstKey) {
     dstKey->qword[0] = ((const uint64_t*)srcUserKey)[0];
     dstKey->qword[1] = ((const uint64_t*)srcUserKey)[1];
     dstKey->qword[2] = ((const uint64_t*)srcUserKey)[2];
@@ -296,7 +296,7 @@ void accelc_AES192_set_key(const uint8_t srcUserKey[24], AES_KEY* dstKey) {
 
 
 
-void accelc_AES256_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES256_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES256_KEY* srcKey) {
     ((uint64_t*)srcBytes)[0] ^= srcKey->qword[0];
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 
@@ -355,7 +355,7 @@ void accelc_AES256_encrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[29];
 }
 
-void accelc_AES256_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES256_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES256_KEY* srcKey) {
     ((uint64_t*)srcBytes)[0] ^= srcKey->qword[28];
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[29];
 
@@ -411,7 +411,7 @@ void accelc_AES256_decrypt(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcK
     ((uint64_t*)srcBytes)[1] ^= srcKey->qword[1];
 }
 
-void accelc_AES256_set_key(const uint8_t srcUserKey[32], AES_KEY* dstKey) {
+void accelc_AES256_set_key(const uint8_t srcUserKey[32], AES256_KEY* dstKey) {
     dstKey->qword[0] = ((const uint64_t*)srcUserKey)[0];
     dstKey->qword[1] = ((const uint64_t*)srcUserKey)[1];
     dstKey->qword[2] = ((const uint64_t*)srcUserKey)[2];

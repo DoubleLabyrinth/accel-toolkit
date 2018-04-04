@@ -13,7 +13,7 @@
 #define _bsf_coeff __bsfd
 #endif
 
-int accelc_numtheory_MillerRabin(coeff_t n, size_t count) {
+int accelc_MillerRabinTest(coeff_t n, size_t count) {
     if (n % 2 == 0 || n == 1)
         return 0;
 

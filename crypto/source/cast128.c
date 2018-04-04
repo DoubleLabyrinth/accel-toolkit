@@ -1,11 +1,13 @@
-/*********************************************************************
-* Filename:   CAST-128.c
-* Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
-*********************************************************************/
-#include "../CAST-128.h"
-#include <intrin.h>
+#include "../cast.h"
 
-const uint32_t CRYPTO_CAST128_S1[256] = {
+#ifdef _MSC_VER
+#include <intrin.h>
+#elif defined(__GNUC__)
+#include <x86intrin.h>
+#define _byteswap_ulong __builtin_bswap32
+#endif
+
+const uint32_t accelc_CAST128_S1[256] = {
     0x30FB40D4, 0x9FA0FF0B, 0x6BECCD2F, 0x3F258C7A, 0x1E213F2F, 0x9C004DD3, 0x6003E540, 0xCF9FC949,
     0xBFD4AF27, 0x88BBBDB5, 0xE2034090, 0x98D09675, 0x6E63A0E0, 0x15C361D2, 0xC2E7661D, 0x22D4FF8E,
     0x28683B6F, 0xC07FD059, 0xFF2379C8, 0x775F50E2, 0x43C340D3, 0xDF2F8656, 0x887CA41A, 0xA2D2BD2D,
@@ -40,7 +42,7 @@ const uint32_t CRYPTO_CAST128_S1[256] = {
     0x1A69E783, 0x02CC4843, 0xA2F7C579, 0x429EF47D, 0x427B169C, 0x5AC9F049, 0xDD8F0F00, 0x5C8165BF
 };
 
-const uint32_t CRYPTO_CAST128_S2[256] = {
+const uint32_t accelc_CAST128_S2[256] = {
     0x1F201094, 0xEF0BA75B, 0x69E3CF7E, 0x393F4380, 0xFE61CF7A, 0xEEC5207A, 0x55889C94, 0x72FC0651,
     0xADA7EF79, 0x4E1D7235, 0xD55A63CE, 0xDE0436BA, 0x99C430EF, 0x5F0C0794, 0x18DCDB7D, 0xA1D6EFF3,
     0xA0B52F7B, 0x59E83605, 0xEE15B094, 0xE9FFD909, 0xDC440086, 0xEF944459, 0xBA83CCB3, 0xE0C3CDFB,
@@ -75,7 +77,7 @@ const uint32_t CRYPTO_CAST128_S2[256] = {
     0x43D79572, 0x7E6DD07C, 0x06DFDF1E, 0x6C6CC4EF, 0x7160A539, 0x73BFBE70, 0x83877605, 0x4523ECF1
 };
 
-const uint32_t CRYPTO_CAST128_S3[256] = {
+const uint32_t accelc_CAST128_S3[256] = {
     0x8DEFC240, 0x25FA5D9F, 0xEB903DBF, 0xE810C907, 0x47607FFF, 0x369FE44B, 0x8C1FC644, 0xAECECA90,
     0xBEB1F9BF, 0xEEFBCAEA, 0xE8CF1950, 0x51DF07AE, 0x920E8806, 0xF0AD0548, 0xE13C8D83, 0x927010D5,
     0x11107D9F, 0x07647DB9, 0xB2E3E4D4, 0x3D4F285E, 0xB9AFA820, 0xFADE82E0, 0xA067268B, 0x8272792E,
@@ -110,7 +112,7 @@ const uint32_t CRYPTO_CAST128_S3[256] = {
     0xF7BAEFD5, 0x4142ED9C, 0xA4315C11, 0x83323EC5, 0xDFEF4636, 0xA133C501, 0xE9D3531C, 0xEE353783
 };
 
-const uint32_t CRYPTO_CAST128_S4[256] = {
+const uint32_t accelc_CAST128_S4[256] = {
     0x9DB30420, 0x1FB6E9DE, 0xA7BE7BEF, 0xD273A298, 0x4A4F7BDB, 0x64AD8C57, 0x85510443, 0xFA020ED1,
     0x7E287AFF, 0xE60FB663, 0x095F35A1, 0x79EBF120, 0xFD059D43, 0x6497B7B1, 0xF3641F63, 0x241E4ADF,
     0x28147F5F, 0x4FA2B8CD, 0xC9430040, 0x0CC32220, 0xFDD30B30, 0xC0A5374F, 0x1D2D00D9, 0x24147B15,
@@ -145,7 +147,7 @@ const uint32_t CRYPTO_CAST128_S4[256] = {
     0x7AE5290C, 0x3CB9536B, 0x851E20FE, 0x9833557E, 0x13ECF0B0, 0xD3FFB372, 0x3F85C5C1, 0x0AEF7ED2
 };
 
-const uint32_t CRYPTO_CAST128_S5[256] = {
+const uint32_t accelc_CAST128_S5[256] = {
     0x7EC90C04, 0x2C6E74B9, 0x9B0E66DF, 0xA6337911, 0xB86A7FFF, 0x1DD358F5, 0x44DD9D44, 0x1731167F,
     0x08FBF1FA, 0xE7F511CC, 0xD2051B00, 0x735ABA00, 0x2AB722D8, 0x386381CB, 0xACF6243A, 0x69BEFD7A,
     0xE6A2E77F, 0xF0C720CD, 0xC4494816, 0xCCF5C180, 0x38851640, 0x15B0A848, 0xE68B18CB, 0x4CAADEFF,
@@ -180,7 +182,7 @@ const uint32_t CRYPTO_CAST128_S5[256] = {
     0xE822FE15, 0x88570983, 0x750E6249, 0xDA627E55, 0x5E76FFA8, 0xB1534546, 0x6D47DE08, 0xEFE9E7D4
 };
 
-const uint32_t CRYPTO_CAST128_S6[256] = {
+const uint32_t accelc_CAST128_S6[256] = {
     0xF6FA8F9D, 0x2CAC6CE1, 0x4CA34867, 0xE2337F7C, 0x95DB08E7, 0x016843B4, 0xECED5CBC, 0x325553AC,
     0xBF9F0960, 0xDFA1E2ED, 0x83F0579D, 0x63ED86B9, 0x1AB6A6B8, 0xDE5EBE39, 0xF38FF732, 0x8989B138,
     0x33F14961, 0xC01937BD, 0xF506C6DA, 0xE4625E7E, 0xA308EA99, 0x4E23E33C, 0x79CBD7CC, 0x48A14367,
@@ -215,7 +217,7 @@ const uint32_t CRYPTO_CAST128_S6[256] = {
     0xA2D762CF, 0x49C92F54, 0x38B5F331, 0x7128A454, 0x48392905, 0xA65B1DB8, 0x851C97BD, 0xD675CF2F
 };
 
-const uint32_t CRYPTO_CAST128_S7[256] = {
+const uint32_t accelc_CAST128_S7[256] = {
     0x85E04019, 0x332BF567, 0x662DBFFF, 0xCFC65693, 0x2A8D7F6F, 0xAB9BC912, 0xDE6008A1, 0x2028DA1F,
     0x0227BCE7, 0x4D642916, 0x18FAC300, 0x50F18B82, 0x2CB2CB11, 0xB232E75C, 0x4B3695F2, 0xB28707DE,
     0xA05FBCF6, 0xCD4181E9, 0xE150210C, 0xE24EF1BD, 0xB168C381, 0xFDE4E789, 0x5C79B0D8, 0x1E8BFD43,
@@ -250,7 +252,7 @@ const uint32_t CRYPTO_CAST128_S7[256] = {
     0x518F36B2, 0x84B1D370, 0x0FEDCE83, 0x878DDADA, 0xF2A279C7, 0x94E01BE8, 0x90716F4B, 0x954B8AA3
 };
 
-const uint32_t CRYPTO_CAST128_S8[256] = {
+const uint32_t accelc_CAST128_S8[256] = {
     0xE216300D, 0xBBDDFFFC, 0xA7EBDABD, 0x35648095, 0x7789F8B7, 0xE6C1121B, 0x0E241600, 0x052CE8B5,
     0x11A9CFB0, 0xE5952F11, 0xECE7990A, 0x9386D174, 0x2A42931C, 0x76E38111, 0xB12DEF3A, 0x37DDDDFC,
     0xDE9ADEB1, 0x0A0CC32C, 0xBE197029, 0x84A00940, 0xBB243A0F, 0xB4D137CF, 0xB44E79F0, 0x049EEDFD,
@@ -289,27 +291,24 @@ const uint32_t CRYPTO_CAST128_S8[256] = {
 temp_swap = _l;                                                     \
 _l = _r;                                                            \
 *(uint32_t*)temp_I = _rotl(_Km[_i] + _r, _Kr[_i] % 32);             \
-_r = temp_swap ^ (((CRYPTO_CAST128_S1[temp_I[3]] ^ CRYPTO_CAST128_S2[temp_I[2]]) - CRYPTO_CAST128_S3[temp_I[1]]) + CRYPTO_CAST128_S4[temp_I[0]]);
+_r = temp_swap ^ (((accelc_CAST128_S1[temp_I[3]] ^ accelc_CAST128_S2[temp_I[2]]) - accelc_CAST128_S3[temp_I[1]]) + accelc_CAST128_S4[temp_I[0]]);
 
 
 #define Type2_transform(_l, _r, _Km, _Kr, temp_swap, temp_I, _i)    \
 temp_swap = _l;                                                     \
 _l = _r;                                                            \
 *(uint32_t*)temp_I = _rotl(_Km[_i] ^ _r, _Kr[_i] % 32);             \
-_r = temp_swap ^ (((CRYPTO_CAST128_S1[temp_I[3]] - CRYPTO_CAST128_S2[temp_I[2]]) + CRYPTO_CAST128_S3[temp_I[1]]) ^ CRYPTO_CAST128_S4[temp_I[0]]);
+_r = temp_swap ^ (((accelc_CAST128_S1[temp_I[3]] - accelc_CAST128_S2[temp_I[2]]) + accelc_CAST128_S3[temp_I[1]]) ^ accelc_CAST128_S4[temp_I[0]]);
 
 
 #define Type3_transform(_l, _r, _Km, _Kr, temp_swap, temp_I, _i)    \
 temp_swap = _l;                                                     \
 _l = _r;                                                            \
 *(uint32_t*)temp_I = _rotl(_Km[_i] - _r, _Kr[_i] % 32);             \
-_r = temp_swap ^ (((CRYPTO_CAST128_S1[temp_I[3]] + CRYPTO_CAST128_S2[temp_I[2]]) ^ CRYPTO_CAST128_S3[temp_I[1]]) - CRYPTO_CAST128_S4[temp_I[0]]);
+_r = temp_swap ^ (((accelc_CAST128_S1[temp_I[3]] + accelc_CAST128_S2[temp_I[2]]) ^ accelc_CAST128_S3[temp_I[1]]) - accelc_CAST128_S4[temp_I[0]]);
 
 
-void CRYPTO_CAST128_EncryptBlock(uint8_t srcBytes[8],
-                                 const uint32_t srcKm[16],
-                                 const uint32_t srcKr[16],
-                                 uint8_t srcKeyLength) {
+void accelc_CAST128_encrypt(uint8_t srcBytes[CAST128_BLOCK_SIZE], const CAST128_KEY* srcKey) {
 
     uint32_t* const L = (uint32_t*)srcBytes;
     uint32_t* const R = (uint32_t*)srcBytes + 4;
@@ -333,24 +332,24 @@ void CRYPTO_CAST128_EncryptBlock(uint8_t srcBytes[8],
     uint32_t temp = 0;
     uint8_t I[4];
 
-    Type1_transform(*L, *R, srcKm, srcKr, temp, I, 0)
-    Type2_transform(*L, *R, srcKm, srcKr, temp, I, 1)
-    Type3_transform(*L, *R, srcKm, srcKr, temp, I, 2)
-    Type1_transform(*L, *R, srcKm, srcKr, temp, I, 3)
-    Type2_transform(*L, *R, srcKm, srcKr, temp, I, 4)
-    Type3_transform(*L, *R, srcKm, srcKr, temp, I, 5)
-    Type1_transform(*L, *R, srcKm, srcKr, temp, I, 6)
-    Type2_transform(*L, *R, srcKm, srcKr, temp, I, 7)
-    Type3_transform(*L, *R, srcKm, srcKr, temp, I, 8)
-    Type1_transform(*L, *R, srcKm, srcKr, temp, I, 9)
-    Type2_transform(*L, *R, srcKm, srcKr, temp, I, 10)
-    Type3_transform(*L, *R, srcKm, srcKr, temp, I, 11)
+    Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 0)
+    Type2_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 1)
+    Type3_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 2)
+    Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 3)
+    Type2_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 4)
+    Type3_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 5)
+    Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 6)
+    Type2_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 7)
+    Type3_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 8)
+    Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 9)
+    Type2_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 10)
+    Type3_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 11)
 
-    if (srcKeyLength > 10) {
-        Type1_transform(*L, *R, srcKm, srcKr, temp, I, 12)
-        Type2_transform(*L, *R, srcKm, srcKr, temp, I, 13)
-        Type3_transform(*L, *R, srcKm, srcKr, temp, I, 14)
-        Type1_transform(*L, *R, srcKm, srcKr, temp, I, 15)
+    if (srcKey->UserKeyLength > 10) {
+        Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 12)
+        Type2_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 13)
+        Type3_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 14)
+        Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 15)
     }
 
     temp = *R;
@@ -364,28 +363,25 @@ void CRYPTO_CAST128_EncryptBlock(uint8_t srcBytes[8],
 
 #define Reverse_Type1_transform(_l, _r, _Km, _Kr, temp_swap, temp_I, _i)    \
 *(uint32_t*)temp_I = _rotl(_Km[_i] + _l, _Kr[_i] % 32);                     \
-temp_swap = _r ^ (((CRYPTO_CAST128_S1[temp_I[3]] ^ CRYPTO_CAST128_S2[temp_I[2]]) - CRYPTO_CAST128_S3[temp_I[1]]) + CRYPTO_CAST128_S4[temp_I[0]]);   \
+temp_swap = _r ^ (((accelc_CAST128_S1[temp_I[3]] ^ accelc_CAST128_S2[temp_I[2]]) - accelc_CAST128_S3[temp_I[1]]) + accelc_CAST128_S4[temp_I[0]]);   \
 _r = _l;                                                                    \
 _l = temp_swap;
 
 
 #define Reverse_Type2_transform(_l, _r, _Km, _Kr, temp_swap, temp_I, _i)    \
 *(uint32_t*)temp_I = _rotl(_Km[_i] ^ _l, _Kr[_i] % 32);                     \
-temp_swap = _r ^ (((CRYPTO_CAST128_S1[temp_I[3]] - CRYPTO_CAST128_S2[temp_I[2]]) + CRYPTO_CAST128_S3[temp_I[1]]) ^ CRYPTO_CAST128_S4[temp_I[0]]);   \
+temp_swap = _r ^ (((accelc_CAST128_S1[temp_I[3]] - accelc_CAST128_S2[temp_I[2]]) + accelc_CAST128_S3[temp_I[1]]) ^ accelc_CAST128_S4[temp_I[0]]);   \
 _r = _l;                                                                    \
 _l = temp_swap;
 
 
 #define Reverse_Type3_transform(_l, _r, _Km, _Kr, temp_swap, temp_I, _i)    \
 *(uint32_t*)temp_I = _rotl(_Km[_i] - _l, _Kr[_i] % 32);                     \
-temp_swap = _r ^ (((CRYPTO_CAST128_S1[temp_I[3]] + CRYPTO_CAST128_S2[temp_I[2]]) ^ CRYPTO_CAST128_S3[temp_I[1]]) - CRYPTO_CAST128_S4[temp_I[0]]);   \
+temp_swap = _r ^ (((accelc_CAST128_S1[temp_I[3]] + accelc_CAST128_S2[temp_I[2]]) ^ accelc_CAST128_S3[temp_I[1]]) - accelc_CAST128_S4[temp_I[0]]);   \
 _r = _l;                                                                    \
 _l = temp_swap;
 
-void CRYPTO_CAST128_DecryptBlock(uint8_t srcBytes[8],
-                                 const uint32_t Km[16],
-                                 const uint32_t Kr[16],
-                                 uint8_t srcKeyLength) {
+void accelc_CAST128_decrypt(uint8_t srcBytes[CAST128_BLOCK_SIZE], const CAST128_KEY* srcKey) {
 
     uint32_t* const L = (uint32_t*)srcBytes;
     uint32_t* const R = (uint32_t*)srcBytes + 4;
@@ -399,44 +395,41 @@ void CRYPTO_CAST128_DecryptBlock(uint8_t srcBytes[8],
     *R = *L;
     *L = temp;
 
-    if (srcKeyLength > 10) {
-        Reverse_Type1_transform(*L, *R, Km, Kr, temp, I, 15)
-        Reverse_Type3_transform(*L, *R, Km, Kr, temp, I, 14)
-        Reverse_Type2_transform(*L, *R, Km, Kr, temp, I, 13)
-        Reverse_Type1_transform(*L, *R, Km, Kr, temp, I, 12)
+    if (srcKey->UserKeyLength > 10) {
+        Reverse_Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 15)
+        Reverse_Type3_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 14)
+        Reverse_Type2_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 13)
+        Reverse_Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 12)
     }
 
-    Reverse_Type3_transform(*L, *R, Km, Kr, temp, I, 11)
-    Reverse_Type2_transform(*L, *R, Km, Kr, temp, I, 10)
-    Reverse_Type1_transform(*L, *R, Km, Kr, temp, I, 9)
-    Reverse_Type3_transform(*L, *R, Km, Kr, temp, I, 8)
-    Reverse_Type2_transform(*L, *R, Km, Kr, temp, I, 7)
-    Reverse_Type1_transform(*L, *R, Km, Kr, temp, I, 6)
-    Reverse_Type3_transform(*L, *R, Km, Kr, temp, I, 5)
-    Reverse_Type2_transform(*L, *R, Km, Kr, temp, I, 4)
-    Reverse_Type1_transform(*L, *R, Km, Kr, temp, I, 3)
-    Reverse_Type3_transform(*L, *R, Km, Kr, temp, I, 2)
-    Reverse_Type2_transform(*L, *R, Km, Kr, temp, I, 1)
-    Reverse_Type1_transform(*L, *R, Km, Kr, temp, I, 0)
+    Reverse_Type3_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 11)
+    Reverse_Type2_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 10)
+    Reverse_Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 9)
+    Reverse_Type3_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 8)
+    Reverse_Type2_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 7)
+    Reverse_Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 6)
+    Reverse_Type3_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 5)
+    Reverse_Type2_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 4)
+    Reverse_Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 3)
+    Reverse_Type3_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 2)
+    Reverse_Type2_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 1)
+    Reverse_Type1_transform(*L, *R, srcKey->Km, srcKey->Kr, temp, I, 0)
 
     *L = _byteswap_ulong(*L);
     *R = _byteswap_ulong(*R);
 }
 
-int CRYPTO_CAST128_KeyExpansion(const uint8_t srcKey[],
-                                uint8_t srcKeyLength,
-                                uint32_t dstKm[16], uint32_t dstKr[16]) {
+int accelc_CAST128_set_key(const uint8_t* srcUserKey, uint8_t srcUserKeyLength, CAST128_KEY* dstKey) {
+    if (srcUserKeyLength < CAST128_MIN_USERKEY_LENGTH)
+        return CAST128_USERKEY_TOO_SHORT;
 
-    if (srcKeyLength < CRYPTO_CAST128_MIN_KEY_LENGTH)
-        return CRYPTO_CAST128_KEY_TOO_SHORT;
-
-    if (srcKeyLength > CRYPTO_CAST128_MAX_KEY_LENGTH)
-        return CRYPTO_CAST128_KEY_TOO_LONG;
+    if (srcUserKeyLength > CAST128_MAX_USERKEY_LENGTH)
+        return CAST128_USERKEY_TOO_LONG;
 
     uint8_t x[16] = { 0 };
     uint32_t* X = (uint32_t*)x;
-    for (int i = 0; i < srcKeyLength; ++i) {
-        x[(i / 4) * 8 + 3 - i] = srcKey[i];
+    for (int i = 0; i < srcUserKeyLength; ++i) {
+        x[(i / 4) * 8 + 3 - i] = srcUserKey[i];
     }
 
     uint32_t Z[4] = { 0 };
@@ -454,104 +447,105 @@ int CRYPTO_CAST128_KeyExpansion(const uint8_t srcKey[],
     // |	z	 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | A | B | C | D | E | F |	(z in code)
     // |    z    | 3 | 2 | 1 | 0 | 7 | 6 | 5 | 4 | B | A | 9 | 8 | F | E | D | C |	(z in document)
 
-    Z[0] = X[0] ^ CRYPTO_CAST128_S5[x[0xE]] ^ CRYPTO_CAST128_S6[x[0xC]] ^ CRYPTO_CAST128_S7[x[0xF]] ^ CRYPTO_CAST128_S8[x[0xD]] ^ CRYPTO_CAST128_S7[x[0xB]];
-    Z[1] = X[2] ^ CRYPTO_CAST128_S5[z[0x3]] ^ CRYPTO_CAST128_S6[z[0x1]] ^ CRYPTO_CAST128_S7[z[0x2]] ^ CRYPTO_CAST128_S8[z[0x0]] ^ CRYPTO_CAST128_S8[x[0x9]];
-    Z[2] = X[3] ^ CRYPTO_CAST128_S5[z[0x4]] ^ CRYPTO_CAST128_S6[z[0x5]] ^ CRYPTO_CAST128_S7[z[0x6]] ^ CRYPTO_CAST128_S8[z[0x7]] ^ CRYPTO_CAST128_S5[x[0xA]];
-    Z[3] = X[1] ^ CRYPTO_CAST128_S5[z[0x9]] ^ CRYPTO_CAST128_S6[z[0xA]] ^ CRYPTO_CAST128_S7[z[0x8]] ^ CRYPTO_CAST128_S8[z[0xB]] ^ CRYPTO_CAST128_S6[x[0x8]];
+    Z[0] = X[0] ^ accelc_CAST128_S5[x[0xE]] ^ accelc_CAST128_S6[x[0xC]] ^ accelc_CAST128_S7[x[0xF]] ^ accelc_CAST128_S8[x[0xD]] ^ accelc_CAST128_S7[x[0xB]];
+    Z[1] = X[2] ^ accelc_CAST128_S5[z[0x3]] ^ accelc_CAST128_S6[z[0x1]] ^ accelc_CAST128_S7[z[0x2]] ^ accelc_CAST128_S8[z[0x0]] ^ accelc_CAST128_S8[x[0x9]];
+    Z[2] = X[3] ^ accelc_CAST128_S5[z[0x4]] ^ accelc_CAST128_S6[z[0x5]] ^ accelc_CAST128_S7[z[0x6]] ^ accelc_CAST128_S8[z[0x7]] ^ accelc_CAST128_S5[x[0xA]];
+    Z[3] = X[1] ^ accelc_CAST128_S5[z[0x9]] ^ accelc_CAST128_S6[z[0xA]] ^ accelc_CAST128_S7[z[0x8]] ^ accelc_CAST128_S8[z[0xB]] ^ accelc_CAST128_S6[x[0x8]];
 
-    K[0] = CRYPTO_CAST128_S5[z[0xB]] ^ CRYPTO_CAST128_S6[z[0xA]] ^ CRYPTO_CAST128_S7[z[0x4]] ^ CRYPTO_CAST128_S8[z[0x5]] ^ CRYPTO_CAST128_S5[z[0x1]];
-    K[1] = CRYPTO_CAST128_S5[z[0x9]] ^ CRYPTO_CAST128_S6[z[0x8]] ^ CRYPTO_CAST128_S7[z[0x6]] ^ CRYPTO_CAST128_S8[z[0x7]] ^ CRYPTO_CAST128_S6[z[0x5]];
-    K[2] = CRYPTO_CAST128_S5[z[0xF]] ^ CRYPTO_CAST128_S6[z[0xE]] ^ CRYPTO_CAST128_S7[z[0x0]] ^ CRYPTO_CAST128_S8[z[0x1]] ^ CRYPTO_CAST128_S7[z[0xA]];
-    K[3] = CRYPTO_CAST128_S5[z[0xD]] ^ CRYPTO_CAST128_S6[z[0xC]] ^ CRYPTO_CAST128_S7[z[0x2]] ^ CRYPTO_CAST128_S8[z[0x3]] ^ CRYPTO_CAST128_S8[z[0xF]];
+    K[0] = accelc_CAST128_S5[z[0xB]] ^ accelc_CAST128_S6[z[0xA]] ^ accelc_CAST128_S7[z[0x4]] ^ accelc_CAST128_S8[z[0x5]] ^ accelc_CAST128_S5[z[0x1]];
+    K[1] = accelc_CAST128_S5[z[0x9]] ^ accelc_CAST128_S6[z[0x8]] ^ accelc_CAST128_S7[z[0x6]] ^ accelc_CAST128_S8[z[0x7]] ^ accelc_CAST128_S6[z[0x5]];
+    K[2] = accelc_CAST128_S5[z[0xF]] ^ accelc_CAST128_S6[z[0xE]] ^ accelc_CAST128_S7[z[0x0]] ^ accelc_CAST128_S8[z[0x1]] ^ accelc_CAST128_S7[z[0xA]];
+    K[3] = accelc_CAST128_S5[z[0xD]] ^ accelc_CAST128_S6[z[0xC]] ^ accelc_CAST128_S7[z[0x2]] ^ accelc_CAST128_S8[z[0x3]] ^ accelc_CAST128_S8[z[0xF]];
 
-    X[0] = Z[2] ^ CRYPTO_CAST128_S5[z[0x6]] ^ CRYPTO_CAST128_S6[z[0x4]] ^ CRYPTO_CAST128_S7[z[0x7]] ^ CRYPTO_CAST128_S8[z[0x5]] ^ CRYPTO_CAST128_S7[z[3]];
-    X[1] = Z[0] ^ CRYPTO_CAST128_S5[x[0x3]] ^ CRYPTO_CAST128_S6[x[0x1]] ^ CRYPTO_CAST128_S7[x[0x2]] ^ CRYPTO_CAST128_S8[x[0x0]] ^ CRYPTO_CAST128_S8[z[1]];
-    X[2] = Z[1] ^ CRYPTO_CAST128_S5[x[0x4]] ^ CRYPTO_CAST128_S6[x[0x5]] ^ CRYPTO_CAST128_S7[x[0x6]] ^ CRYPTO_CAST128_S8[x[0x7]] ^ CRYPTO_CAST128_S5[z[2]];
-    X[3] = Z[3] ^ CRYPTO_CAST128_S5[x[0x9]] ^ CRYPTO_CAST128_S6[x[0xA]] ^ CRYPTO_CAST128_S7[x[0x8]] ^ CRYPTO_CAST128_S8[x[0xB]] ^ CRYPTO_CAST128_S6[z[0]];
+    X[0] = Z[2] ^ accelc_CAST128_S5[z[0x6]] ^ accelc_CAST128_S6[z[0x4]] ^ accelc_CAST128_S7[z[0x7]] ^ accelc_CAST128_S8[z[0x5]] ^ accelc_CAST128_S7[z[3]];
+    X[1] = Z[0] ^ accelc_CAST128_S5[x[0x3]] ^ accelc_CAST128_S6[x[0x1]] ^ accelc_CAST128_S7[x[0x2]] ^ accelc_CAST128_S8[x[0x0]] ^ accelc_CAST128_S8[z[1]];
+    X[2] = Z[1] ^ accelc_CAST128_S5[x[0x4]] ^ accelc_CAST128_S6[x[0x5]] ^ accelc_CAST128_S7[x[0x6]] ^ accelc_CAST128_S8[x[0x7]] ^ accelc_CAST128_S5[z[2]];
+    X[3] = Z[3] ^ accelc_CAST128_S5[x[0x9]] ^ accelc_CAST128_S6[x[0xA]] ^ accelc_CAST128_S7[x[0x8]] ^ accelc_CAST128_S8[x[0xB]] ^ accelc_CAST128_S6[z[0]];
 
-    K[4] = CRYPTO_CAST128_S5[x[0x0]] ^ CRYPTO_CAST128_S6[x[0x1]] ^ CRYPTO_CAST128_S7[x[0xF]] ^ CRYPTO_CAST128_S8[x[0xE]] ^ CRYPTO_CAST128_S5[x[0xB]];
-    K[5] = CRYPTO_CAST128_S5[x[0x2]] ^ CRYPTO_CAST128_S6[x[0x3]] ^ CRYPTO_CAST128_S7[x[0xD]] ^ CRYPTO_CAST128_S8[x[0xC]] ^ CRYPTO_CAST128_S6[x[0xE]];
-    K[6] = CRYPTO_CAST128_S5[x[0x4]] ^ CRYPTO_CAST128_S6[x[0x5]] ^ CRYPTO_CAST128_S7[x[0xB]] ^ CRYPTO_CAST128_S8[x[0xA]] ^ CRYPTO_CAST128_S7[x[0x0]];
-    K[7] = CRYPTO_CAST128_S5[x[0x6]] ^ CRYPTO_CAST128_S6[x[0x7]] ^ CRYPTO_CAST128_S7[x[0x9]] ^ CRYPTO_CAST128_S8[x[0x8]] ^ CRYPTO_CAST128_S8[x[0x4]];
+    K[4] = accelc_CAST128_S5[x[0x0]] ^ accelc_CAST128_S6[x[0x1]] ^ accelc_CAST128_S7[x[0xF]] ^ accelc_CAST128_S8[x[0xE]] ^ accelc_CAST128_S5[x[0xB]];
+    K[5] = accelc_CAST128_S5[x[0x2]] ^ accelc_CAST128_S6[x[0x3]] ^ accelc_CAST128_S7[x[0xD]] ^ accelc_CAST128_S8[x[0xC]] ^ accelc_CAST128_S6[x[0xE]];
+    K[6] = accelc_CAST128_S5[x[0x4]] ^ accelc_CAST128_S6[x[0x5]] ^ accelc_CAST128_S7[x[0xB]] ^ accelc_CAST128_S8[x[0xA]] ^ accelc_CAST128_S7[x[0x0]];
+    K[7] = accelc_CAST128_S5[x[0x6]] ^ accelc_CAST128_S6[x[0x7]] ^ accelc_CAST128_S7[x[0x9]] ^ accelc_CAST128_S8[x[0x8]] ^ accelc_CAST128_S8[x[0x4]];
 
-    Z[0] = X[0] ^ CRYPTO_CAST128_S5[x[0xE]] ^ CRYPTO_CAST128_S6[x[0xC]] ^ CRYPTO_CAST128_S7[x[0xF]] ^ CRYPTO_CAST128_S8[x[0xD]] ^ CRYPTO_CAST128_S7[x[0xB]];
-    Z[1] = X[2] ^ CRYPTO_CAST128_S5[z[0x3]] ^ CRYPTO_CAST128_S6[z[0x1]] ^ CRYPTO_CAST128_S7[z[0x2]] ^ CRYPTO_CAST128_S8[z[0x0]] ^ CRYPTO_CAST128_S8[x[0x9]];
-    Z[2] = X[3] ^ CRYPTO_CAST128_S5[z[0x4]] ^ CRYPTO_CAST128_S6[z[0x5]] ^ CRYPTO_CAST128_S7[z[0x6]] ^ CRYPTO_CAST128_S8[z[0x7]] ^ CRYPTO_CAST128_S5[x[0xA]];
-    Z[3] = X[1] ^ CRYPTO_CAST128_S5[z[0x9]] ^ CRYPTO_CAST128_S6[z[0xA]] ^ CRYPTO_CAST128_S7[z[0x8]] ^ CRYPTO_CAST128_S8[z[0xB]] ^ CRYPTO_CAST128_S6[x[0x8]];
+    Z[0] = X[0] ^ accelc_CAST128_S5[x[0xE]] ^ accelc_CAST128_S6[x[0xC]] ^ accelc_CAST128_S7[x[0xF]] ^ accelc_CAST128_S8[x[0xD]] ^ accelc_CAST128_S7[x[0xB]];
+    Z[1] = X[2] ^ accelc_CAST128_S5[z[0x3]] ^ accelc_CAST128_S6[z[0x1]] ^ accelc_CAST128_S7[z[0x2]] ^ accelc_CAST128_S8[z[0x0]] ^ accelc_CAST128_S8[x[0x9]];
+    Z[2] = X[3] ^ accelc_CAST128_S5[z[0x4]] ^ accelc_CAST128_S6[z[0x5]] ^ accelc_CAST128_S7[z[0x6]] ^ accelc_CAST128_S8[z[0x7]] ^ accelc_CAST128_S5[x[0xA]];
+    Z[3] = X[1] ^ accelc_CAST128_S5[z[0x9]] ^ accelc_CAST128_S6[z[0xA]] ^ accelc_CAST128_S7[z[0x8]] ^ accelc_CAST128_S8[z[0xB]] ^ accelc_CAST128_S6[x[0x8]];
 
-    K[8] = CRYPTO_CAST128_S5[z[0x0]] ^ CRYPTO_CAST128_S6[z[0x1]] ^ CRYPTO_CAST128_S7[z[0xF]] ^ CRYPTO_CAST128_S8[z[0xE]] ^ CRYPTO_CAST128_S5[z[0xA]];
-    K[9] = CRYPTO_CAST128_S5[z[0x2]] ^ CRYPTO_CAST128_S6[z[0x3]] ^ CRYPTO_CAST128_S7[z[0xD]] ^ CRYPTO_CAST128_S8[z[0xC]] ^ CRYPTO_CAST128_S6[z[0xF]];
-    K[10] = CRYPTO_CAST128_S5[z[0x4]] ^ CRYPTO_CAST128_S6[z[0x5]] ^ CRYPTO_CAST128_S7[z[0xB]] ^ CRYPTO_CAST128_S8[z[0xA]] ^ CRYPTO_CAST128_S7[z[0x1]];
-    K[11] = CRYPTO_CAST128_S5[z[0x6]] ^ CRYPTO_CAST128_S6[z[0x7]] ^ CRYPTO_CAST128_S7[z[0x9]] ^ CRYPTO_CAST128_S8[z[0x8]] ^ CRYPTO_CAST128_S8[z[0x5]];
+    K[8] = accelc_CAST128_S5[z[0x0]] ^ accelc_CAST128_S6[z[0x1]] ^ accelc_CAST128_S7[z[0xF]] ^ accelc_CAST128_S8[z[0xE]] ^ accelc_CAST128_S5[z[0xA]];
+    K[9] = accelc_CAST128_S5[z[0x2]] ^ accelc_CAST128_S6[z[0x3]] ^ accelc_CAST128_S7[z[0xD]] ^ accelc_CAST128_S8[z[0xC]] ^ accelc_CAST128_S6[z[0xF]];
+    K[10] = accelc_CAST128_S5[z[0x4]] ^ accelc_CAST128_S6[z[0x5]] ^ accelc_CAST128_S7[z[0xB]] ^ accelc_CAST128_S8[z[0xA]] ^ accelc_CAST128_S7[z[0x1]];
+    K[11] = accelc_CAST128_S5[z[0x6]] ^ accelc_CAST128_S6[z[0x7]] ^ accelc_CAST128_S7[z[0x9]] ^ accelc_CAST128_S8[z[0x8]] ^ accelc_CAST128_S8[z[0x5]];
 
-    X[0] = Z[2] ^ CRYPTO_CAST128_S5[z[0x6]] ^ CRYPTO_CAST128_S6[z[0x4]] ^ CRYPTO_CAST128_S7[z[0x7]] ^ CRYPTO_CAST128_S8[z[0x5]] ^ CRYPTO_CAST128_S7[z[3]];
-    X[1] = Z[0] ^ CRYPTO_CAST128_S5[x[0x3]] ^ CRYPTO_CAST128_S6[x[0x1]] ^ CRYPTO_CAST128_S7[x[0x2]] ^ CRYPTO_CAST128_S8[x[0x0]] ^ CRYPTO_CAST128_S8[z[1]];
-    X[2] = Z[1] ^ CRYPTO_CAST128_S5[x[0x4]] ^ CRYPTO_CAST128_S6[x[0x5]] ^ CRYPTO_CAST128_S7[x[0x6]] ^ CRYPTO_CAST128_S8[x[0x7]] ^ CRYPTO_CAST128_S5[z[2]];
-    X[3] = Z[3] ^ CRYPTO_CAST128_S5[x[0x9]] ^ CRYPTO_CAST128_S6[x[0xA]] ^ CRYPTO_CAST128_S7[x[0x8]] ^ CRYPTO_CAST128_S8[x[0xB]] ^ CRYPTO_CAST128_S6[z[0]];
+    X[0] = Z[2] ^ accelc_CAST128_S5[z[0x6]] ^ accelc_CAST128_S6[z[0x4]] ^ accelc_CAST128_S7[z[0x7]] ^ accelc_CAST128_S8[z[0x5]] ^ accelc_CAST128_S7[z[3]];
+    X[1] = Z[0] ^ accelc_CAST128_S5[x[0x3]] ^ accelc_CAST128_S6[x[0x1]] ^ accelc_CAST128_S7[x[0x2]] ^ accelc_CAST128_S8[x[0x0]] ^ accelc_CAST128_S8[z[1]];
+    X[2] = Z[1] ^ accelc_CAST128_S5[x[0x4]] ^ accelc_CAST128_S6[x[0x5]] ^ accelc_CAST128_S7[x[0x6]] ^ accelc_CAST128_S8[x[0x7]] ^ accelc_CAST128_S5[z[2]];
+    X[3] = Z[3] ^ accelc_CAST128_S5[x[0x9]] ^ accelc_CAST128_S6[x[0xA]] ^ accelc_CAST128_S7[x[0x8]] ^ accelc_CAST128_S8[x[0xB]] ^ accelc_CAST128_S6[z[0]];
 
-    K[12] = CRYPTO_CAST128_S5[x[0xB]] ^ CRYPTO_CAST128_S6[x[0xA]] ^ CRYPTO_CAST128_S7[x[0x4]] ^ CRYPTO_CAST128_S8[x[0x5]] ^ CRYPTO_CAST128_S5[x[0x0]];
-    K[13] = CRYPTO_CAST128_S5[x[0x9]] ^ CRYPTO_CAST128_S6[x[0x8]] ^ CRYPTO_CAST128_S7[x[0x6]] ^ CRYPTO_CAST128_S8[x[0x7]] ^ CRYPTO_CAST128_S6[x[0x4]];
-    K[14] = CRYPTO_CAST128_S5[x[0xF]] ^ CRYPTO_CAST128_S6[x[0xE]] ^ CRYPTO_CAST128_S7[x[0x0]] ^ CRYPTO_CAST128_S8[x[0x1]] ^ CRYPTO_CAST128_S7[x[0xB]];
-    K[15] = CRYPTO_CAST128_S5[x[0xD]] ^ CRYPTO_CAST128_S6[x[0xC]] ^ CRYPTO_CAST128_S7[x[0x2]] ^ CRYPTO_CAST128_S8[x[0x3]] ^ CRYPTO_CAST128_S8[x[0xE]];
+    K[12] = accelc_CAST128_S5[x[0xB]] ^ accelc_CAST128_S6[x[0xA]] ^ accelc_CAST128_S7[x[0x4]] ^ accelc_CAST128_S8[x[0x5]] ^ accelc_CAST128_S5[x[0x0]];
+    K[13] = accelc_CAST128_S5[x[0x9]] ^ accelc_CAST128_S6[x[0x8]] ^ accelc_CAST128_S7[x[0x6]] ^ accelc_CAST128_S8[x[0x7]] ^ accelc_CAST128_S6[x[0x4]];
+    K[14] = accelc_CAST128_S5[x[0xF]] ^ accelc_CAST128_S6[x[0xE]] ^ accelc_CAST128_S7[x[0x0]] ^ accelc_CAST128_S8[x[0x1]] ^ accelc_CAST128_S7[x[0xB]];
+    K[15] = accelc_CAST128_S5[x[0xD]] ^ accelc_CAST128_S6[x[0xC]] ^ accelc_CAST128_S7[x[0x2]] ^ accelc_CAST128_S8[x[0x3]] ^ accelc_CAST128_S8[x[0xE]];
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Z[0] = X[0] ^ CRYPTO_CAST128_S5[x[0xE]] ^ CRYPTO_CAST128_S6[x[0xC]] ^ CRYPTO_CAST128_S7[x[0xF]] ^ CRYPTO_CAST128_S8[x[0xD]] ^ CRYPTO_CAST128_S7[x[0xB]];
-    Z[1] = X[2] ^ CRYPTO_CAST128_S5[z[0x3]] ^ CRYPTO_CAST128_S6[z[0x1]] ^ CRYPTO_CAST128_S7[z[0x2]] ^ CRYPTO_CAST128_S8[z[0x0]] ^ CRYPTO_CAST128_S8[x[0x9]];
-    Z[2] = X[3] ^ CRYPTO_CAST128_S5[z[0x4]] ^ CRYPTO_CAST128_S6[z[0x5]] ^ CRYPTO_CAST128_S7[z[0x6]] ^ CRYPTO_CAST128_S8[z[0x7]] ^ CRYPTO_CAST128_S5[x[0xA]];
-    Z[3] = X[1] ^ CRYPTO_CAST128_S5[z[0x9]] ^ CRYPTO_CAST128_S6[z[0xA]] ^ CRYPTO_CAST128_S7[z[0x8]] ^ CRYPTO_CAST128_S8[z[0xB]] ^ CRYPTO_CAST128_S6[x[0x8]];
+    Z[0] = X[0] ^ accelc_CAST128_S5[x[0xE]] ^ accelc_CAST128_S6[x[0xC]] ^ accelc_CAST128_S7[x[0xF]] ^ accelc_CAST128_S8[x[0xD]] ^ accelc_CAST128_S7[x[0xB]];
+    Z[1] = X[2] ^ accelc_CAST128_S5[z[0x3]] ^ accelc_CAST128_S6[z[0x1]] ^ accelc_CAST128_S7[z[0x2]] ^ accelc_CAST128_S8[z[0x0]] ^ accelc_CAST128_S8[x[0x9]];
+    Z[2] = X[3] ^ accelc_CAST128_S5[z[0x4]] ^ accelc_CAST128_S6[z[0x5]] ^ accelc_CAST128_S7[z[0x6]] ^ accelc_CAST128_S8[z[0x7]] ^ accelc_CAST128_S5[x[0xA]];
+    Z[3] = X[1] ^ accelc_CAST128_S5[z[0x9]] ^ accelc_CAST128_S6[z[0xA]] ^ accelc_CAST128_S7[z[0x8]] ^ accelc_CAST128_S8[z[0xB]] ^ accelc_CAST128_S6[x[0x8]];
 
-    K[16] = CRYPTO_CAST128_S5[z[0xB]] ^ CRYPTO_CAST128_S6[z[0xA]] ^ CRYPTO_CAST128_S7[z[0x4]] ^ CRYPTO_CAST128_S8[z[0x5]] ^ CRYPTO_CAST128_S5[z[0x1]];
-    K[17] = CRYPTO_CAST128_S5[z[0x9]] ^ CRYPTO_CAST128_S6[z[0x8]] ^ CRYPTO_CAST128_S7[z[0x6]] ^ CRYPTO_CAST128_S8[z[0x7]] ^ CRYPTO_CAST128_S6[z[0x5]];
-    K[18] = CRYPTO_CAST128_S5[z[0xF]] ^ CRYPTO_CAST128_S6[z[0xE]] ^ CRYPTO_CAST128_S7[z[0x0]] ^ CRYPTO_CAST128_S8[z[0x1]] ^ CRYPTO_CAST128_S7[z[0xA]];
-    K[19] = CRYPTO_CAST128_S5[z[0xD]] ^ CRYPTO_CAST128_S6[z[0xC]] ^ CRYPTO_CAST128_S7[z[0x2]] ^ CRYPTO_CAST128_S8[z[0x3]] ^ CRYPTO_CAST128_S8[z[0xF]];
+    K[16] = accelc_CAST128_S5[z[0xB]] ^ accelc_CAST128_S6[z[0xA]] ^ accelc_CAST128_S7[z[0x4]] ^ accelc_CAST128_S8[z[0x5]] ^ accelc_CAST128_S5[z[0x1]];
+    K[17] = accelc_CAST128_S5[z[0x9]] ^ accelc_CAST128_S6[z[0x8]] ^ accelc_CAST128_S7[z[0x6]] ^ accelc_CAST128_S8[z[0x7]] ^ accelc_CAST128_S6[z[0x5]];
+    K[18] = accelc_CAST128_S5[z[0xF]] ^ accelc_CAST128_S6[z[0xE]] ^ accelc_CAST128_S7[z[0x0]] ^ accelc_CAST128_S8[z[0x1]] ^ accelc_CAST128_S7[z[0xA]];
+    K[19] = accelc_CAST128_S5[z[0xD]] ^ accelc_CAST128_S6[z[0xC]] ^ accelc_CAST128_S7[z[0x2]] ^ accelc_CAST128_S8[z[0x3]] ^ accelc_CAST128_S8[z[0xF]];
 
-    X[0] = Z[2] ^ CRYPTO_CAST128_S5[z[0x6]] ^ CRYPTO_CAST128_S6[z[0x4]] ^ CRYPTO_CAST128_S7[z[0x7]] ^ CRYPTO_CAST128_S8[z[0x5]] ^ CRYPTO_CAST128_S7[z[3]];
-    X[1] = Z[0] ^ CRYPTO_CAST128_S5[x[0x3]] ^ CRYPTO_CAST128_S6[x[0x1]] ^ CRYPTO_CAST128_S7[x[0x2]] ^ CRYPTO_CAST128_S8[x[0x0]] ^ CRYPTO_CAST128_S8[z[1]];
-    X[2] = Z[1] ^ CRYPTO_CAST128_S5[x[0x4]] ^ CRYPTO_CAST128_S6[x[0x5]] ^ CRYPTO_CAST128_S7[x[0x6]] ^ CRYPTO_CAST128_S8[x[0x7]] ^ CRYPTO_CAST128_S5[z[2]];
-    X[3] = Z[3] ^ CRYPTO_CAST128_S5[x[0x9]] ^ CRYPTO_CAST128_S6[x[0xA]] ^ CRYPTO_CAST128_S7[x[0x8]] ^ CRYPTO_CAST128_S8[x[0xB]] ^ CRYPTO_CAST128_S6[z[0]];
+    X[0] = Z[2] ^ accelc_CAST128_S5[z[0x6]] ^ accelc_CAST128_S6[z[0x4]] ^ accelc_CAST128_S7[z[0x7]] ^ accelc_CAST128_S8[z[0x5]] ^ accelc_CAST128_S7[z[3]];
+    X[1] = Z[0] ^ accelc_CAST128_S5[x[0x3]] ^ accelc_CAST128_S6[x[0x1]] ^ accelc_CAST128_S7[x[0x2]] ^ accelc_CAST128_S8[x[0x0]] ^ accelc_CAST128_S8[z[1]];
+    X[2] = Z[1] ^ accelc_CAST128_S5[x[0x4]] ^ accelc_CAST128_S6[x[0x5]] ^ accelc_CAST128_S7[x[0x6]] ^ accelc_CAST128_S8[x[0x7]] ^ accelc_CAST128_S5[z[2]];
+    X[3] = Z[3] ^ accelc_CAST128_S5[x[0x9]] ^ accelc_CAST128_S6[x[0xA]] ^ accelc_CAST128_S7[x[0x8]] ^ accelc_CAST128_S8[x[0xB]] ^ accelc_CAST128_S6[z[0]];
 
-    K[20] = CRYPTO_CAST128_S5[x[0x0]] ^ CRYPTO_CAST128_S6[x[0x1]] ^ CRYPTO_CAST128_S7[x[0xF]] ^ CRYPTO_CAST128_S8[x[0xE]] ^ CRYPTO_CAST128_S5[x[0xB]];
-    K[21] = CRYPTO_CAST128_S5[x[0x2]] ^ CRYPTO_CAST128_S6[x[0x3]] ^ CRYPTO_CAST128_S7[x[0xD]] ^ CRYPTO_CAST128_S8[x[0xC]] ^ CRYPTO_CAST128_S6[x[0xE]];
-    K[22] = CRYPTO_CAST128_S5[x[0x4]] ^ CRYPTO_CAST128_S6[x[0x5]] ^ CRYPTO_CAST128_S7[x[0xB]] ^ CRYPTO_CAST128_S8[x[0xA]] ^ CRYPTO_CAST128_S7[x[0x0]];
-    K[23] = CRYPTO_CAST128_S5[x[0x6]] ^ CRYPTO_CAST128_S6[x[0x7]] ^ CRYPTO_CAST128_S7[x[0x9]] ^ CRYPTO_CAST128_S8[x[0x8]] ^ CRYPTO_CAST128_S8[x[0x4]];
+    K[20] = accelc_CAST128_S5[x[0x0]] ^ accelc_CAST128_S6[x[0x1]] ^ accelc_CAST128_S7[x[0xF]] ^ accelc_CAST128_S8[x[0xE]] ^ accelc_CAST128_S5[x[0xB]];
+    K[21] = accelc_CAST128_S5[x[0x2]] ^ accelc_CAST128_S6[x[0x3]] ^ accelc_CAST128_S7[x[0xD]] ^ accelc_CAST128_S8[x[0xC]] ^ accelc_CAST128_S6[x[0xE]];
+    K[22] = accelc_CAST128_S5[x[0x4]] ^ accelc_CAST128_S6[x[0x5]] ^ accelc_CAST128_S7[x[0xB]] ^ accelc_CAST128_S8[x[0xA]] ^ accelc_CAST128_S7[x[0x0]];
+    K[23] = accelc_CAST128_S5[x[0x6]] ^ accelc_CAST128_S6[x[0x7]] ^ accelc_CAST128_S7[x[0x9]] ^ accelc_CAST128_S8[x[0x8]] ^ accelc_CAST128_S8[x[0x4]];
 
-    Z[0] = X[0] ^ CRYPTO_CAST128_S5[x[0xE]] ^ CRYPTO_CAST128_S6[x[0xC]] ^ CRYPTO_CAST128_S7[x[0xF]] ^ CRYPTO_CAST128_S8[x[0xD]] ^ CRYPTO_CAST128_S7[x[0xB]];
-    Z[1] = X[2] ^ CRYPTO_CAST128_S5[z[0x3]] ^ CRYPTO_CAST128_S6[z[0x1]] ^ CRYPTO_CAST128_S7[z[0x2]] ^ CRYPTO_CAST128_S8[z[0x0]] ^ CRYPTO_CAST128_S8[x[0x9]];
-    Z[2] = X[3] ^ CRYPTO_CAST128_S5[z[0x4]] ^ CRYPTO_CAST128_S6[z[0x5]] ^ CRYPTO_CAST128_S7[z[0x6]] ^ CRYPTO_CAST128_S8[z[0x7]] ^ CRYPTO_CAST128_S5[x[0xA]];
-    Z[3] = X[1] ^ CRYPTO_CAST128_S5[z[0x9]] ^ CRYPTO_CAST128_S6[z[0xA]] ^ CRYPTO_CAST128_S7[z[0x8]] ^ CRYPTO_CAST128_S8[z[0xB]] ^ CRYPTO_CAST128_S6[x[0x8]];
+    Z[0] = X[0] ^ accelc_CAST128_S5[x[0xE]] ^ accelc_CAST128_S6[x[0xC]] ^ accelc_CAST128_S7[x[0xF]] ^ accelc_CAST128_S8[x[0xD]] ^ accelc_CAST128_S7[x[0xB]];
+    Z[1] = X[2] ^ accelc_CAST128_S5[z[0x3]] ^ accelc_CAST128_S6[z[0x1]] ^ accelc_CAST128_S7[z[0x2]] ^ accelc_CAST128_S8[z[0x0]] ^ accelc_CAST128_S8[x[0x9]];
+    Z[2] = X[3] ^ accelc_CAST128_S5[z[0x4]] ^ accelc_CAST128_S6[z[0x5]] ^ accelc_CAST128_S7[z[0x6]] ^ accelc_CAST128_S8[z[0x7]] ^ accelc_CAST128_S5[x[0xA]];
+    Z[3] = X[1] ^ accelc_CAST128_S5[z[0x9]] ^ accelc_CAST128_S6[z[0xA]] ^ accelc_CAST128_S7[z[0x8]] ^ accelc_CAST128_S8[z[0xB]] ^ accelc_CAST128_S6[x[0x8]];
 
-    K[24] = CRYPTO_CAST128_S5[z[0x0]] ^ CRYPTO_CAST128_S6[z[0x1]] ^ CRYPTO_CAST128_S7[z[0xF]] ^ CRYPTO_CAST128_S8[z[0xE]] ^ CRYPTO_CAST128_S5[z[0xA]];
-    K[25] = CRYPTO_CAST128_S5[z[0x2]] ^ CRYPTO_CAST128_S6[z[0x3]] ^ CRYPTO_CAST128_S7[z[0xD]] ^ CRYPTO_CAST128_S8[z[0xC]] ^ CRYPTO_CAST128_S6[z[0xF]];
-    K[26] = CRYPTO_CAST128_S5[z[0x4]] ^ CRYPTO_CAST128_S6[z[0x5]] ^ CRYPTO_CAST128_S7[z[0xB]] ^ CRYPTO_CAST128_S8[z[0xA]] ^ CRYPTO_CAST128_S7[z[0x1]];
-    K[27] = CRYPTO_CAST128_S5[z[0x6]] ^ CRYPTO_CAST128_S6[z[0x7]] ^ CRYPTO_CAST128_S7[z[0x9]] ^ CRYPTO_CAST128_S8[z[0x8]] ^ CRYPTO_CAST128_S8[z[0x5]];
+    K[24] = accelc_CAST128_S5[z[0x0]] ^ accelc_CAST128_S6[z[0x1]] ^ accelc_CAST128_S7[z[0xF]] ^ accelc_CAST128_S8[z[0xE]] ^ accelc_CAST128_S5[z[0xA]];
+    K[25] = accelc_CAST128_S5[z[0x2]] ^ accelc_CAST128_S6[z[0x3]] ^ accelc_CAST128_S7[z[0xD]] ^ accelc_CAST128_S8[z[0xC]] ^ accelc_CAST128_S6[z[0xF]];
+    K[26] = accelc_CAST128_S5[z[0x4]] ^ accelc_CAST128_S6[z[0x5]] ^ accelc_CAST128_S7[z[0xB]] ^ accelc_CAST128_S8[z[0xA]] ^ accelc_CAST128_S7[z[0x1]];
+    K[27] = accelc_CAST128_S5[z[0x6]] ^ accelc_CAST128_S6[z[0x7]] ^ accelc_CAST128_S7[z[0x9]] ^ accelc_CAST128_S8[z[0x8]] ^ accelc_CAST128_S8[z[0x5]];
 
-    X[0] = Z[2] ^ CRYPTO_CAST128_S5[z[0x6]] ^ CRYPTO_CAST128_S6[z[0x4]] ^ CRYPTO_CAST128_S7[z[0x7]] ^ CRYPTO_CAST128_S8[z[0x5]] ^ CRYPTO_CAST128_S7[z[3]];
-    X[1] = Z[0] ^ CRYPTO_CAST128_S5[x[0x3]] ^ CRYPTO_CAST128_S6[x[0x1]] ^ CRYPTO_CAST128_S7[x[0x2]] ^ CRYPTO_CAST128_S8[x[0x0]] ^ CRYPTO_CAST128_S8[z[1]];
-    X[2] = Z[1] ^ CRYPTO_CAST128_S5[x[0x4]] ^ CRYPTO_CAST128_S6[x[0x5]] ^ CRYPTO_CAST128_S7[x[0x6]] ^ CRYPTO_CAST128_S8[x[0x7]] ^ CRYPTO_CAST128_S5[z[2]];
-    X[3] = Z[3] ^ CRYPTO_CAST128_S5[x[0x9]] ^ CRYPTO_CAST128_S6[x[0xA]] ^ CRYPTO_CAST128_S7[x[0x8]] ^ CRYPTO_CAST128_S8[x[0xB]] ^ CRYPTO_CAST128_S6[z[0]];
+    X[0] = Z[2] ^ accelc_CAST128_S5[z[0x6]] ^ accelc_CAST128_S6[z[0x4]] ^ accelc_CAST128_S7[z[0x7]] ^ accelc_CAST128_S8[z[0x5]] ^ accelc_CAST128_S7[z[3]];
+    X[1] = Z[0] ^ accelc_CAST128_S5[x[0x3]] ^ accelc_CAST128_S6[x[0x1]] ^ accelc_CAST128_S7[x[0x2]] ^ accelc_CAST128_S8[x[0x0]] ^ accelc_CAST128_S8[z[1]];
+    X[2] = Z[1] ^ accelc_CAST128_S5[x[0x4]] ^ accelc_CAST128_S6[x[0x5]] ^ accelc_CAST128_S7[x[0x6]] ^ accelc_CAST128_S8[x[0x7]] ^ accelc_CAST128_S5[z[2]];
+    X[3] = Z[3] ^ accelc_CAST128_S5[x[0x9]] ^ accelc_CAST128_S6[x[0xA]] ^ accelc_CAST128_S7[x[0x8]] ^ accelc_CAST128_S8[x[0xB]] ^ accelc_CAST128_S6[z[0]];
 
-    K[28] = CRYPTO_CAST128_S5[x[0xB]] ^ CRYPTO_CAST128_S6[x[0xA]] ^ CRYPTO_CAST128_S7[x[0x4]] ^ CRYPTO_CAST128_S8[x[0x5]] ^ CRYPTO_CAST128_S5[x[0x0]];
-    K[29] = CRYPTO_CAST128_S5[x[0x9]] ^ CRYPTO_CAST128_S6[x[0x8]] ^ CRYPTO_CAST128_S7[x[0x6]] ^ CRYPTO_CAST128_S8[x[0x7]] ^ CRYPTO_CAST128_S6[x[0x4]];
-    K[30] = CRYPTO_CAST128_S5[x[0xF]] ^ CRYPTO_CAST128_S6[x[0xE]] ^ CRYPTO_CAST128_S7[x[0x0]] ^ CRYPTO_CAST128_S8[x[0x1]] ^ CRYPTO_CAST128_S7[x[0xB]];
-    K[31] = CRYPTO_CAST128_S5[x[0xD]] ^ CRYPTO_CAST128_S6[x[0xC]] ^ CRYPTO_CAST128_S7[x[0x2]] ^ CRYPTO_CAST128_S8[x[0x3]] ^ CRYPTO_CAST128_S8[x[0xE]];
+    K[28] = accelc_CAST128_S5[x[0xB]] ^ accelc_CAST128_S6[x[0xA]] ^ accelc_CAST128_S7[x[0x4]] ^ accelc_CAST128_S8[x[0x5]] ^ accelc_CAST128_S5[x[0x0]];
+    K[29] = accelc_CAST128_S5[x[0x9]] ^ accelc_CAST128_S6[x[0x8]] ^ accelc_CAST128_S7[x[0x6]] ^ accelc_CAST128_S8[x[0x7]] ^ accelc_CAST128_S6[x[0x4]];
+    K[30] = accelc_CAST128_S5[x[0xF]] ^ accelc_CAST128_S6[x[0xE]] ^ accelc_CAST128_S7[x[0x0]] ^ accelc_CAST128_S8[x[0x1]] ^ accelc_CAST128_S7[x[0xB]];
+    K[31] = accelc_CAST128_S5[x[0xD]] ^ accelc_CAST128_S6[x[0xC]] ^ accelc_CAST128_S7[x[0x2]] ^ accelc_CAST128_S8[x[0x3]] ^ accelc_CAST128_S8[x[0xE]];
 
-    for (int i = 0, round_count = (srcKeyLength > 10 ? 16 : 12); i < round_count; ++i) {
-        dstKm[i] = K[i];
-        dstKr[i] = K[16 + i];
+    for (int i = 0, round_count = (srcUserKeyLength > 10 ? 16 : 12); i < round_count; ++i) {
+        dstKey->Km[i] = K[i];
+        dstKey->Kr[i] = K[16 + i];
     }
 
-    if (srcKeyLength <= 10) {
-        dstKm[12] = 0;
-        dstKm[13] = 0;
-        dstKm[14] = 0;
-        dstKm[15] = 0;
+    if (srcUserKeyLength <= 10) {
+        dstKey->Km[12] = 0;
+        dstKey->Km[13] = 0;
+        dstKey->Km[14] = 0;
+        dstKey->Km[15] = 0;
 
-        dstKr[12] = 0;
-        dstKr[13] = 0;
-        dstKr[14] = 0;
-        dstKr[15] = 0;
+        dstKey->Kr[12] = 0;
+        dstKey->Kr[13] = 0;
+        dstKey->Kr[14] = 0;
+        dstKey->Kr[15] = 0;
     }
 
-    return CRYPTO_CAST128_SUCCESS;
+    dstKey->UserKeyLength = srcUserKeyLength;
+    return CAST128_SUCCESS;
 }

@@ -28,8 +28,9 @@ extern "C" {
                              const coeff_t* Exponent, size_t ExponentLength,
                              const coeff_t* Modulus);
 
-    coeff_t accelc_numtheory_reciprocal(coeff_t a, coeff_t P);
-    int accelc_numtheory_MillerRabin(coeff_t n, size_t count);
+    coeff_t accelc_reciprocal_Fermat(coeff_t a, coeff_t P);
+
+    int accelc_MillerRabinTest(coeff_t n, size_t count);
 
     size_t accelc_NTT(const coeff_t* __restrict src, size_t len,
                       coeff_t* __restrict dst,

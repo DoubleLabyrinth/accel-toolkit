@@ -1,9 +1,10 @@
-/*********************************************************************
-* Filename:   DES.c
-* Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
-*********************************************************************/
-#include "../DES.h"
+#include "../des.h"
+
+#ifdef _MSC_VER
 #include <intrin.h>
+#elif defined(__GNUC__)
+#include <x86intrin.h>
+#endif
 
 const uint8_t CRYPTO_DES_S1[4][16] = {
     { 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7 },
@@ -61,7 +62,7 @@ const uint8_t CRYPTO_DES_S8[4][16] = {
     { 2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 }
 };  //checked
 
-void CRYPTO_DES_EncryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[16][6]) {
+void accelc_DES_encrypt(uint8_t srcBytes[DES_BLOCK_SIZE], const DES_KEY* srcKey) {
     uint8_t Buffer[8];
 
     //Start initial permutation
@@ -167,7 +168,7 @@ void CRYPTO_DES_EncryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
             (RightPart[3] << 7) |
                 (RightPart[0] & 0xF8) >> 1 |
                 (RightPart[0] & 0x18) >> 3
-                ) ^ srcExpandedKey[i][0]
+                ) ^ srcKey->ExpandedKey[i][0]
             );
 
         tmp[1] = (
@@ -176,7 +177,7 @@ void CRYPTO_DES_EncryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
                 (RightPart[1] & 0x80) >> 3 |
                 (RightPart[0] & 0x01) << 3 |
                 (RightPart[1] >> 5)
-                ) ^ srcExpandedKey[i][1]
+                ) ^ srcKey->ExpandedKey[i][1]
             );
 
         tmp[2] = (
@@ -184,7 +185,7 @@ void CRYPTO_DES_EncryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
             (RightPart[1] & 0x18) << 3 |
                 (RightPart[1] & 0x1F) << 1 |
                 (RightPart[2] >> 7)
-                ) ^ srcExpandedKey[i][2]
+                ) ^ srcKey->ExpandedKey[i][2]
             );
 
         tmp[3] = (
@@ -192,7 +193,7 @@ void CRYPTO_DES_EncryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
             (RightPart[1] << 7) |
                 (RightPart[2] & 0xF8) >> 1 |
                 (RightPart[2] & 0x18) >> 3
-                ) ^ srcExpandedKey[i][3]
+                ) ^ srcKey->ExpandedKey[i][3]
             );
 
         tmp[4] = (
@@ -201,7 +202,7 @@ void CRYPTO_DES_EncryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
                 (RightPart[3] & 0x80) >> 3 |
                 (RightPart[2] & 0x01) << 3 |
                 (RightPart[3] >> 5)
-                ) ^ srcExpandedKey[i][4]
+                ) ^ srcKey->ExpandedKey[i][4]
             );
 
         tmp[5] = (
@@ -209,7 +210,7 @@ void CRYPTO_DES_EncryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
             (RightPart[3] & 0x18) << 3 |
                 (RightPart[3] & 0x1F) << 1 |
                 (RightPart[0] >> 7)
-                ) ^ srcExpandedKey[i][5]
+                ) ^ srcKey->ExpandedKey[i][5]
             );
 
         //S transformation
@@ -382,7 +383,7 @@ void CRYPTO_DES_EncryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
     //*reinterpret_cast<uint64_t*>(Buffer) = 0;
 }
 
-void CRYPTO_DES_DecryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[16][6]) {
+void accelc_DES_decrypt(uint8_t srcBytes[DES_BLOCK_SIZE], const DES_KEY* srcKey) {
     uint8_t Buffer[8];
 
     //Start initial permutation
@@ -487,7 +488,7 @@ void CRYPTO_DES_DecryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
             (LeftPart[3] << 7) |
                 (LeftPart[0] & 0xF8) >> 1 |
                 (LeftPart[0] & 0x18) >> 3
-                ) ^ srcExpandedKey[i][0]
+                ) ^ srcKey->ExpandedKey[i][0]
             );
 
         tmp[1] = (
@@ -496,7 +497,7 @@ void CRYPTO_DES_DecryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
                 (LeftPart[1] & 0x80) >> 3 |
                 (LeftPart[0] & 0x01) << 3 |
                 (LeftPart[1] >> 5)
-                ) ^ srcExpandedKey[i][1]
+                ) ^ srcKey->ExpandedKey[i][1]
             );
 
         tmp[2] = (
@@ -504,7 +505,7 @@ void CRYPTO_DES_DecryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
             (LeftPart[1] & 0x18) << 3 |
                 (LeftPart[1] & 0x1F) << 1 |
                 (LeftPart[2] >> 7)
-                ) ^ srcExpandedKey[i][2]
+                ) ^ srcKey->ExpandedKey[i][2]
             );
 
         tmp[3] = (
@@ -512,7 +513,7 @@ void CRYPTO_DES_DecryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
             (LeftPart[1] << 7) |
                 (LeftPart[2] & 0xF8) >> 1 |
                 (LeftPart[2] & 0x18) >> 3
-                ) ^ srcExpandedKey[i][3]
+                ) ^ srcKey->ExpandedKey[i][3]
             );
 
         tmp[4] = (
@@ -521,7 +522,7 @@ void CRYPTO_DES_DecryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
                 (LeftPart[3] & 0x80) >> 3 |
                 (LeftPart[2] & 0x01) << 3 |
                 (LeftPart[3] >> 5)
-                ) ^ srcExpandedKey[i][4]
+                ) ^ srcKey->ExpandedKey[i][4]
             );
 
         tmp[5] = (
@@ -529,7 +530,7 @@ void CRYPTO_DES_DecryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
             (LeftPart[3] & 0x18) << 3 |
                 (LeftPart[3] & 0x1F) << 1 |
                 (LeftPart[0] >> 7)
-                ) ^ srcExpandedKey[i][5]
+                ) ^ srcKey->ExpandedKey[i][5]
             );
 
         //S transformation
@@ -700,28 +701,28 @@ void CRYPTO_DES_DecryptBlock(uint8_t srcBytes[8], const uint8_t srcExpandedKey[1
         );
 }
 
-void CRYPTO_3DES_DecryptBlock(uint8_t srcBytes[8],
-                              const uint8_t srcExpandedKey1[16][6],
-                              const uint8_t srcExpandedKey2[16][6],
-                              const uint8_t srcExpandedKey3[16][6]) {
-    CRYPTO_DES_DecryptBlock(srcBytes, srcExpandedKey3);
-    CRYPTO_DES_EncryptBlock(srcBytes, srcExpandedKey2);
-    CRYPTO_DES_DecryptBlock(srcBytes, srcExpandedKey1);
+void accelc_3DES_decrypt(uint8_t srcBytes[DES_BLOCK_SIZE],
+                         const DES_KEY* srcKey1,
+                         const DES_KEY* srcKey2,
+                         const DES_KEY* srcKey3) {
+    accelc_DES_decrypt(srcBytes, srcKey3);
+    accelc_DES_encrypt(srcBytes, srcKey2);
+    accelc_DES_decrypt(srcBytes, srcKey1);
 }
 
-void CRYPTO_3DES_EncryptBlock(uint8_t srcBytes[8],
-                              const uint8_t srcExpandedKey1[16][6],
-                              const uint8_t srcExpandedKey2[16][6],
-                              const uint8_t srcExpandedKey3[16][6]) {
-    CRYPTO_DES_EncryptBlock(srcBytes, srcExpandedKey1);
-    CRYPTO_DES_DecryptBlock(srcBytes, srcExpandedKey2);
-    CRYPTO_DES_EncryptBlock(srcBytes, srcExpandedKey3);
+void accelc_3DES_encrypt(uint8_t srcBytes[DES_BLOCK_SIZE],
+                         DES_KEY* srcKey1,
+                         DES_KEY* srcKey2,
+                         DES_KEY* srcKey3) {
+    accelc_DES_encrypt(srcBytes, srcKey1);
+    accelc_DES_decrypt(srcBytes, srcKey2);
+    accelc_DES_encrypt(srcBytes, srcKey3);
 }
 
-int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t dstExpandedKey[16][6]) {
+int accelc_DES_set_key(const uint8_t srcUserKey[DES_USERKEY_LENGTH], DES_KEY* dstKey) {
     //check if cipher key is legal
     for (int i = 0; i < 8; ++i) {
-        uint8_t temp = srcKey[i];
+        uint8_t temp = srcUserKey[i];
         uint8_t count = 0;
 
         while (temp) {
@@ -730,90 +731,90 @@ int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t dstExpandedKey[16][
         }
 
         if (count % 2 == 0)
-            return CRYPTO_DES_INVALID_KEY;
+            return DES_INVALID_KEY;
     }
 
     //Permuted choice 1
     uint8_t C_Part[4];
     uint8_t D_Part[4];
     C_Part[0] = (
-        (srcKey[7] & 0x80) |
-        (srcKey[6] & 0x80) >> 1 |
-        (srcKey[5] & 0x80) >> 2 |
-        (srcKey[4] & 0x80) >> 3 |
-        (srcKey[3] & 0x80) >> 4 |
-        (srcKey[2] & 0x80) >> 5 |
-        (srcKey[1] & 0x80) >> 6 |
-        (srcKey[0] & 0x80) >> 7
+        (srcUserKey[7] & 0x80) |
+        (srcUserKey[6] & 0x80) >> 1 |
+        (srcUserKey[5] & 0x80) >> 2 |
+        (srcUserKey[4] & 0x80) >> 3 |
+        (srcUserKey[3] & 0x80) >> 4 |
+        (srcUserKey[2] & 0x80) >> 5 |
+        (srcUserKey[1] & 0x80) >> 6 |
+        (srcUserKey[0] & 0x80) >> 7
         );
 
     C_Part[1] = (
-        (srcKey[7] & 0x40) << 1 |
-        (srcKey[6] & 0x40) |
-        (srcKey[5] & 0x40) >> 1 |
-        (srcKey[4] & 0x40) >> 2 |
-        (srcKey[3] & 0x40) >> 3 |
-        (srcKey[2] & 0x40) >> 4 |
-        (srcKey[1] & 0x40) >> 5 |
-        (srcKey[0] & 0x40) >> 6
+        (srcUserKey[7] & 0x40) << 1 |
+        (srcUserKey[6] & 0x40) |
+        (srcUserKey[5] & 0x40) >> 1 |
+        (srcUserKey[4] & 0x40) >> 2 |
+        (srcUserKey[3] & 0x40) >> 3 |
+        (srcUserKey[2] & 0x40) >> 4 |
+        (srcUserKey[1] & 0x40) >> 5 |
+        (srcUserKey[0] & 0x40) >> 6
         );
 
     C_Part[2] = (
-        (srcKey[7] & 0x20) << 2 |
-        (srcKey[6] & 0x20) << 1 |
-        (srcKey[5] & 0x20) |
-        (srcKey[4] & 0x20) >> 1 |
-        (srcKey[3] & 0x20) >> 2 |
-        (srcKey[2] & 0x20) >> 3 |
-        (srcKey[1] & 0x20) >> 4 |
-        (srcKey[0] & 0x20) >> 5
+        (srcUserKey[7] & 0x20) << 2 |
+        (srcUserKey[6] & 0x20) << 1 |
+        (srcUserKey[5] & 0x20) |
+        (srcUserKey[4] & 0x20) >> 1 |
+        (srcUserKey[3] & 0x20) >> 2 |
+        (srcUserKey[2] & 0x20) >> 3 |
+        (srcUserKey[1] & 0x20) >> 4 |
+        (srcUserKey[0] & 0x20) >> 5
         );
 
     C_Part[3] = (
-        (srcKey[7] & 0x10) << 3 |
-        (srcKey[6] & 0x10) << 2 |
-        (srcKey[5] & 0x10) << 1 |
-        (srcKey[4] & 0x10)
+        (srcUserKey[7] & 0x10) << 3 |
+        (srcUserKey[6] & 0x10) << 2 |
+        (srcUserKey[5] & 0x10) << 1 |
+        (srcUserKey[4] & 0x10)
         );
 
     D_Part[0] = (
-        (srcKey[7] & 0x02) << 6 |
-        (srcKey[6] & 0x02) << 5 |
-        (srcKey[5] & 0x02) << 4 |
-        (srcKey[4] & 0x02) << 3 |
-        (srcKey[3] & 0x02) << 2 |
-        (srcKey[2] & 0x02) << 1 |
-        (srcKey[1] & 0x02) |
-        (srcKey[0] & 0x02) >> 1
+        (srcUserKey[7] & 0x02) << 6 |
+        (srcUserKey[6] & 0x02) << 5 |
+        (srcUserKey[5] & 0x02) << 4 |
+        (srcUserKey[4] & 0x02) << 3 |
+        (srcUserKey[3] & 0x02) << 2 |
+        (srcUserKey[2] & 0x02) << 1 |
+        (srcUserKey[1] & 0x02) |
+        (srcUserKey[0] & 0x02) >> 1
         );
 
     D_Part[1] = (
-        (srcKey[7] & 0x04) << 5 |
-        (srcKey[6] & 0x04) << 4 |
-        (srcKey[5] & 0x04) << 3 |
-        (srcKey[4] & 0x04) << 2 |
-        (srcKey[3] & 0x04) << 1 |
-        (srcKey[2] & 0x04) |
-        (srcKey[1] & 0x04) >> 1 |
-        (srcKey[0] & 0x04) >> 2
+        (srcUserKey[7] & 0x04) << 5 |
+        (srcUserKey[6] & 0x04) << 4 |
+        (srcUserKey[5] & 0x04) << 3 |
+        (srcUserKey[4] & 0x04) << 2 |
+        (srcUserKey[3] & 0x04) << 1 |
+        (srcUserKey[2] & 0x04) |
+        (srcUserKey[1] & 0x04) >> 1 |
+        (srcUserKey[0] & 0x04) >> 2
         );
 
     D_Part[2] = (
-        (srcKey[7] & 0x08) << 4 |
-        (srcKey[6] & 0x08) << 3 |
-        (srcKey[5] & 0x08) << 2 |
-        (srcKey[4] & 0x08) << 1 |
-        (srcKey[3] & 0x08) |
-        (srcKey[2] & 0x08) >> 1 |
-        (srcKey[1] & 0x08) >> 2 |
-        (srcKey[0] & 0x08) >> 3
+        (srcUserKey[7] & 0x08) << 4 |
+        (srcUserKey[6] & 0x08) << 3 |
+        (srcUserKey[5] & 0x08) << 2 |
+        (srcUserKey[4] & 0x08) << 1 |
+        (srcUserKey[3] & 0x08) |
+        (srcUserKey[2] & 0x08) >> 1 |
+        (srcUserKey[1] & 0x08) >> 2 |
+        (srcUserKey[0] & 0x08) >> 3
         );
 
     D_Part[3] = (
-        (srcKey[3] & 0x10) << 3 |
-        (srcKey[2] & 0x10) << 2 |
-        (srcKey[1] & 0x10) << 1 |
-        (srcKey[0] & 0x10)
+        (srcUserKey[3] & 0x10) << 3 |
+        (srcUserKey[2] & 0x10) << 2 |
+        (srcUserKey[1] & 0x10) << 1 |
+        (srcUserKey[0] & 0x10)
         );
 
     //Generate K
@@ -828,7 +829,7 @@ int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t dstExpandedKey[16][
         ROL_28Bits(C_Part, NumberOfROL[i])
         ROL_28Bits(D_Part, NumberOfROL[i])
         //Permuted choice 2
-        dstExpandedKey[i][0] = (
+        dstKey->ExpandedKey[i][0] = (
         (C_Part[1] & 0x04) << 5 |
             (C_Part[2] & 0x80) >> 1 |
             (C_Part[1] & 0x20) |
@@ -839,7 +840,7 @@ int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t dstExpandedKey[16][
             (C_Part[3] & 0x10) >> 4
             );
 
-        dstExpandedKey[i][1] = (
+        dstKey->ExpandedKey[i][1] = (
             (C_Part[1] & 0x02) << 6 |
             (C_Part[0] & 0x04) << 4 |
             (C_Part[2] & 0x08) << 2 |
@@ -850,7 +851,7 @@ int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t dstExpandedKey[16][
             (C_Part[0] & 0x10) >> 4
             );
 
-        dstExpandedKey[i][2] = (
+        dstKey->ExpandedKey[i][2] = (
             (C_Part[3] & 0x40) << 1 |
             (C_Part[0] & 0x01) << 6 |
             (C_Part[1] & 0x01) << 5 |
@@ -861,7 +862,7 @@ int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t dstExpandedKey[16][
             (C_Part[0] & 0x40) >> 6
             );
 
-        dstExpandedKey[i][3] = (
+        dstKey->ExpandedKey[i][3] = (
             (D_Part[1] & 0x08) << 4 |
             (D_Part[2] & 0x01) << 6 |
             (D_Part[0] & 0x20) |
@@ -872,7 +873,7 @@ int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t dstExpandedKey[16][
             (D_Part[1] & 0x10) >> 4
             );
 
-        dstExpandedKey[i][4] = (
+        dstKey->ExpandedKey[i][4] = (
             (D_Part[2] & 0x02) << 6 |
             (D_Part[2] & 0x80) >> 1 |
             (D_Part[0] & 0x08) << 2 |
@@ -883,7 +884,7 @@ int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t dstExpandedKey[16][
             (D_Part[3] & 0x10) >> 4
             );
 
-        dstExpandedKey[i][5] = (
+        dstKey->ExpandedKey[i][5] = (
             (D_Part[0] & 0x04) << 5 |
             (D_Part[3] & 0x80) >> 1 |
             (D_Part[2] & 0x40) >> 1 |
@@ -895,5 +896,5 @@ int CRYPTO_DES_KeyExpansion(const uint8_t srcKey[8], uint8_t dstExpandedKey[16][
             );
     }
 
-    return CRYPTO_DES_SUCCESS;
+    return DES_SUCCESS;
 }

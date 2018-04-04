@@ -6,7 +6,7 @@
 #include <x86intrin.h>
 #endif
 
-void accelc_AES128_encrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES128_encrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES128_KEY* srcKey) {
     __m128i buffer = _mm_loadu_si128((__m128i*)srcBytes);
 
     buffer = _mm_xor_si128(buffer, _mm_loadu_si128((const __m128i*)(srcKey)));
@@ -24,7 +24,7 @@ void accelc_AES128_encrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY
     _mm_storeu_si128((__m128i*)(srcBytes), buffer);
 }
 
-void accelc_AES128_decrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES128_decrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES128_KEY* srcKey) {
     __m128i buffer = _mm_loadu_si128((__m128i*)(srcBytes));
 
     buffer = _mm_xor_si128(buffer, _mm_loadu_si128((const __m128i*)(srcKey) + 10));
@@ -42,7 +42,7 @@ void accelc_AES128_decrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY
     _mm_storeu_si128((__m128i*)(srcBytes), buffer);
 }
 
-void accelc_AES128_decrypt_aesni_fast(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcInverseKey) {
+void accelc_AES128_decrypt_aesni_fast(uint8_t srcBytes[AES_BLOCK_SIZE], const AES128_KEY* srcInverseKey) {
     __m128i buffer = _mm_loadu_si128((__m128i*)(srcBytes));
 
     buffer = _mm_xor_si128(buffer, _mm_loadu_si128((const __m128i*)(srcInverseKey)));
@@ -60,7 +60,7 @@ void accelc_AES128_decrypt_aesni_fast(uint8_t srcBytes[AES_BLOCK_SIZE], const AE
     _mm_storeu_si128((__m128i*)(srcBytes), buffer);
 }
 
-void accelc_AES128_set_key_aesni(const uint8_t srcUserKey[AES128_USERKEY_LENGTH], AES_KEY* dstKey) {
+void accelc_AES128_set_key_aesni(const uint8_t srcUserKey[AES128_USERKEY_LENGTH], AES128_KEY* dstKey) {
     __m128i buffer;
     __m128i assist_key;
 
@@ -138,7 +138,7 @@ void accelc_AES128_set_key_aesni(const uint8_t srcUserKey[AES128_USERKEY_LENGTH]
     _mm_storeu_si128((__m128i*)(dstKey) + 10, buffer);
 }
 
-void accelc_AES128_set_invkey_aesni(const AES_KEY* __restrict srcKey, AES_KEY* __restrict dstInverseKey) {
+void accelc_AES128_set_invkey_aesni(const AES128_KEY* __restrict srcKey, AES128_KEY* __restrict dstInverseKey) {
     _mm_storeu_si128((__m128i*)(dstInverseKey), _mm_loadu_si128((const __m128i*)(srcKey) + 10));
     _mm_storeu_si128((__m128i*)(dstInverseKey) + 1, _mm_aesimc_si128(_mm_loadu_si128((const __m128i*)(srcKey) + 9)));
     _mm_storeu_si128((__m128i*)(dstInverseKey) + 2, _mm_aesimc_si128(_mm_loadu_si128((const __m128i*)(srcKey) + 8)));
@@ -154,7 +154,7 @@ void accelc_AES128_set_invkey_aesni(const AES_KEY* __restrict srcKey, AES_KEY* _
 
 
 
-void accelc_AES192_encrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES192_encrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES192_KEY* srcKey) {
     __m128i buffer = _mm_lddqu_si128((__m128i*)srcBytes);
 
     buffer = _mm_xor_si128(buffer, _mm_lddqu_si128((const __m128i*)(srcKey)));
@@ -174,7 +174,7 @@ void accelc_AES192_encrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY
     _mm_storeu_si128((__m128i*)(srcBytes), buffer);
 }
 
-void accelc_AES192_decrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES192_decrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES192_KEY* srcKey) {
     __m128i buffer = _mm_lddqu_si128((__m128i*)(srcBytes));
 
     buffer = _mm_xor_si128(buffer, _mm_lddqu_si128((const __m128i*)(srcKey) + 12));
@@ -194,7 +194,7 @@ void accelc_AES192_decrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY
     _mm_storeu_si128((__m128i*)(srcBytes), buffer);
 }
 
-void accelc_AES192_decrypt_aesni_fast(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcInverseKey) {
+void accelc_AES192_decrypt_aesni_fast(uint8_t srcBytes[AES_BLOCK_SIZE], const AES192_KEY* srcInverseKey) {
     __m128i buffer = _mm_lddqu_si128((__m128i*)(srcBytes));
 
     buffer = _mm_xor_si128(buffer, _mm_lddqu_si128((const __m128i*)(srcInverseKey)));
@@ -214,7 +214,7 @@ void accelc_AES192_decrypt_aesni_fast(uint8_t srcBytes[AES_BLOCK_SIZE], const AE
     _mm_storeu_si128((__m128i*)(srcBytes), buffer);
 }
 
-void accelc_AES192_set_invkey_aesni(const AES_KEY* __restrict srcKey, AES_KEY* __restrict dstInverseKey) {
+void accelc_AES192_set_invkey_aesni(const AES192_KEY* __restrict srcKey, AES192_KEY* __restrict dstInverseKey) {
     _mm_storeu_si128((__m128i*)(dstInverseKey), _mm_lddqu_si128((const __m128i*)(srcKey) + 12));
     _mm_storeu_si128((__m128i*)(dstInverseKey) + 1, _mm_aesimc_si128(_mm_lddqu_si128((const __m128i*)(srcKey) + 11)));
     _mm_storeu_si128((__m128i*)(dstInverseKey) + 2, _mm_aesimc_si128(_mm_lddqu_si128((const __m128i*)(srcKey) + 10)));
@@ -232,7 +232,7 @@ void accelc_AES192_set_invkey_aesni(const AES_KEY* __restrict srcKey, AES_KEY* _
 
 
 
-void accelc_AES256_encrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES256_encrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES256_KEY* srcKey) {
     __m128i buffer = _mm_lddqu_si128((__m128i*)srcBytes);
 
     buffer = _mm_xor_si128(buffer, _mm_lddqu_si128((const __m128i*)(srcKey)));
@@ -254,7 +254,7 @@ void accelc_AES256_encrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY
     _mm_storeu_si128((__m128i*)(srcBytes), buffer);
 }
 
-void accelc_AES256_decrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcKey) {
+void accelc_AES256_decrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES256_KEY* srcKey) {
     __m128i buffer = _mm_lddqu_si128((__m128i*)(srcBytes));
 
     buffer = _mm_xor_si128(buffer, _mm_lddqu_si128((const __m128i*)(srcKey) + 14));
@@ -276,7 +276,7 @@ void accelc_AES256_decrypt_aesni(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY
     _mm_storeu_si128((__m128i*)(srcBytes), buffer);
 }
 
-void accelc_AES256_decrypt_aesni_fast(uint8_t srcBytes[AES_BLOCK_SIZE], const AES_KEY* srcInverseKey) {
+void accelc_AES256_decrypt_aesni_fast(uint8_t srcBytes[AES_BLOCK_SIZE], const AES256_KEY* srcInverseKey) {
     __m128i buffer = _mm_lddqu_si128((__m128i*)(srcBytes));
 
     buffer = _mm_xor_si128(buffer, _mm_lddqu_si128((const __m128i*)(srcInverseKey)));
@@ -298,7 +298,7 @@ void accelc_AES256_decrypt_aesni_fast(uint8_t srcBytes[AES_BLOCK_SIZE], const AE
     _mm_storeu_si128((__m128i*)(srcBytes), buffer);
 }
 
-void accelc_AES256_set_key_aesni(const uint8_t srcUserKey[AES256_USERKEY_LENGTH], AES_KEY* dstKey) {
+void accelc_AES256_set_key_aesni(const uint8_t srcUserKey[AES256_USERKEY_LENGTH], AES256_KEY* dstKey) {
     __m128i buffer_l, buffer_h;
     __m128i assist_key;
 
@@ -393,7 +393,7 @@ void accelc_AES256_set_key_aesni(const uint8_t srcUserKey[AES256_USERKEY_LENGTH]
     _mm_storeu_si128((__m128i*)dstKey + 14, buffer_l);
 }
 
-void accelc_AES256_set_invkey_aesni(const AES_KEY* __restrict srcKey, AES_KEY* __restrict dstInverseKey) {
+void accelc_AES256_set_invkey_aesni(const AES256_KEY* __restrict srcKey, AES256_KEY* __restrict dstInverseKey) {
     _mm_storeu_si128((__m128i*)(dstInverseKey), _mm_lddqu_si128((const __m128i*)(srcKey) + 14));
     _mm_storeu_si128((__m128i*)(dstInverseKey) + 1, _mm_aesimc_si128(_mm_lddqu_si128((const __m128i*)(srcKey) + 13)));
     _mm_storeu_si128((__m128i*)(dstInverseKey) + 1, _mm_aesimc_si128(_mm_lddqu_si128((const __m128i*)(srcKey) + 12)));
