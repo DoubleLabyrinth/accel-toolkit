@@ -1,10 +1,10 @@
-#include "../gcd.h"
+#include "../num_theory.h"
 #include "../arithmetic.h"
 #include <memory.h>
 
 // Get the greatest common divisor of a and b
 // The return value is the GCD
-coeff_t accelc_uintx_gcd_s(coeff_t a, coeff_t b) {
+coeff_t accelc_gcd(coeff_t a, coeff_t b) {
     coeff_t rem;
     while ((rem = a % b) != 0) {
         a = b;

@@ -1,6 +1,5 @@
-#include "../powmod.h"
+#include "../num_theory.h"
 #include "../arithmetic.h"
-#include <immintrin.h>
 #include <memory.h>
 #include <alloca.h>
 
@@ -16,7 +15,6 @@ inline uint8_t _bittest_coeff(const coeff_t* mask, coeff_t index) {
             "adcb %%al, %%al;"
             : "=a"(ret)
             : "m"(*mask), "r"(index)
-            :
     );
     return ret;
 }
@@ -33,7 +31,6 @@ inline uint8_t _bittestandreset_coeff(coeff_t* mask, coeff_t index) {
             "adcb %%al, %%al;"
             : "=a"(ret), "+m"(mask)
             : "r"(index)
-            :
     );
     return ret;
 }
@@ -42,17 +39,14 @@ static __attribute__((always_inline))
 inline coeff_t _mul_coeff(coeff_t multiplier, coeff_t multiplicand,
                           coeff_t* product_h) {
     coeff_t product_l;
-    __asm__(".intel_syntax;"
+    __asm__(
 #if defined(_M_X64) || defined(__x86_64__)
-            "mul rdx;"
+            "mulq %3;"
 #elif defined(_M_IX86) || defined(__i386__)
-            "mul edx;"
+            "mull %3;"
 #endif
-            ".att_syntax;"
             : "=a"(product_l), "=d"(*product_h)
-            : "a"(multiplier), "d"(multiplicand)
-            :
-            );
+            : "a"(multiplier), "r"(multiplicand));
     return product_l;
 }
 
@@ -60,21 +54,18 @@ static __attribute__((always_inline))
 inline coeff_t _mod_asm(coeff_t dividend_l, coeff_t dividend_h,
                         coeff_t divisor) {
     coeff_t remainder;
-    __asm__(".intel_syntax;"
+    __asm__(
 #if defined(_M_X64) || defined(__x86_64__)
-            "div rcx;"
+            "divq %3;"
 #elif defined(_M_IX86) || defined(__i386__)
-            "div ecx;"
+            "divl %3;"
 #endif
-            ".att_syntax;"
             : "=d"(remainder)
-            : "a"(dividend_l), "c"(divisor), "d"(dividend_h)
-            :
-    );
+            : "a"(dividend_l), "d"(dividend_h), "r"(divisor));
     return remainder;
 }
 
-coeff_t accelc_uintx_powmod_s(coeff_t Base, coeff_t Exponent, coeff_t Modulus) {
+coeff_t accelc_powmod(coeff_t Base, coeff_t Exponent, coeff_t Modulus) {
     coeff_t ret = 1 % Modulus;
     coeff_t temp[2];
 
@@ -90,6 +81,10 @@ coeff_t accelc_uintx_powmod_s(coeff_t Base, coeff_t Exponent, coeff_t Modulus) {
     }
 
     return ret;
+}
+
+coeff_t accelc_numtheory_reciprocal(coeff_t a, coeff_t P) {
+    return accelc_powmod(a, P - 2, P);
 }
 
 // ASSERT:

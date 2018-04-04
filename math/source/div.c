@@ -1,10 +1,11 @@
-/*********************************************************************
-* Filename:   div.c
-* Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
-*********************************************************************/
 #include "../arithmetic.h"
-#include <x86intrin.h>
 #include <memory.h>
+
+#if defined(_MSC_VER)
+#include <intrin.h>
+#elif defined(__GNUC__)
+#include <x86intrin.h>
+#endif
 
 #if defined(_M_X64) || defined(__x86_64__)
 #define _addcarry_coeff _addcarry_u64
