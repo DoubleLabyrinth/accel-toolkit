@@ -1,15 +1,11 @@
-/*********************************************************************
-* Filename:   SHA1.c
-* Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
-*********************************************************************/
 #include "../sha1.h"
 
 #if defined(_MSC_VER)
 #include <intrin.h>
 #elif defined(__GNUC__)
 #include <x86intrin.h>
-#define _byteswap_ulong __bswapd
-#define _byteswap_uint64 __bswapq
+#define _byteswap_ulong __builtin_bswap32
+#define _byteswap_uint64 __builtin_bswap64
 #endif
 
 #define SHA1_BLOCKSIZE 64

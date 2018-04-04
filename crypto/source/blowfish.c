@@ -5,6 +5,7 @@
 #include <intrin.h>
 #elif defined(__GNUC__)
 #include <x86intrin.h>
+#define _byteswap_ulong __builtin_bswap32
 #endif
 
 const uint32_t accelc_Blowfish_Original_PBox[18] = {
@@ -100,8 +101,8 @@ void accelc_Blowfish_encrypt(uint8_t srcBytes[8],
     uint32_t* const R = (uint32_t*)srcBytes + 4;
 
     if (Endian == BLOWFISH_BIG_ENDIAN) {
-        *L = _bswap(*L);
-        *R = _bswap(*R);
+        *L = _byteswap_ulong(*L);
+        *R = _byteswap_ulong(*R);
     }
 
     *L ^= srcKey->SubKey[0];
@@ -160,8 +161,8 @@ void accelc_Blowfish_encrypt(uint8_t srcBytes[8],
     *L = temp;
 
     if (Endian == BLOWFISH_BIG_ENDIAN) {
-        *L = _bswap(*L);
-        *R = _bswap(*R);
+        *L = _byteswap_ulong(*L);
+        *R = _byteswap_ulong(*R);
     }
 }
 
@@ -172,8 +173,8 @@ void accelc_Blowfish_decrypt(uint8_t srcBytes[8],
     uint32_t* const R = (uint32_t*)srcBytes + 4;
 
     if (Endian == BLOWFISH_BIG_ENDIAN) {
-        *L = _bswap(*L);
-        *R = _bswap(*R);
+        *L = _byteswap_ulong(*L);
+        *R = _byteswap_ulong(*R);
     }
 
     uint32_t temp = *R;
@@ -232,8 +233,8 @@ void accelc_Blowfish_decrypt(uint8_t srcBytes[8],
     *L ^= srcKey->SubKey[0];
 
     if (Endian == BLOWFISH_BIG_ENDIAN) {
-        *L = _bswap(*L);
-        *R = _bswap(*R);
+        *L = _byteswap_ulong(*L);
+        *R = _byteswap_ulong(*R);
     }
 }
 

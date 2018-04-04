@@ -4,8 +4,8 @@
 #include <intrin.h>
 #elif defined(__GNUC__)
 #include <x86intrin.h>
-#define _byteswap_ulong __bswapd
-#define _byteswap_uint64 __bswapq
+#define _byteswap_ulong __builtin_bswap32
+#define _byteswap_uint64 __builtin_bswap64
 #endif
 
 #define SHA224_BLOCKSIZE 64
