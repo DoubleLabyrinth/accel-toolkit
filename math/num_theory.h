@@ -19,7 +19,6 @@ extern "C" {
 
     // return Base ^ Exponent % Modulus
     coeff_t accelc_powmod(coeff_t Base, coeff_t Exponent, coeff_t Modulus);
-    coeff_t accelc_numtheory_reciprocal(coeff_t a, coeff_t P);
 
     // ASSERT:
     // 1. Base and Modulus have the same length, specified by Length
@@ -29,7 +28,8 @@ extern "C" {
                              const coeff_t* Exponent, size_t ExponentLength,
                              const coeff_t* Modulus);
 
-
+    coeff_t accelc_numtheory_reciprocal(coeff_t a, coeff_t P);
+    int accelc_numtheory_MillerRabin(coeff_t n, size_t count);
 
     size_t accelc_NTT(const coeff_t* __restrict src, size_t len,
                       coeff_t* __restrict dst,

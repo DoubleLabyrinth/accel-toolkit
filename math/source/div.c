@@ -10,25 +10,12 @@
 #if defined(_M_X64) || defined(__x86_64__)
 #define _addcarry_coeff _addcarry_u64
 #define _subborrow_coeff _subborrow_u64
+#define _bsr_coeff __bsrq
 #elif defined(_M_IX86) || defined(__i386__)
 #define _addcarry_coeff _addcarry_u32
 #define _subborrow_coeff _subborrow_u32
+#define _bsr_coeff __bsrd
 #endif
-
-static __attribute__((always_inline))
-inline coeff_t _bsr_coeff(coeff_t mask) {
-    coeff_t ret;
-    __asm__(
-#if defined(_M_X64) || defined(__x86_64__)
-            "bsrq %1, %%rax;"
-#elif defined(_M_IX86) || defined(__i386__)
-            "bsrl %1, %%eax;"
-#endif
-            : "=a"(ret)
-            : "r"(mask)
-    );
-    return ret;
-}
 
 static __attribute__((always_inline))
 inline coeff_t _mul_coeff(coeff_t multiplier, coeff_t multiplicand,
@@ -41,8 +28,7 @@ inline coeff_t _mul_coeff(coeff_t multiplier, coeff_t multiplicand,
             "mull %3;"
 #endif
             : "=a"(product_l), "=d"(*product_h)
-            : "a"(multiplier), "r"(multiplicand)
-    );
+            : "a"(multiplier), "r"(multiplicand));
     return product_l;
 }
 
@@ -58,8 +44,7 @@ inline coeff_t _divmod_asm(coeff_t dividend_l, coeff_t dividend_h,
             "divl %4;"
 #endif
             : "=a"(quotient), "=d"(*remainder)
-            : "a"(dividend_l), "d"(dividend_h), "r"(divisor)
-    );
+            : "a"(dividend_l), "d"(dividend_h), "r"(divisor));
     return quotient;
 }
 
@@ -74,8 +59,7 @@ inline coeff_t _div_asm(coeff_t dividend_l, coeff_t dividend_h,
             "divl %3;"
 #endif
             : "=a"(quotient)
-            : "a"(dividend_l), "d"(dividend_h), "r"(divisor)
-            );
+            : "a"(dividend_l), "d"(dividend_h), "r"(divisor));
     return quotient;
 }
 
@@ -90,8 +74,7 @@ inline coeff_t _mod_asm(coeff_t dividend_l, coeff_t dividend_h,
             "divl %3;"
 #endif
             : "=d"(remainder)
-            : "a"(dividend_l), "d"(dividend_h), "r"(divisor)
-            );
+            : "a"(dividend_l), "d"(dividend_h), "r"(divisor));
     return remainder;
 }
 
@@ -105,8 +88,7 @@ inline coeff_t __shiftR_2coeff(coeff_t _Low, coeff_t _High, unsigned char _Shift
             "shrdl %%cl, %%edx, %%eax;"
 #endif
             : "=a"(ret)
-            : "a"(_Low), "d"(_High), "c"(_Shift)
-    );
+            : "a"(_Low), "d"(_High), "c"(_Shift));
     return ret;
 }
 

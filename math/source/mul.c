@@ -24,8 +24,7 @@ inline coeff_t _mul_coeff(coeff_t multiplier, coeff_t multiplicand,
             "mull %3;"
 #endif
             : "=a"(product_l), "=d"(*product_h)
-            : "a"(multiplier), "r"(multiplicand)
-            );
+            : "a"(multiplier), "r"(multiplicand));
     return product_l;
 }
 
