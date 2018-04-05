@@ -91,9 +91,9 @@ size_t accelc_NTT_inverse(const coeff_t* __restrict src, size_t len,
     // dst[n] = (len ^ -1 % P) * sigma_k_(0)_to_(len - 1)_(src[k] * (w ^ -1 % P) ^ nk % P)
     // while w = g ^ ((P - 1) / len) % P
     coeff_t w = accelc_powmod(g, (P - 1) / len, P);
-    w = accelc_reciprocal_Fermat(w, P);
+    w = accelc_Reciprocal_Fermat(w, P);
 
-    coeff_t len_reciprocal = accelc_reciprocal_Fermat(len, P);
+    coeff_t len_reciprocal = accelc_Reciprocal_Fermat(len, P);
 
     for (size_t n = 0; n < len; n++) {
         coeff_t result = 0;
