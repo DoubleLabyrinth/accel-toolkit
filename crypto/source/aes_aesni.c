@@ -214,6 +214,100 @@ void accelc_AES192_decrypt_aesni_fast(uint8_t srcBytes[AES_BLOCK_SIZE], const AE
     _mm_storeu_si128((__m128i*)(srcBytes), buffer);
 }
 
+void accelc_AES192_set_key_aesni(const uint8_t srcUserKey[AES192_USERKEY_LENGTH], AES192_KEY* dstKey) {
+    __m128i buffer0, buffer1;
+    __m128i assist_key;
+
+    buffer0 = _mm_loadu_si128((const __m128i*)(srcUserKey));
+    buffer1 = _mm_loadl_epi64((const __m128i*)(srcUserKey) + 1);
+    _mm_storeu_si128((__m128i*)(dstKey->qword), buffer0);
+    _mm_storel_epi64((__m128i*)(dstKey->qword + 2), buffer1);
+
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer1, 0x01), _MM_SHUFFLE(1, 1, 1, 1));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_slli_si128(buffer1, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_shuffle_epi32(buffer0, _MM_SHUFFLE(3, 3, 3, 3)));
+    buffer0 = _mm_xor_si128(buffer0, assist_key);
+    buffer1 = _mm_xor_si128(buffer1, assist_key);
+    _mm_storeu_si128((__m128i*)(dstKey->qword + 3), buffer0);
+    _mm_storel_epi64((__m128i*)(dstKey->qword + 5), buffer1);
+
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer1, 0x02), _MM_SHUFFLE(1, 1, 1, 1));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_slli_si128(buffer1, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_shuffle_epi32(buffer0, _MM_SHUFFLE(3, 3, 3, 3)));
+    buffer0 = _mm_xor_si128(buffer0, assist_key);
+    buffer1 = _mm_xor_si128(buffer1, assist_key);
+    _mm_storeu_si128((__m128i*)(dstKey->qword + 6), buffer0);
+    _mm_storel_epi64((__m128i*)(dstKey->qword + 8), buffer1);
+
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer1, 0x04), _MM_SHUFFLE(1, 1, 1, 1));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_slli_si128(buffer1, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_shuffle_epi32(buffer0, _MM_SHUFFLE(3, 3, 3, 3)));
+    buffer0 = _mm_xor_si128(buffer0, assist_key);
+    buffer1 = _mm_xor_si128(buffer1, assist_key);
+    _mm_storeu_si128((__m128i*)(dstKey->qword + 9), buffer0);
+    _mm_storel_epi64((__m128i*)(dstKey->qword + 11), buffer1);
+
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer1, 0x08), _MM_SHUFFLE(1, 1, 1, 1));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_slli_si128(buffer1, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_shuffle_epi32(buffer0, _MM_SHUFFLE(3, 3, 3, 3)));
+    buffer0 = _mm_xor_si128(buffer0, assist_key);
+    buffer1 = _mm_xor_si128(buffer1, assist_key);
+    _mm_storeu_si128((__m128i*)(dstKey->qword + 12), buffer0);
+    _mm_storel_epi64((__m128i*)(dstKey->qword + 14), buffer1);
+
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer1, 0x10), _MM_SHUFFLE(1, 1, 1, 1));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_slli_si128(buffer1, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_shuffle_epi32(buffer0, _MM_SHUFFLE(3, 3, 3, 3)));
+    buffer0 = _mm_xor_si128(buffer0, assist_key);
+    buffer1 = _mm_xor_si128(buffer1, assist_key);
+    _mm_storeu_si128((__m128i*)(dstKey->qword + 15), buffer0);
+    _mm_storel_epi64((__m128i*)(dstKey->qword + 17), buffer1);
+
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer1, 0x20), _MM_SHUFFLE(1, 1, 1, 1));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_slli_si128(buffer1, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_shuffle_epi32(buffer0, _MM_SHUFFLE(3, 3, 3, 3)));
+    buffer0 = _mm_xor_si128(buffer0, assist_key);
+    buffer1 = _mm_xor_si128(buffer1, assist_key);
+    _mm_storeu_si128((__m128i*)(dstKey->qword + 18), buffer0);
+    _mm_storel_epi64((__m128i*)(dstKey->qword + 20), buffer1);
+
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer1, 0x40), _MM_SHUFFLE(1, 1, 1, 1));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_slli_si128(buffer1, 4));
+    buffer1 = _mm_xor_si128(buffer1, _mm_shuffle_epi32(buffer0, _MM_SHUFFLE(3, 3, 3, 3)));
+    buffer0 = _mm_xor_si128(buffer0, assist_key);
+    buffer1 = _mm_xor_si128(buffer1, assist_key);
+    _mm_storeu_si128((__m128i*)(dstKey->qword + 21), buffer0);
+    _mm_storel_epi64((__m128i*)(dstKey->qword + 23), buffer1);
+
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer1, 0x80), _MM_SHUFFLE(1, 1, 1, 1));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, _mm_slli_si128(buffer0, 4));
+    buffer0 = _mm_xor_si128(buffer0, assist_key);
+    _mm_storeu_si128((__m128i*)(dstKey->qword + 24), buffer0);
+}
+
 void accelc_AES192_set_invkey_aesni(const AES192_KEY* __restrict srcKey, AES192_KEY* __restrict dstInverseKey) {
     _mm_storeu_si128((__m128i*)(dstInverseKey), _mm_lddqu_si128((const __m128i*)(srcKey) + 12));
     _mm_storeu_si128((__m128i*)(dstInverseKey) + 1, _mm_aesimc_si128(_mm_lddqu_si128((const __m128i*)(srcKey) + 11)));
@@ -312,7 +406,7 @@ void accelc_AES256_set_key_aesni(const uint8_t srcUserKey[AES256_USERKEY_LENGTH]
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, assist_key);
-    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_h, 0x01), _MM_SHUFFLE(2, 2, 2, 2));
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_l, 0x01), _MM_SHUFFLE(2, 2, 2, 2));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
@@ -325,7 +419,7 @@ void accelc_AES256_set_key_aesni(const uint8_t srcUserKey[AES256_USERKEY_LENGTH]
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, assist_key);
-    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_h, 0x02), _MM_SHUFFLE(2, 2, 2, 2));
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_l, 0x02), _MM_SHUFFLE(2, 2, 2, 2));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
@@ -338,7 +432,7 @@ void accelc_AES256_set_key_aesni(const uint8_t srcUserKey[AES256_USERKEY_LENGTH]
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, assist_key);
-    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_h, 0x04), _MM_SHUFFLE(2, 2, 2, 2));
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_l, 0x04), _MM_SHUFFLE(2, 2, 2, 2));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
@@ -351,7 +445,7 @@ void accelc_AES256_set_key_aesni(const uint8_t srcUserKey[AES256_USERKEY_LENGTH]
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, assist_key);
-    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_h, 0x08), _MM_SHUFFLE(2, 2, 2, 2));
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_l, 0x08), _MM_SHUFFLE(2, 2, 2, 2));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
@@ -364,7 +458,7 @@ void accelc_AES256_set_key_aesni(const uint8_t srcUserKey[AES256_USERKEY_LENGTH]
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, assist_key);
-    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_h, 0x10), _MM_SHUFFLE(2, 2, 2, 2));
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_l, 0x10), _MM_SHUFFLE(2, 2, 2, 2));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
@@ -377,7 +471,7 @@ void accelc_AES256_set_key_aesni(const uint8_t srcUserKey[AES256_USERKEY_LENGTH]
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, _mm_slli_si128(buffer_l, 4));
     buffer_l = _mm_xor_si128(buffer_l, assist_key);
-    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_h, 0x20), _MM_SHUFFLE(2, 2, 2, 2));
+    assist_key = _mm_shuffle_epi32(_mm_aeskeygenassist_si128(buffer_l, 0x20), _MM_SHUFFLE(2, 2, 2, 2));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
     buffer_h = _mm_xor_si128(buffer_h, _mm_slli_si128(buffer_h, 4));
