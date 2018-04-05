@@ -9,9 +9,9 @@ extern "C" {
                     coeff_t* __restrict dst,
                     coeff_t g, coeff_t P);
 
-    void accelc_NTT_inv(const coeff_t* __restrict src, size_t len,
-                        coeff_t* __restrict dst,
-                        coeff_t g, coeff_t P);
+    void accelc_iNTT(const coeff_t* __restrict src, size_t len,
+                     coeff_t* __restrict dst,
+                     coeff_t g, coeff_t P);
 
     extern const uint64_t accelc_NTT_2px_prime_64[56];
     extern const uint64_t accelc_NTT_2px_primitive_root_64[56];
@@ -21,6 +21,10 @@ extern "C" {
     void accelc_FNTT_base2(const coeff_t* __restrict src, size_t len,
                            coeff_t* __restrict dst,
                            coeff_t g, coeff_t P);
+
+    void accelc_iFNTT_base2(const coeff_t* __restrict src, size_t len,
+                            coeff_t* __restrict dst,
+                            coeff_t g, coeff_t P);
 
 #if defined(__cplusplus)
 }

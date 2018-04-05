@@ -91,6 +91,7 @@ set(accel_toolkit_src
         math/arithmetic.h
         math/compare.h
         math/num_theory.h
+        math/ntt.h
         math/random.h
         math/source/add.c
         math/source/sub.c

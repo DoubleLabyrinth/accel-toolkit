@@ -131,9 +131,9 @@ void accelc_NTT(const coeff_t* __restrict src, size_t len,
     }
 }
 
-void accelc_NTT_inv(const coeff_t* __restrict src, size_t len,
-                    coeff_t* __restrict dst,
-                    coeff_t g, coeff_t P) {
+void accelc_iNTT(const coeff_t* __restrict src, size_t len,
+                 coeff_t* __restrict dst,
+                 coeff_t g, coeff_t P) {
     // dst[n] = (len ^ -1 % P) * sigma_k_(0)_to_(len - 1)_(src[k] * (w ^ -1 % P) ^ nk % P)
     // while w = g ^ ((P - 1) / len) % P
     coeff_t w = accelc_powmod(g, (P - 1) / len, P);
@@ -191,8 +191,58 @@ static void accelc_FNTT_base2_impl(const coeff_t* __restrict src, size_t len,
     }
 }
 
+static void accelc_iFNTT_base2_impl(const coeff_t* __restrict src, size_t len,
+                                    coeff_t* __restrict dst,
+                                    coeff_t g, coeff_t P, size_t gap) {
+    if (len == 2) {
+        coeff_t temp[2];
+        uint8_t carry;
+
+        carry = _addcarry_coeff(0, src[0], src[gap], temp);
+        temp[0] = _mod_asm(temp[0], carry, P);
+        carry = _addcarry_coeff(0, src[0], P - src[gap], temp + 1);
+        temp[1] = _mod_asm(temp[1], carry, P);
+
+        dst[0] = temp[0];
+        dst[gap] = temp[1];
+    } else {
+        accelc_FNTT_base2_impl(src, len / 2, dst, g, P, gap * 2);
+        accelc_FNTT_base2_impl(src + gap, len / 2, dst + gap, g, P, gap * 2);
+
+        coeff_t* dst_even = dst;
+        coeff_t* dst_odd = dst + gap;
+        coeff_t w = accelc_powmod(g, (P - 1) / len, P);
+        for (size_t i = 0, pair = len / 2; i < pair; ++i) {
+            coeff_t wk = accelc_powmod(w, i, P);
+            wk = _mulmod_coeff(wk, dst_odd[i * 2 * gap], P);
+
+            coeff_t temp[2];
+            uint8_t carry;
+
+            carry = _addcarry_coeff(0, dst_even[i * 2 * gap], wk, temp);
+            temp[0] = _mod_asm(temp[0], carry, P);
+            carry = _addcarry_coeff(0, dst_even[i * 2 * gap], P - wk, temp + 1);
+            temp[1] = _mod_asm(temp[1], carry, P);
+
+            dst_even[i * 2 * gap] = temp[0];
+            dst_odd[i * 2 * gap] = temp[1];
+        }
+    }
+}
+
 void accelc_FNTT_base2(const coeff_t* __restrict src, size_t len,
                        coeff_t* __restrict dst,
                        coeff_t g, coeff_t P) {
     accelc_FNTT_base2_impl(src, len, dst, g, P, 1);
+}
+
+void accelc_iFNTT_base2(const coeff_t* __restrict src, size_t len,
+                        coeff_t* __restrict dst,
+                        coeff_t g, coeff_t P) {
+    g = accelc_Reciprocal_Fermat(g, P);
+    accelc_FNTT_base2_impl(src, len, dst, g, P, 1);
+
+    coeff_t len_Reciprocal = accelc_Reciprocal_Fermat(len, P);
+    for (size_t i = 0; i < len; ++i)
+        dst[i] = _mulmod_coeff(len_Reciprocal, dst[i], P);
 }
