@@ -49,14 +49,14 @@ int accelc_uintx_GCD(coeff_t* __restrict a, size_t a_length,
         }
 
         // Swap(_a, _b)
-        coeff_t* temp = _a;
+        coeff_t* temp_ptr = _a;
         _a = _b;
-        _b = temp;
+        _b = temp_ptr;
 
         // Swap(_a_length, _b_length)
-        size_t temp = _a_length;
+        size_t temp_len = _a_length;
         _a_length = _b_length;
-        _b_length = temp;
+        _b_length = temp_len;
     }
 }
 

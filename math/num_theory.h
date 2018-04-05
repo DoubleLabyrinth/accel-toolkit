@@ -32,13 +32,7 @@ extern "C" {
 
     int accelc_uintx_MillerRabinTest(const coeff_t* src, size_t len, size_t count);
 
-    size_t accelc_NTT(const coeff_t* __restrict src, size_t len,
-                      coeff_t* __restrict dst,
-                      coeff_t g, coeff_t P);
 
-    size_t accelc_NTT_inverse(const coeff_t* __restrict src, size_t len,
-                              coeff_t* __restrict dst,
-                              coeff_t g, coeff_t P);
 
 
 
