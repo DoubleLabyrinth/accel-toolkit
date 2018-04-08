@@ -118,6 +118,10 @@ extern "C" {
                                       size_t length,
                                       coeff_t* __restrict product);
 
+    int accelc_uintx_multo_FNTT(const coeff_t* multiplier, const coeff_t* multiplicand,
+                                size_t length,
+                                coeff_t* __restrict product);
+
     // Equivalent to "dividend /= divisor;"
     // ASSERT:
     // 1. dividend_length > 0

@@ -1,82 +1,6 @@
 #include "../arithmetic.h"
+#include "../def_asm.h"
 #include <memory.h>
-
-#if defined(_MSC_VER)
-#include <intrin.h>
-#elif defined(__GNUC__)
-#include <x86intrin.h>
-#endif
-
-#if defined(_M_X64) || defined(__x86_64__)
-#define _addcarry_coeff _addcarry_u64
-#define _subborrow_coeff _subborrow_u64
-#define _bsr_coeff __bsrq
-#elif defined(_M_IX86) || defined(__i386__)
-#define _addcarry_coeff _addcarry_u32
-#define _subborrow_coeff _subborrow_u32
-#define _bsr_coeff __bsrd
-#endif
-
-static __attribute__((always_inline))
-inline coeff_t _mul_coeff(coeff_t multiplier, coeff_t multiplicand,
-                          coeff_t* product_h) {
-    coeff_t product_l;
-    __asm__(
-#if defined(_M_X64) || defined(__x86_64__)
-            "mulq %3;"
-#elif defined(_M_IX86) || defined(__i386__)
-            "mull %3;"
-#endif
-            : "=a"(product_l), "=d"(*product_h)
-            : "a"(multiplier), "r"(multiplicand));
-    return product_l;
-}
-
-static __attribute__((always_inline))
-inline coeff_t _divmod_asm(coeff_t dividend_l, coeff_t dividend_h,
-                           coeff_t divisor,
-                           coeff_t* remainder) {
-    coeff_t quotient;
-    __asm__(
-#if defined(_M_X64) || defined(__x86_64__)
-            "divq %4;"
-#elif defined(_M_IX86) || defined(__i386__)
-            "divl %4;"
-#endif
-            : "=a"(quotient), "=d"(*remainder)
-            : "a"(dividend_l), "d"(dividend_h), "r"(divisor));
-    return quotient;
-}
-
-static __attribute__((always_inline))
-inline coeff_t _div_asm(coeff_t dividend_l, coeff_t dividend_h,
-                        coeff_t divisor) {
-    coeff_t quotient;
-    __asm__(
-#if defined(_M_X64) || defined(__x86_64__)
-            "divq %3;"
-#elif defined(_M_IX86) || defined(__i386__)
-            "divl %3;"
-#endif
-            : "=a"(quotient)
-            : "a"(dividend_l), "d"(dividend_h), "r"(divisor));
-    return quotient;
-}
-
-static __attribute__((always_inline))
-inline coeff_t _mod_asm(coeff_t dividend_l, coeff_t dividend_h,
-                        coeff_t divisor) {
-    coeff_t remainder;
-    __asm__(
-#if defined(_M_X64) || defined(__x86_64__)
-            "divq %3;"
-#elif defined(_M_IX86) || defined(__i386__)
-            "divl %3;"
-#endif
-            : "=d"(remainder)
-            : "a"(dividend_l), "d"(dividend_h), "r"(divisor));
-    return remainder;
-}
 
 static __attribute__((always_inline))
 inline coeff_t __shiftR_2coeff(coeff_t _Low, coeff_t _High, unsigned char _Shift) {
@@ -102,9 +26,9 @@ static inline coeff_t _div_helper_(coeff_t* __restrict dividend,
     if (eft_length == 1) {
         coeff_t quotient;
         if (diff1) {
-            quotient = _divmod_asm(dividend[0], dividend[1],
-                                   divisor[0],
-                                   dividend);
+            quotient = _div_coeff(dividend[0], dividend[1],
+                                  divisor[0],
+                                  dividend);
             dividend[1] = 0;
         } else {
             quotient = *dividend / *divisor;
@@ -118,11 +42,11 @@ static inline coeff_t _div_helper_(coeff_t* __restrict dividend,
 
     coeff_t quotient;
     if (shift == sizeof(coeff_t) * 8) {
-        quotient = _div_asm(dividend[eft_length - 1],
-                            diff1 ? dividend[eft_length] : 0,
-                            divisor[eft_length - 1]);
+        quotient = _div_only_coeff(dividend[eft_length - 1],
+                                   diff1 ? dividend[eft_length] : 0,
+                                   divisor[eft_length - 1]);
     } else {
-        quotient = _div_asm(
+        quotient = _div_only_coeff(
                 __shiftR_2coeff(dividend[eft_length - 2], dividend[eft_length - 1], shift),
                 diff1 ? __shiftR_2coeff(dividend[eft_length - 1], dividend[eft_length], shift) :
                 dividend[eft_length - 1] >> shift,
@@ -164,7 +88,7 @@ coeff_t accelc_uintx_div_s(coeff_t* dividend, size_t dividend_length,
     *cur = *cur / divisor;
     while (cur != dividend) {
         --cur;
-        *cur = _divmod_asm(*cur, remainder, divisor, &remainder);
+        *cur = _div_coeff(*cur, remainder, divisor, &remainder);
     }
     return remainder;
 }

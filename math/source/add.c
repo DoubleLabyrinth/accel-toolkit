@@ -1,17 +1,6 @@
 #include "../arithmetic.h"
+#include "../def_asm.h"
 #include <memory.h>
-
-#if defined(_MSC_VER)
-#include <intrin.h>
-#elif defined(__GNUC__)
-#include <x86intrin.h>
-#endif
-
-#if defined(_M_X64) || defined(__x86_64__)
-#define _addcarry_coeff _addcarry_u64
-#elif defined(_M_IX86) || defined(__i386__)
-#define _addcarry_coeff _addcarry_u32
-#endif
 
 uint8_t accelc_uintx_add(coeff_t* __restrict summand, size_t summand_length,
                          const coeff_t* __restrict addend, size_t addend_length,

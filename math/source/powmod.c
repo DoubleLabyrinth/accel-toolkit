@@ -1,4 +1,5 @@
 #include "../num_theory.h"
+#include "../def_asm.h"
 #include "../arithmetic.h"
 #include <memory.h>
 #include <alloca.h>
@@ -22,47 +23,13 @@ inline uint8_t _bittest_coeff(const coeff_t* mask, coeff_t index) {
 static __attribute__((always_inline))
 inline uint8_t _bittestandreset_coeff(coeff_t* mask, coeff_t index) {
     uint8_t ret;
-    __asm__("xorb %%al, %%al;"
-#if defined(_M_X64) || defined(__x86_64__)
-            "btrq %2, %1;"
-#elif defined(_M_IX86) || defined(__i386__)
-            "btrl %2, %1;"
-#endif
-            "adcb %%al, %%al;"
+    __asm__("xor %%al, %%al;"
+            "btr %2, %1;"
+            "adc %%al, %%al;"
             : "=a"(ret), "+m"(mask)
             : "r"(index)
     );
     return ret;
-}
-
-static __attribute__((always_inline))
-inline coeff_t _mul_coeff(coeff_t multiplier, coeff_t multiplicand,
-                          coeff_t* product_h) {
-    coeff_t product_l;
-    __asm__(
-#if defined(_M_X64) || defined(__x86_64__)
-            "mulq %3;"
-#elif defined(_M_IX86) || defined(__i386__)
-            "mull %3;"
-#endif
-            : "=a"(product_l), "=d"(*product_h)
-            : "a"(multiplier), "r"(multiplicand));
-    return product_l;
-}
-
-static __attribute__((always_inline))
-inline coeff_t _mod_asm(coeff_t dividend_l, coeff_t dividend_h,
-                        coeff_t divisor) {
-    coeff_t remainder;
-    __asm__(
-#if defined(_M_X64) || defined(__x86_64__)
-            "divq %3;"
-#elif defined(_M_IX86) || defined(__i386__)
-            "divl %3;"
-#endif
-            : "=d"(remainder)
-            : "a"(dividend_l), "d"(dividend_h), "r"(divisor));
-    return remainder;
 }
 
 coeff_t accelc_powmod(coeff_t Base, coeff_t Exponent, coeff_t Modulus) {
@@ -73,11 +40,11 @@ coeff_t accelc_powmod(coeff_t Base, coeff_t Exponent, coeff_t Modulus) {
     while (Exponent) {
         if (Exponent % 2 == 1) {
             temp[0] = _mul_coeff(ret, Base, temp + 1);
-            ret = _mod_asm(temp[0], temp[1], Modulus);
+            ret = _mod_only_coeff(temp[0], temp[1], Modulus);
         }
         Exponent /= 2;
         temp[0] = _mul_coeff(Base, Base, temp + 1);
-        Base = _mod_asm(temp[0], temp[1], Modulus);
+        Base = _mod_only_coeff(temp[0], temp[1], Modulus);
     }
 
     return ret;

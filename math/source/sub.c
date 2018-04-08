@@ -1,16 +1,6 @@
-/*********************************************************************
-* Filename:   sub.c
-* Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
-*********************************************************************/
 #include "../arithmetic.h"
-#include <x86intrin.h>
+#include "../def_asm.h"
 #include <memory.h>
-
-#if defined(_M_X64) || defined(__x86_64__)
-#define _subborrow_coeff _subborrow_u64
-#elif defined(_M_IX86) || defined(__i386__)
-#define _subborrow_coeff _subborrow_u32
-#endif
 
 uint8_t accelc_uintx_sub(coeff_t* __restrict minuend, size_t minuend_length,
                          const coeff_t* __restrict subtrahend, size_t subtrahend_length,

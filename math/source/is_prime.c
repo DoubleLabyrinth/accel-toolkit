@@ -1,17 +1,7 @@
 #include "../num_theory.h"
+#include "../def_asm.h"
+
 #include "../random.h"
-
-#if defined(_MSC_VER)
-#include <intrin.h>
-#elif defined(__GNUC__)
-#include <x86intrin.h>
-#endif
-
-#if defined(_M_X64) || defined(__x86_64__)
-#define _bsf_coeff __bsfq
-#elif defined(_M_IX86) || defined(__i386__)
-#define _bsf_coeff __bsfd
-#endif
 
 int accelc_MillerRabinTest(coeff_t n, size_t count) {
     if (n % 2 == 0 || n == 1)

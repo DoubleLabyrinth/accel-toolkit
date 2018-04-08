@@ -1,19 +1,5 @@
 #include "../compare.h"
-
-static __attribute__((always_inline))
-inline coeff_t _bsr_coeff(coeff_t mask) {
-    coeff_t ret;
-    __asm__(
-#if defined(_M_X64) || defined(__x86_64__)
-            "bsrq %1, %%rax;"
-#elif defined(_M_IX86) || defined(__i386__)
-            "bsrl %1, %%eax;"
-#endif
-            : "=a"(ret)
-            : "r"(mask)
-    );
-    return ret;
-}
+#include "../def_asm.h"
 
 int8_t accelc_uintx_cmp(const coeff_t* src1, size_t length1,
                         const coeff_t* src2, size_t length2) {

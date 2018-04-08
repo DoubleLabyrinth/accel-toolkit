@@ -88,20 +88,23 @@ set(accel_toolkit_src
         hash/source/sha512.c
 
         math/def.h
+        math/def_asm.h
         math/arithmetic.h
         math/compare.h
         math/num_theory.h
-        math/ntt.h
+        math/ntt/ntt.h
         math/random.h
         math/source/add.c
         math/source/sub.c
         math/source/mul.c
         math/source/mul_Karatsuba.c
+        math/source/mul_fntt.c
         math/source/div.c
         math/source/cmp.c
         math/source/gcd.c
         math/source/powmod.c
-        math/source/ntt.c
+        math/ntt/source/ntt.c
+        math/ntt/source/fntt.c
         math/source/is_prime.c
         math/source/random.c
 
@@ -113,6 +116,9 @@ set(accel_toolkit_src
         memory/source/reverse.c
         memory/source/reverse_ssse3.c
         memory/source/reverse_avx2.c
+
+        test/source/math/test_ntt.c
+        test/source/math/test_arithmetic.c
 )
 
 add_library(accel_toolkit
