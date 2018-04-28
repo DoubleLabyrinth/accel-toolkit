@@ -16,7 +16,7 @@ void accelc_MD4_init(MD4_BUFFER* HashBuffer) {
 }
 
 void accelc_MD4_update(const void* srcBytes, size_t srcBytesLength, MD4_BUFFER* HashBuffer) {
-    uint32_t AA = 0, BB = 0, CC = 0, DD = 0;
+    uint32_t AA, BB, CC, DD;
     size_t RoundsOfMainCycle = srcBytesLength / MD4_BLOCKSIZE;
 
     const uint32_t(*Ptr)[16] = (const uint32_t (*)[16])srcBytes;

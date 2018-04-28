@@ -19,7 +19,7 @@ void accelc_SHA1_init(SHA1_BUFFER* HashBuffer) {
 }
 
 void accelc_SHA1_update(const void* srcBytes, size_t srcBytesLength, SHA1_BUFFER* HashBuffer) {
-    uint32_t Buffer[80] = { 0 };
+    uint32_t Buffer[80];
     uint32_t a, b, c, d, e;
     const uint32_t (*MessageBlock)[16] = srcBytes;
 

@@ -36,8 +36,8 @@ void accelc_SHA384_init(SHA384_BUFFER* HashBuffer) {
 }
 
 void accelc_SHA384_update(const void* srcBytes, size_t srcBytesLength, SHA384_BUFFER* HashBuffer) {
-    uint64_t Buffer[80] = { 0 };
-    uint64_t a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0;
+    uint64_t Buffer[80];
+    uint64_t a, b, c, d, e, f, g, h;
     const uint64_t (*MessageBlock)[16] = srcBytes;
 
     size_t RoundsOfMainCycle = srcBytesLength / 128;

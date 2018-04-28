@@ -33,8 +33,8 @@ void accelc_SHA256_init(SHA256_BUFFER* HashBuffer) {
 }
 
 void accelc_SHA256_update(const void* srcBytes, size_t srcBytesLength, SHA256_BUFFER* HashBuffer) {
-    uint32_t Buffer[64] = { 0 };
-    uint32_t a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0;
+    uint32_t Buffer[64];
+    uint32_t a, b, c, d, e, f, g, h;
     const uint32_t (*MessageBlock)[16] = srcBytes;
 
     size_t RoundsOfMainCycle = srcBytesLength / 64;

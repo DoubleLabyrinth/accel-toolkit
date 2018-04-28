@@ -41,7 +41,7 @@ void accelc_MD5_init(MD5_BUFFER* HashBuffer) {
 }
 
 void accelc_MD5_update(const void* srcBytes, size_t srcBytesLength, MD5_BUFFER* HashBuffer) {
-    uint32_t AA = 0, BB = 0, CC = 0, DD = 0;
+    uint32_t AA, BB, CC, DD;
     size_t RoundsOfMainCycle = srcBytesLength / 64;
     const uint32_t(*Ptr)[16] = srcBytes;
 
