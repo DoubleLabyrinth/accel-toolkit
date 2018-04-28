@@ -1,7 +1,3 @@
-/*********************************************************************
-* Filename:   MD5.h
-* Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
-*********************************************************************/
 #pragma once
 #include <stdint.h>
 #include <stddef.h>
