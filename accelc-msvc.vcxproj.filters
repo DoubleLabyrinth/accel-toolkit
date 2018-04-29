@@ -120,6 +120,9 @@
     <ClCompile Include="memory\source\reverse_ssse3.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="hash\source\ripemd160.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="crypto\aes.h">

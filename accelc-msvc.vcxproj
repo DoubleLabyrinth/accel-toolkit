@@ -186,6 +186,7 @@
     <ClCompile Include="hash\source\md2.c" />
     <ClCompile Include="hash\source\md4.c" />
     <ClCompile Include="hash\source\md5.c" />
+    <ClCompile Include="hash\source\ripemd160.c" />
     <ClCompile Include="hash\source\sha1.c" />
     <ClCompile Include="hash\source\sha224.c" />
     <ClCompile Include="hash\source\sha256.c" />
