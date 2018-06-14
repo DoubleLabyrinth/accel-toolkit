@@ -2,8 +2,8 @@
 #include "../def_asm.h"
 #include <memory.h>
 
-coeff_t accelc_uintx_mul_s(coeff_t* multiplier, size_t multiplier_length,
-                           coeff_t multiplicand) {
+coeff_t accelc_uintx_fastmul(coeff_t* multiplier, size_t multiplier_length,
+                             coeff_t multiplicand) {
     coeff_t temp[2];
     coeff_t carry = 0;
     for (size_t i = 0; i < multiplier_length; ++i) {
@@ -35,9 +35,9 @@ void accelc_uintx_multo(const coeff_t* multiplier, size_t multiplier_length,
     }
 }
 
-void accelc_uintx_multo_s(const coeff_t* multiplier, size_t multiplier_length,
-                          coeff_t multiplicand,
-                          coeff_t* __restrict product) {
+coeff_t accelc_uintx_fastmulto(const coeff_t* multiplier, size_t multiplier_length,
+                               coeff_t multiplicand,
+                               coeff_t* __restrict product) {
     coeff_t temp[2];
     coeff_t carry = 0;
     for (size_t i = 0; i < multiplier_length; ++i) {
@@ -45,5 +45,5 @@ void accelc_uintx_multo_s(const coeff_t* multiplier, size_t multiplier_length,
         carry = temp[1] + _addcarry_coeff(0, temp[0], carry, product + i);
     }
 
-    product[multiplier_length] = carry;
+    return carry;
 }

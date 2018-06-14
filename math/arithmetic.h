@@ -18,9 +18,9 @@ extern "C" {
     // Return carry flag
     // ASSERT:
     // 1. summand_length > 0
-    uint8_t accelc_uintx_add_s(coeff_t* summand, size_t summand_length,
-                               coeff_t addend,
-                               uint8_t carry);
+    uint8_t accelc_uintx_fastadd(coeff_t* summand, size_t summand_length,
+                                 coeff_t addend,
+                                 uint8_t carry);
 
     // Equivalent to "sum = summand + addend + carry;"
     // Return carry flag
@@ -38,10 +38,10 @@ extern "C" {
     // ASSERT:
     // 1. summand_length > 0
     // 3. sum length >= summand_length
-    uint8_t accelc_uintx_addto_s(const coeff_t* summand, size_t summand_length,
-                                 coeff_t addend,
-                                 uint8_t carry,
-                                 coeff_t* __restrict sum);
+    uint8_t accelc_uintx_fastaddto(const coeff_t* summand, size_t summand_length,
+                                   coeff_t addend,
+                                   uint8_t carry,
+                                   coeff_t* __restrict sum);
 
     // Equivalent to "minuend -= (subtrahend + borrow);"
     // Return carry(borrow) flag
@@ -56,9 +56,9 @@ extern "C" {
     // Return carry(borrow) flag
     // ASSERT:
     // 1. minuend_length > 0
-    uint8_t accelc_uintx_sub_s(coeff_t* __restrict minuend, size_t minuend_length,
-                               coeff_t subtrahend,
-                               uint8_t borrow);
+    uint8_t accelc_uintx_fastsub(coeff_t* __restrict minuend, size_t minuend_length,
+                                 coeff_t subtrahend,
+                                 uint8_t borrow);
 
     // Equivalent to "diff = minuend - (subtrahend + borrow);"
     // Return carry(borrow) flag
@@ -76,17 +76,17 @@ extern "C" {
     // ASSERT:
     // 1. minuend_length > 0
     // 3. diff length >= minuend_length
-    uint8_t accelc_uintx_subto_s(const coeff_t* minuend, size_t minuend_length,
-                                 coeff_t subtrahend,
-                                 uint8_t borrow,
-                                 coeff_t* __restrict diff);
+    uint8_t accelc_uintx_fastsubto(const coeff_t* minuend, size_t minuend_length,
+                                   coeff_t subtrahend,
+                                   uint8_t borrow,
+                                   coeff_t* __restrict diff);
 
     // Equivalent to "multiplier *= multiplicand;"
     // Return carry coeff_t
     // ASSERT:
     // 1. multiplier_length > 0
-    coeff_t accelc_uintx_mul_s(coeff_t* multiplier, size_t multiplier_length,
-                               coeff_t multiplicand);
+    coeff_t accelc_uintx_fastmul(coeff_t* multiplier, size_t multiplier_length,
+                                 coeff_t multiplicand);
 
     // Equivalent to "product = multiplier * multiplicand;"
     // Just grade-school multiplication,  time complexity O(n ^ 2)
@@ -101,10 +101,10 @@ extern "C" {
     // Equivalent to "product = multiplier * multiplicand;"
     // ASSERT:
     // 1. multiplier_length > 0
-    // 3. product length = multiplier_length + 1
-    void accelc_uintx_multo_s(const coeff_t* multiplier, size_t multiplier_length,
-                              coeff_t multiplicand,
-                              coeff_t* __restrict product);
+    // 3. product buffer length >= multiplier_length
+    coeff_t accelc_uintx_fastmulto(const coeff_t* multiplier, size_t multiplier_length,
+                                   coeff_t multiplicand,
+                                   coeff_t* __restrict product);
 
     // Equivalent to "product = multiplier * multiplicand;"
     // Karatsuba multiplication,  time complexity O(n ^ log_2(3)) ~= O(n ^ 1.585)

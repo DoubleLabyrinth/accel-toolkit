@@ -88,8 +88,8 @@ void accelc_uintx_multo_Karatsuba(const coeff_t* multiplier,
                      buffer + length, length,
                      0);
 
-    accelc_uintx_add_s(product + length + length / 2, length / 2,
-                       0,
-                       carry);
+    accelc_uintx_fastadd(product + length + length / 2, length / 2,
+                         0,
+                         carry);
     free(buffer);
 }
