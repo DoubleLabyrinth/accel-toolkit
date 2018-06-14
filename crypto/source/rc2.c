@@ -1,19 +1,11 @@
-/*********************************************************************
-* Filename:   RC2.c
-* Author:     Aiyu Xiao (xiao_ai_yu@live.cn)
-*********************************************************************/
 #include "../rc2.h"
 #include <memory.h>
-
-#ifdef _MSC_VER
-#include <intrin.h>
-#elif defined(__GNUC__)
 #include <x86intrin.h>
+
 #define _rotl16 _rotwl
 #define _rotr16 _rotwr
-#endif
 
-const uint8_t accelc_RC2_PI_Table[256] = {
+static const uint8_t _RC2_PI_Table[256] = {
     0xD9, 0x78, 0xF9, 0xC4, 0x19, 0xDD, 0xB5, 0xED, 0x28, 0xE9, 0xFD, 0x79, 0x4A, 0xA0, 0xD8, 0x9D,
     0xC6, 0x7E, 0x37, 0x83, 0x2B, 0x76, 0x53, 0x8E, 0x62, 0x4C, 0x64, 0x88, 0x44, 0x8B, 0xFB, 0xA2,
     0x17, 0x9A, 0x59, 0xF5, 0x87, 0xB3, 0x4F, 0x13, 0x61, 0x45, 0x6D, 0x8D, 0x09, 0x81, 0x7D, 0x32,
@@ -190,12 +182,12 @@ int accelc_RC2_set_key(const uint8_t* srcKey,
     unsigned int T8 = (eftKey_bit_Length + 7) / 8;
     unsigned int TM = 255 % (1 << (8 + eftKey_bit_Length - T8 * 8));
     for (int i = srcKeyLength; i < 128; ++i)
-        L[i] = accelc_RC2_PI_Table[(L[i - 1] + L[i - srcKeyLength]) % sizeof(accelc_RC2_PI_Table)];
+        L[i] = _RC2_PI_Table[(L[i - 1] + L[i - srcKeyLength]) % sizeof(_RC2_PI_Table)];
 
-    L[128 - T8] = accelc_RC2_PI_Table[L[128 - T8] & TM];
+    L[128 - T8] = _RC2_PI_Table[L[128 - T8] & TM];
 
     for (int i = (int)(127 - T8); i >= 0; --i)
-        L[i] = accelc_RC2_PI_Table[L[i + 1] ^ L[i + T8]];
+        L[i] = _RC2_PI_Table[L[i + 1] ^ L[i + T8]];
 
     return RC2_SUCCESS;
 }

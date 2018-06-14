@@ -1,18 +1,14 @@
 #include "../rc5.h"
 #include <memory.h>
-
-#ifdef _MSC_VER
-#include <intrin.h>
-#elif defined(__GNUC__)
 #include <x86intrin.h>
+
 #define _rotl16 _rotwl
 #define _rotr16 _rotwr
 #define _rotl64 __rolq
 #define _rotr64 __rorq
-#endif
 
-const uint16_t accelc_RC5_P16 = 0xB7E1;
-const uint16_t accelc_RC5_Q16 = 0x9E37;
+static const uint16_t _RC5_P16 = 0xB7E1;
+static const uint16_t _RC5_Q16 = 0x9E37;
 
 void accelc_RC5_16_encrypt(uint8_t srcBytes[RC5_16_BLOCK_SIZE], const uint16_t ExpandedKey[], uint8_t round_count) {
     uint16_t* const A = (uint16_t*)srcBytes;
@@ -57,9 +53,9 @@ int accelc_RC5_16_set_key(const uint8_t srcKey[],
     memcpy(L, srcKey, srcKeyLength);
 
     int t = (round_count + 1) * 2;
-    dstExpandedKey[0] = accelc_RC5_P16;
+    dstExpandedKey[0] = _RC5_P16;
     for (int i = 1; i < t; ++i)
-        dstExpandedKey[i] = dstExpandedKey[i - 1] + accelc_RC5_Q16;
+        dstExpandedKey[i] = dstExpandedKey[i - 1] + _RC5_Q16;
 
     int ii = 0, jj = 0;
     uint16_t A = 0, B = 0;
@@ -77,8 +73,8 @@ int accelc_RC5_16_set_key(const uint8_t srcKey[],
     return RC5_16_SUCCESS;
 }
 
-const uint32_t accelc_RC5_P32 = 0xB7E15163;
-const uint32_t accelc_RC5_Q32 = 0x9E3779B9;
+static const uint32_t _RC5_P32 = 0xB7E15163;
+static const uint32_t _RC5_Q32 = 0x9E3779B9;
 
 void accelc_RC5_32_encrypt(uint8_t srcBytes[RC5_32_BLOCK_SIZE], const uint32_t srcExpandedKey[], uint8_t round_count) {
     uint32_t* const A = (uint32_t*)srcBytes;
@@ -120,9 +116,9 @@ int accelc_RC5_32_set_key(const uint8_t srcKey[],
     memcpy(L, srcKey, srcKeyLength);
 
     int t = (round_count + 1) * 2;
-    dstExpandedKey[0] = accelc_RC5_P32;
+    dstExpandedKey[0] = _RC5_P32;
     for (int i = 1; i < t; ++i)
-        dstExpandedKey[i] = dstExpandedKey[i - 1] + accelc_RC5_Q32;
+        dstExpandedKey[i] = dstExpandedKey[i - 1] + _RC5_Q32;
 
     int ii = 0, jj = 0;
     uint32_t A = 0, B = 0;
@@ -140,8 +136,8 @@ int accelc_RC5_32_set_key(const uint8_t srcKey[],
     return RC5_32_SUCCESS;
 }
 
-const uint64_t accelc_RC5_P64 = 0xB7E151628AED2A6B;
-const uint64_t accelc_RC5_Q64 = 0x9E3779B97F4A7C15;
+static const uint64_t _RC5_P64 = 0xB7E151628AED2A6B;
+static const uint64_t _RC5_Q64 = 0x9E3779B97F4A7C15;
 
 void accelc_RC5_64_encrypt(uint8_t srcBytes[RC5_64_BLOCK_SIZE], const uint64_t ExpandedKey[], uint8_t round_count) {
     uint64_t* const A = (uint64_t*)srcBytes;
@@ -183,9 +179,9 @@ int accelc_RC5_64_set_key(const uint8_t srcKey[],
     memcpy(L, srcKey, srcKeyLength);
 
     int t = (round_count + 1) * 2;
-    dstExpandedKey[0] = accelc_RC5_P64;
+    dstExpandedKey[0] = _RC5_P64;
     for (int i = 1; i < t; ++i)
-        dstExpandedKey[i] = dstExpandedKey[i - 1] + accelc_RC5_Q64;
+        dstExpandedKey[i] = dstExpandedKey[i - 1] + _RC5_Q64;
 
     int ii = 0, jj = 0;
     uint64_t A = 0, B = 0;
