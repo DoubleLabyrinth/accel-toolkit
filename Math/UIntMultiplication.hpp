@@ -38,6 +38,8 @@ namespace accel::Math {
                           uint64_t product[], size_t product_len,
                           size_t NumberOfThreads = 1);
 
+#else
+#error "NOT Implement"
 #endif
 
 }
