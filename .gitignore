@@ -1,0 +1,6 @@
+bin/*
+.vs/*
+Crypto/obj/*
+CryptoTest/obj/*
+Math/obj/*
+MathTest/obj/*
