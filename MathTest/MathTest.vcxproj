@@ -143,8 +143,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AsmHelper.cpp" />
     <ClCompile Include="UIntAddition.cpp" />
     <ClCompile Include="UIntMultiplication.cpp" />
+    <ClCompile Include="NTT.cpp" />
+    <ClCompile Include="UIntPower.cpp" />
     <ClCompile Include="UIntSubtraction.cpp" />
     <ClCompile Include="_tmain.cpp" />
   </ItemGroup>

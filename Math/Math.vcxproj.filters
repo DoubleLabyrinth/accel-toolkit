@@ -24,6 +24,15 @@
     <ClInclude Include="UIntMultiplication.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="UIntPower.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="source\AsmHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NTT.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\UIntAddition.cpp">
@@ -41,5 +50,16 @@
     <ClCompile Include="source\KaratsubaMT.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="source\UintPower.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\NumberTheoTrans.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="source\DivisionIntrinsic_x64.asm">
+      <Filter>源文件</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

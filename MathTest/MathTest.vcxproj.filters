@@ -27,5 +27,14 @@
     <ClCompile Include="UIntSubtraction.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="NTT.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UIntPower.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AsmHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

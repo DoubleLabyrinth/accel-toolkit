@@ -53,6 +53,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -136,16 +137,28 @@
   <ItemGroup>
     <ClCompile Include="source\KaratsubaMT.cpp" />
     <ClCompile Include="source\KaratsubaST.cpp" />
+    <ClCompile Include="source\NumberTheoTrans.cpp" />
     <ClCompile Include="source\UIntAddition.cpp" />
     <ClCompile Include="source\UIntMultiplication.cpp" />
+    <ClCompile Include="source\UintPower.cpp" />
     <ClCompile Include="source\UIntSubtraction.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="NTT.hpp" />
+    <ClInclude Include="source\AsmHelper.h" />
+    <ClInclude Include="UIntPower.hpp" />
     <ClInclude Include="UIntMultiplication.hpp" />
     <ClInclude Include="UIntSubtraction.hpp" />
     <ClInclude Include="UIntAddition.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <MASM Include="source\DivisionIntrinsic_x64.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </MASM>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>
