@@ -16,6 +16,8 @@ namespace accel::Math {
 
     void INumberTheoTrans(const uint64_t src[], uint64_t dst[], size_t len, uint64_t g, uint64_t P);
 
+#else
+#error "NOT Implement"
 #endif
 
 }
