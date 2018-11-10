@@ -28,6 +28,8 @@ namespace accel::MathTest {
     bool UIntMulTest3ST();
     bool UIntMulTest3MT(size_t Threads);
 
+    bool _uaddmodTest();
+    bool _usubmodTest();
     bool _umulmodTest();
     bool _udivTest();
     bool _udivmodTest();
@@ -36,8 +38,10 @@ namespace accel::MathTest {
     bool UIntPowerModuleTest0();
 
     bool NumberTheoTransTest0();
+    bool FastNumberTheoTransSTTest0();
 
     bool INumberTheoTransTest0();
+    bool IFastNumberTheoTransSTTest0();
 }
 
 int _tmain(int argc, PTSTR argv[], PTSTR envp[]) {
@@ -62,6 +66,8 @@ int _tmain(int argc, PTSTR argv[], PTSTR envp[]) {
     DO_TEST([]() -> bool { return accel::MathTest::UIntMulTest3MT(8); });
 
     MESSAGE("");
+    DO_TEST(accel::MathTest::_uaddmodTest);
+    DO_TEST(accel::MathTest::_usubmodTest);
     DO_TEST(accel::MathTest::_umulmodTest);
     DO_TEST(accel::MathTest::_udivTest);
     DO_TEST(accel::MathTest::_udivmodTest);
@@ -72,8 +78,10 @@ int _tmain(int argc, PTSTR argv[], PTSTR envp[]) {
 
     MESSAGE("");
     DO_TEST(accel::MathTest::NumberTheoTransTest0);
+    DO_TEST(accel::MathTest::FastNumberTheoTransSTTest0);
 
     MESSAGE("");
     DO_TEST(accel::MathTest::INumberTheoTransTest0);
+    DO_TEST(accel::MathTest::IFastNumberTheoTransSTTest0);
     return 0;
 }

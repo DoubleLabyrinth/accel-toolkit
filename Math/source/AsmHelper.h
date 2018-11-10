@@ -6,6 +6,47 @@ extern "C" {
 #if defined(_M_IX86)
 
     static __forceinline
+    uint32_t __fastcall _uaddmod64(uint32_t a, uint32_t b, uint32_t m) {
+        __asm {
+            cmp m, 1
+            jnz _uaddmod64_label0
+            xor eax, eax
+            jmp _uaddmod64_fin
+        _uaddmod64_label0:
+            mov eax, b
+            xor edx, edx
+            add eax, a
+            adc edx, edx
+            div m
+            mov eax, edx
+        _uaddmod64_fin:
+        }
+    }
+
+    static __forceinline
+    uint32_t __fastcall _usubmod64(uint32_t a, uint32_t b, uint32_t m) {
+        __asm {
+            mov eax, a
+            mov edx, b
+            cmp eax, edx
+            jb _usubmod64_label0
+            sub eax, edx
+            xor edx, edx
+            div m
+            mov eax, edx
+            jmp _usubmod64_fin
+        _usubmod64_label0:
+            xchg eax, edx
+            sub eax, edx
+            xor edx, edx
+            div m
+            mov eax, m
+            sub eax, edx
+        _usubmod64_fin:
+        }
+    }
+
+    static __forceinline
     uint32_t __fastcall _umulmod64(uint32_t a, uint32_t b, uint32_t m) {
         __asm {
             mov ecx, a
@@ -65,6 +106,10 @@ extern "C" {
     }
 
 #elif defined(_M_X64)
+
+    uint64_t __fastcall _uaddmod128(uint64_t a, uint64_t b, uint64_t m);
+
+    uint64_t __fastcall _usubmod128(uint64_t a, uint64_t b, uint64_t m);
 
     uint64_t __fastcall _umulmod128(uint64_t a, uint64_t b, uint64_t m);
 

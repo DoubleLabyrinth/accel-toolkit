@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\FastNumberTheoTransST.cpp" />
     <ClCompile Include="source\KaratsubaMT.cpp" />
     <ClCompile Include="source\KaratsubaST.cpp" />
     <ClCompile Include="source\NumberTheoTrans.cpp" />
@@ -152,7 +153,7 @@
     <ClInclude Include="UIntAddition.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="source\DivisionIntrinsic_x64.asm">
+    <MASM Include="source\AsmHelper_x64.asm">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </MASM>

@@ -296,10 +296,26 @@ namespace accel::MathTest {
         return memcmp(dst, X_After_NTT, sizeof(X_After_NTT)) == 0;
     }
 
+    bool FastNumberTheoTransSTTest0() {
+        uintX_t dst[_countof(X_After_NTT)];
+
+        accel::Math::FastNumberTheoTransST(X, dst, _countof(X), PrimitiveRoot, Prime);
+
+        return memcmp(dst, X_After_NTT, sizeof(X_After_NTT)) == 0;
+    }
+
     bool INumberTheoTransTest0() {
         uintX_t dst[_countof(X)];
 
         accel::Math::INumberTheoTrans(X_After_NTT, dst, _countof(X_After_NTT), PrimitiveRoot, Prime);
+
+        return memcmp(dst, X, sizeof(X)) == 0;
+    }
+
+    bool IFastNumberTheoTransSTTest0() {
+        uintX_t dst[_countof(X)];
+
+        accel::Math::IFastNumberTheoTransST(X_After_NTT, dst, _countof(X_After_NTT), PrimitiveRoot, Prime);
 
         return memcmp(dst, X, sizeof(X)) == 0;
     }
