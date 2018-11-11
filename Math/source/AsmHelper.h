@@ -1,7 +1,9 @@
 #pragma once
 #include <stdint.h>
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 
 #if defined(_M_IX86)
 
@@ -127,5 +129,6 @@ extern "C" {
 #error "NOT Implement"
 #endif
 
+#ifdef __cplusplus
 }
-
+#endif
