@@ -17,8 +17,8 @@ namespace accel::Math {
 #define _umulmod _umulmod128
 #endif
 
-    static bool _impl_FastNTT_ST_base2(const uintX_t src[], uintX_t dst[], size_t len,
-                                       uintX_t w, uintX_t P, size_t gap) {
+    bool FastNttST_b2_Internal(const uintX_t src[], uintX_t dst[], size_t len,
+                               uintX_t w, uintX_t P, size_t gap) {
         if (len == 2) {
             if (gap == 1) {
                 dst[0] = _uaddmod(src[0], src[gap], P);
@@ -36,17 +36,17 @@ namespace accel::Math {
             uintX_t* dst_odd = buffer + 1;
 
             uintX_t next_w = _umulmod(w, w, P);
-            if (!_impl_FastNTT_ST_base2(src, dst_even, len / 2,
-                                        next_w,
-                                        P,
-                                        gap * 2)) {
+            if (!FastNttST_b2_Internal(src, dst_even, len / 2,
+                                       next_w,
+                                       P,
+                                       gap * 2)) {
                 free(buffer);
                 return false;
             }
-            if (!_impl_FastNTT_ST_base2(src + gap, dst_odd, len / 2,
-                                        next_w,
-                                        P,
-                                        gap * 2)) {
+            if (!FastNttST_b2_Internal(src + gap, dst_odd, len / 2,
+                                       next_w,
+                                       P,
+                                       gap * 2)) {
                 free(buffer);
                 return false;
             }
@@ -72,8 +72,8 @@ namespace accel::Math {
         return true;
     }
 
-    static bool _impl_FastNTTX_ST_base2(const uintX_t src[], uintX_t dst[], size_t len,
-                                        uintX_t w, uintX_t P, size_t gap) {
+    bool FastNttXST_b2_Internal(const uintX_t src[], uintX_t dst[], size_t len,
+                                uintX_t w, uintX_t P, size_t gap) {
         if (len == 2) {
             if (gap == 1) {
                 uintX_t right_part = _umulmod(src[gap], w, P);
@@ -97,17 +97,17 @@ namespace accel::Math {
             uintX_t* dst_odd = buffer + 1;
 
             uintX_t next_w = _umulmod(w, w, P);
-            if (!_impl_FastNTTX_ST_base2(src, dst_even, len / 2,
-                                         next_w,
-                                         P,
-                                         gap * 2)) {
+            if (!FastNttXST_b2_Internal(src, dst_even, len / 2,
+                                        next_w,
+                                        P,
+                                        gap * 2)) {
                 free(buffer);
                 return false;
             }
-            if (!_impl_FastNTTX_ST_base2(src + gap, dst_odd, len / 2,
-                                         next_w,
-                                         P,
-                                         gap * 2)) {
+            if (!FastNttXST_b2_Internal(src + gap, dst_odd, len / 2,
+                                        next_w,
+                                        P,
+                                        gap * 2)) {
                 free(buffer);
                 return false;
             }
@@ -131,53 +131,6 @@ namespace accel::Math {
             free(buffer);
         }
         return true;
-    }
-
-    bool FastNumberTheoTransST(const uintX_t src[], uintX_t dst[], size_t len,
-                               uintX_t g, uintX_t P) {
-        if (len == 0)
-            return false;
-
-        if (len & (len - 1))
-            return false;
-
-        if (len == 1) {
-            dst[0] = src[0];
-            return true;
-        } else {
-            return _impl_FastNTT_ST_base2(src, dst, len, 
-                                          UIntPowerModule(g, (P - 1) / len, P), P, 
-                                          1);
-        }
-    }
-
-    bool IFastNumberTheoTransST(const uintX_t src[], uintX_t dst[], size_t len,
-                                uintX_t g, uintX_t P) {
-        if (len == 0)
-            return false;
-
-        if (len & (len - 1))
-            return false;
-
-        if (len == 1) {
-            dst[0] = src[0];
-            return true;
-        } else {
-            uintX_t len_Reciprocal;
-
-            // g = g ^ -1 % P
-            g = UIntPowerModule(g, P - 2, P);
-            if (!_impl_FastNTT_ST_base2(src, dst, len,
-                                        UIntPowerModule(g, (P - 1) / len, P), P,
-                                        1)) {
-                return false;
-            }
-
-            len_Reciprocal = UIntPowerModule(len, P - 2, P);
-            for (size_t i = 0; i < len; ++i)
-                dst[i] = _umulmod(len_Reciprocal, dst[i], P);
-            return true;
-        }
     }
 
 }

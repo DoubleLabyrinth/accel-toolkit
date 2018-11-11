@@ -2,14 +2,34 @@
 #include <stdio.h>
 #include <windows.h>
 
-#define DO_TEST(x)                                      \
-    if ((x)()) {                                        \
-        _tprintf(TEXT("%-64s passed.\n"), TEXT(#x));    \
-    } else {                                            \
-        _tprintf(TEXT("%-64s failed!\n"), TEXT(#x));    \
-    }
-
 #define MESSAGE(x) _putts(TEXT(x))
+
+#define TIMING_ENABLE 0
+
+#if TIMING_ENABLE == 0
+#define DO_TEST(x)                                          \
+    if ((x)()) {                                            \
+        _tprintf(TEXT("%-72s passed.\n"), TEXT(#x));        \
+    } else {                                                \
+        _tprintf(TEXT("%-72s failed!\n"), TEXT(#x));        \
+    }
+#else
+#define DO_TEST(x)                                                      \
+    {                                                                   \
+        bool pass;                                                      \
+        LARGE_INTEGER t1, t2;                                           \
+        QueryPerformanceCounter(&t1);                                   \
+        pass = (x)();                                                   \
+        QueryPerformanceCounter(&t2);                                   \
+        if (pass) {                                                     \
+            _tprintf(TEXT("%-72s passed. PerformanceCounter = %llu\n"), \
+                     TEXT(#x), t2.QuadPart - t1.QuadPart);              \
+        } else {                                                        \
+            _tprintf(TEXT("%-72s failed! PerformanceCounter = %llu\n"), \
+                     TEXT(#x), t2.QuadPart - t1.QuadPart);              \
+        }                                                               \
+    }
+#endif
 
 namespace accel::MathTest {
     bool UIntAddTest0();
@@ -38,10 +58,12 @@ namespace accel::MathTest {
     bool UIntPowerModuleTest0();
 
     bool NumberTheoTransTest0();
-    bool FastNumberTheoTransSTTest0();
+    bool FastNumberTheoTransTest0ST();
+    bool FastNumberTheoTransTest0MT(size_t Threads);
 
     bool INumberTheoTransTest0();
-    bool IFastNumberTheoTransSTTest0();
+    bool IFastNumberTheoTransTest0ST();
+    bool IFastNumberTheoTransTest0MT(size_t Threads);
 }
 
 int _tmain(int argc, PTSTR argv[], PTSTR envp[]) {
@@ -78,10 +100,16 @@ int _tmain(int argc, PTSTR argv[], PTSTR envp[]) {
 
     MESSAGE("");
     DO_TEST(accel::MathTest::NumberTheoTransTest0);
-    DO_TEST(accel::MathTest::FastNumberTheoTransSTTest0);
+    DO_TEST(accel::MathTest::FastNumberTheoTransTest0ST);
+    DO_TEST([]() -> bool { return accel::MathTest::FastNumberTheoTransTest0MT(2); });
+    DO_TEST([]() -> bool { return accel::MathTest::FastNumberTheoTransTest0MT(4); });
+    DO_TEST([]() -> bool { return accel::MathTest::FastNumberTheoTransTest0MT(8); });
 
     MESSAGE("");
     DO_TEST(accel::MathTest::INumberTheoTransTest0);
-    DO_TEST(accel::MathTest::IFastNumberTheoTransSTTest0);
+    DO_TEST(accel::MathTest::IFastNumberTheoTransTest0ST);
+    DO_TEST([]() -> bool { return accel::MathTest::IFastNumberTheoTransTest0MT(2); });
+    DO_TEST([]() -> bool { return accel::MathTest::IFastNumberTheoTransTest0MT(4); });
+    DO_TEST([]() -> bool { return accel::MathTest::IFastNumberTheoTransTest0MT(8); });
     return 0;
 }

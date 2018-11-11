@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\FastNumberTheoTransMT.cpp" />
     <ClCompile Include="source\FastNumberTheoTransST.cpp" />
     <ClCompile Include="source\KaratsubaMT.cpp" />
     <ClCompile Include="source\KaratsubaST.cpp" />

@@ -296,10 +296,19 @@ namespace accel::MathTest {
         return memcmp(dst, X_After_NTT, sizeof(X_After_NTT)) == 0;
     }
 
-    bool FastNumberTheoTransSTTest0() {
+    bool FastNumberTheoTransTest0ST() {
         uintX_t dst[_countof(X_After_NTT)];
 
-        accel::Math::FastNumberTheoTransST(X, dst, _countof(X), PrimitiveRoot, Prime);
+        accel::Math::FastNumberTheoTrans(X, dst, _countof(X), PrimitiveRoot, Prime);
+
+        return memcmp(dst, X_After_NTT, sizeof(X_After_NTT)) == 0;
+    }
+
+    bool FastNumberTheoTransTest0MT(size_t Threads) {
+        uintX_t dst[_countof(X_After_NTT)];
+
+        accel::Math::FastNumberTheoTrans(X, dst, _countof(X), PrimitiveRoot, Prime,
+                                         Threads);
 
         return memcmp(dst, X_After_NTT, sizeof(X_After_NTT)) == 0;
     }
@@ -312,10 +321,19 @@ namespace accel::MathTest {
         return memcmp(dst, X, sizeof(X)) == 0;
     }
 
-    bool IFastNumberTheoTransSTTest0() {
+    bool IFastNumberTheoTransTest0ST() {
         uintX_t dst[_countof(X)];
 
-        accel::Math::IFastNumberTheoTransST(X_After_NTT, dst, _countof(X_After_NTT), PrimitiveRoot, Prime);
+        accel::Math::IFastNumberTheoTrans(X_After_NTT, dst, _countof(X_After_NTT), PrimitiveRoot, Prime);
+
+        return memcmp(dst, X, sizeof(X)) == 0;
+    }
+
+    bool IFastNumberTheoTransTest0MT(size_t Threads) {
+        uintX_t dst[_countof(X)];
+
+        accel::Math::IFastNumberTheoTrans(X_After_NTT, dst, _countof(X_After_NTT), PrimitiveRoot, Prime,
+                                          Threads);
 
         return memcmp(dst, X, sizeof(X)) == 0;
     }

@@ -59,6 +59,9 @@
     <ClCompile Include="source\FastNumberTheoTransST.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="source\FastNumberTheoTransMT.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="source\AsmHelper_x64.asm">
